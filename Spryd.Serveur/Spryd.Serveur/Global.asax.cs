@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Spryd.Serveur.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,6 +12,9 @@ namespace Spryd.Serveur
 {
     public class WebApiApplication : System.Web.HttpApplication
     {
+        /// <summary>
+        /// Démarrage de l'application
+        /// </summary>
         protected void Application_Start()
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
