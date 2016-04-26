@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Web.Http;
 
 namespace Spryd.Serveur
@@ -9,9 +10,9 @@ namespace Spryd.Serveur
     {
         public static void Register(HttpConfiguration config)
         {
-            // Configuration et services API Web
+            // Web API services configuration
 
-            // Itinéraires de l'API Web
+            // Web API Routes
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
@@ -19,6 +20,9 @@ namespace Spryd.Serveur
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            // Output in JSON
+            config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
         }
     }
 }

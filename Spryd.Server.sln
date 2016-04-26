@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spryd.Serveur", "Spryd.Serveur\Spryd.Serveur.csproj", "{94C0D5C5-1E92-44C3-9047-9B83F870C990}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spryd.Server", "Spryd.Serveur\Spryd.Server.csproj", "{94C0D5C5-1E92-44C3-9047-9B83F870C990}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spryd.Serveur.Tests", "Spryd.Serveur.Tests\Spryd.Serveur.Tests.csproj", "{E0C73015-B6FB-4F79-8B77-BF07CD6AD26A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spryd.Server.Tests", "Spryd.Serveur.Tests\Spryd.Server.Tests.csproj", "{E0C73015-B6FB-4F79-8B77-BF07CD6AD26A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
