@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Spryd.Serveur.Models;
 using Spryd.Serveur.Controllers;
 using System.Web.Http;
+using System.Net.Http;
 
 namespace Spryd.Serveur.Tests
 {
@@ -13,10 +14,12 @@ namespace Spryd.Serveur.Tests
         private UserController userController;
 
         [TestInitialize]
-        public void FillUserList()
+        public void InitializeTestingEnvironnement()
         {
             dal = new FakeDal();
-            userController = new UserController(dal);            
+            userController = new UserController(dal);
+            userController.Request = new HttpRequestMessage();
+            userController.Configuration = new HttpConfiguration();
         }
 
         [TestMethod]
@@ -28,11 +31,11 @@ namespace Spryd.Serveur.Tests
         }
 
         [TestMethod]
-        public void GetNotExistingUser_Fail()
+        [ExpectedException(typeof(HttpResponseException))]
+        public void GetNotExistingUser_ThrowsException()
         {
-            //var response = new HttpResponseException(System.Net.HttpStatusCode.NotFound);
-            //Assert.AreEqual(userController.GetUser(1), response);
-            // à continuer
+            //Récupère un user inexistant et renvoi une exception not found
+            userController.GetUser(1);
         }
     }
 }
