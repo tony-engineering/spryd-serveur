@@ -23,6 +23,11 @@ namespace Spryd.Serveur
 
             // Output in JSON
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
+
+            // Enable Cross Origin Requests
+            config.EnableCors();
+            //var corsAttr = new EnableCorsAttribute("http://example.com", "*", "*");
+            //config.EnableCors(corsAttr);
         }
     }
 }

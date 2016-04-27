@@ -6,12 +6,14 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace Spryd.Serveur.Controllers
 {
     /// <summary>
     /// User controller
     /// </summary>
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class UserController : ApiController
     {
         private IDal dal;
@@ -68,10 +70,8 @@ namespace Spryd.Serveur.Controllers
         /// <param name="user"></param>
         private void CheckUser(User user)
         {
-            if (user == null)
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "User is null."));
-            if(String.IsNullOrEmpty(user.Email) || String.IsNullOrEmpty(user.Password))
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "One or more missing parameters"));
+            if(String.IsNullOrEmpty(user.Email) || String.IsNullOrEmpty(user.Password) || String.IsNullOrEmpty(user.Name) || String.IsNullOrEmpty(user.Surname))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "One or more missing parameters."));
         }
     }
 }
