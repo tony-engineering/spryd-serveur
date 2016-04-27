@@ -10,14 +10,14 @@ using System.Web.Http;
 namespace Spryd.Serveur.Controllers
 {
     /// <summary>
-    /// Contrôleur d'un utilisateur
+    /// User controller
     /// </summary>
     public class UserController : ApiController
     {
         private IDal dal;
 
         /// <summary>
-        /// Constructeur par défaut
+        /// Default constructor
         /// </summary>
         public UserController()
         {
@@ -25,7 +25,7 @@ namespace Spryd.Serveur.Controllers
         }
 
         /// <summary>
-        /// Constructeur pour les tests
+        /// Tests constructor
         /// </summary>
         /// <param name="fakeDal"></param>
         public UserController(IDal fakeDal)
@@ -34,7 +34,7 @@ namespace Spryd.Serveur.Controllers
         }
 
         /// <summary>
-        /// Récupère un utilisateur par son ID
+        /// Get user by id
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
@@ -44,32 +44,34 @@ namespace Spryd.Serveur.Controllers
         {
             User user = dal.GetUserById(userId);
             if(user == null)
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Le user " + userId + " n'existe pas."));
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "User " + userId + " is null."));
             return dal.GetUserById(userId);
         }
 
         /// <summary>
-        /// Ajoute un utilisateur
+        /// Create user
         /// </summary>
         /// <param name="user"></param>
         [Route("User")]
         [HttpPost]
-        public void AddUser([FromBody] User user)
+        public User AddUser([FromBody] User user)
         {
             CheckUser(user);
             dal.AddUser(user);
+
+            return user;
         }
 
         /// <summary>
-        /// Validation de l'utilisateur
+        /// Check user
         /// </summary>
         /// <param name="user"></param>
         private void CheckUser(User user)
         {
             if (user == null)
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Aucun paramètre n'a été reçu."));
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "User is null."));
             if(String.IsNullOrEmpty(user.Email) || String.IsNullOrEmpty(user.Password))
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Paramètres indispensable manquant."));
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "One or more missing parameters"));
         }
     }
 }
