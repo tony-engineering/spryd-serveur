@@ -65,6 +65,19 @@ namespace Spryd.Serveur.Controllers
         }
 
         /// <summary>
+        /// List Users
+        /// </summary>
+        /// <param name="user"></param>
+        [Route("Users/all")]
+        [HttpGet]
+        public List<User> ListUsers()
+        {
+            List<User> users = dal.ListUsers();
+
+            return users;
+        }
+
+        /// <summary>
         /// Check user
         /// </summary>
         /// <param name="user"></param>

@@ -40,5 +40,10 @@ namespace Spryd.Serveur.Tests
         {
             return listUsers.FirstOrDefault(u => u.Id == id);
         }
+
+        public List<User> ListUsers()
+        {
+            return listUsers;
+        }
     }
 }

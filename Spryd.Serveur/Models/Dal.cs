@@ -1,46 +1,41 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 
 namespace Spryd.Serveur.Models
 {
     /// <summary>
-    /// Couche d'accès aux données MySQL
+    /// Data access layer
     /// </summary>
     public class Dal : IDal
     {
         private MySqlConnection connection;
 
         /// <summary>
-        /// Constructeur par défaut
+        /// Default constructor
         /// </summary>
         public Dal()
         {
-            // Création de la chaîne de connexion
+            // Create DB auth string
             string connectionString = "SERVER=127.0.0.1; DATABASE=sprydioflxadm; UID=root; PASSWORD=";
             connection = new MySqlConnection(connectionString);
         }
 
         /// <summary>
-        /// Ajouter un utilisateur
+        /// Add user
         /// </summary>
         /// <param name="user"></param>
         public void AddUser(User user)
         {
             try
             {
-                // Ouverture de la connexion SQL
                 connection.Open();
-
-                // Création d'une commande SQL en fonction de l'objet connection
                 MySqlCommand cmd = connection.CreateCommand();
-
-                // Requête SQL
                 cmd.CommandText = "INSERT INTO user (name, surname,email,password,create_date,update_date) VALUES (@name, @surname, @email, @password, @create_date, @update_date)";
 
-                // utilisation de l'objet contact passé en paramètre
                 cmd.Parameters.AddWithValue("@name", user.Name);
                 cmd.Parameters.AddWithValue("@surname", user.Surname);
                 cmd.Parameters.AddWithValue("@email", user.Email);
@@ -48,13 +43,11 @@ namespace Spryd.Serveur.Models
                 cmd.Parameters.AddWithValue("@create_date", DateTime.Now);
                 cmd.Parameters.AddWithValue("@update_date", DateTime.Now);
 
-                // Exécution de la commande SQL
                 cmd.ExecuteNonQuery();
 
-                // Fermeture de la connexion
                 connection.Close();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 return;
@@ -62,7 +55,7 @@ namespace Spryd.Serveur.Models
         }
 
         /// <summary>
-        /// Récupérer un utilisateur par son identifiant
+        /// Get user by ID
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -71,16 +64,11 @@ namespace Spryd.Serveur.Models
             User user = new User();
             try
             {
-                // Ouverture de la connexion SQL
                 connection.Open();
 
-                // Création d'une commande SQL en fonction de l'objet connection
                 MySqlCommand cmd = connection.CreateCommand();
 
-                // Requête SQL
-                //cmd.CommandText = "INSERT INTO user (name, surname,email,password,create_date,update_date) VALUES (@name, @surname, @email, @password, @create_date, @update_date)";
                 cmd.CommandText = "SELECT id,name, surname,email,password,create_date,update_date FROM user where id = @id";
-                // utilisation de l'objet contact passé en paramètre
                 cmd.Parameters.AddWithValue("@id", id);
 
                 var result = cmd.ExecuteReader(System.Data.CommandBehavior.SingleRow);
@@ -97,16 +85,63 @@ namespace Spryd.Serveur.Models
                 else
                     return null;
 
-                // Fermeture de la connexion
                 connection.Close();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 return null;
             };
 
             return user;
+        }
+
+        /// <summary>
+        /// List users
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public List<User> ListUsers()
+        {
+            List<User> users = new List<User>();
+            try
+            {
+                connection.Open();
+
+                MySqlCommand cmd = connection.CreateCommand();
+
+                cmd.CommandText = "SELECT id,name, surname,email,password,create_date,update_date FROM user";
+
+                //var result = cmd.ExecuteReader(System.Data.CommandBehavior.SingleRow);
+
+                using (MySqlDataReader result = cmd.ExecuteReader())
+                {
+                    while (result.Read())
+                    {
+                        User user = new User();
+
+                        user.Id = result.GetInt32("id");
+                        user.Name = result.GetString("name");
+                        user.Surname = result.GetString("surname");
+                        user.Email = result.GetString("email");
+                        user.Password = result.GetString("password");
+                        user.CreateDate = result.GetDateTime("create_date");
+                        user.UpdateDate = result.GetDateTime("update_date");
+
+                        users.Add(user);
+                    }
+                }
+
+                connection.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
+                return null;
+            };
+
+            return users;
         }
     }
 }
