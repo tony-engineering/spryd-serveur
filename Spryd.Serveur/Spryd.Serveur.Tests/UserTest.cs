@@ -13,6 +13,9 @@ namespace Spryd.Serveur.Tests
         private IDal dal;
         private UserController userController;
 
+        /// <summary>
+        /// Méthode lancée au début de chaque test pour initialiser le controlleur et la DAL
+        /// </summary>
         [TestInitialize]
         public void InitializeTestingEnvironnement()
         {
@@ -22,6 +25,9 @@ namespace Spryd.Serveur.Tests
             userController.Configuration = new HttpConfiguration();
         }
 
+        /// <summary>
+        /// Ajout et récupération d'un utilisateur complet
+        /// </summary>
         [TestMethod]
         public void GetExistingUser_Success()
         {
@@ -30,12 +36,27 @@ namespace Spryd.Serveur.Tests
             Assert.AreEqual(userController.GetUser(1), newUser);
         }
 
+        /// <summary>
+        /// Ajoute un utilisateur sans donnée
+        /// Jète une exception car Email et Password sont obligatoire
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(HttpResponseException))]
+        public void AddUserWihoutInfo_ThrowException()
+        {
+            User newUser = new User();
+            userController.AddUser(newUser);
+        }
+
+        /// <summary>
+        /// Récupère un user inexistant et renvoi une exception not found
+        /// </summary>
         [TestMethod]
         [ExpectedException(typeof(HttpResponseException))]
         public void GetNotExistingUser_ThrowsException()
         {
-            //Récupère un user inexistant et renvoi une exception not found
             userController.GetUser(1);
         }
+
     }
 }

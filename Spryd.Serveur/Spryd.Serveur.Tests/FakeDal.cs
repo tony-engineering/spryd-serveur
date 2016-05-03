@@ -13,6 +13,7 @@ namespace Spryd.Serveur.Tests
     public class FakeDal : IDal
     {
         private List<User> listUsers;
+        private List<Beacon> listBeacons;
 
         /// <summary>
         /// Constructeur par défaut
@@ -20,6 +21,7 @@ namespace Spryd.Serveur.Tests
         public FakeDal()
         {
             listUsers = new List<User>();
+            listBeacons = new List<Beacon>();
         }
 
         /// <summary>
@@ -29,6 +31,11 @@ namespace Spryd.Serveur.Tests
         public void AddUser(User user)
         {
             listUsers.Add(user);
+        }
+
+        public List<Beacon> GetBeacons()
+        {
+            return listBeacons;
         }
 
         /// <summary>
