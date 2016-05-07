@@ -143,5 +143,45 @@ namespace Spryd.Serveur.Models
 
             return users;
         }
+
+        /// <summary>
+        /// Récupère la liste des beacons
+        /// </summary>
+        /// <returns></returns>
+        public List<Beacon> GetBeacons()
+        {
+            List<Beacon> beaconList = new List<Beacon>();
+            try
+            {
+                // Ouverture de la connexion SQL
+                connection.Open();
+
+                // Création d'une commande SQL en fonction de l'objet connection
+                MySqlCommand cmd = connection.CreateCommand();
+
+                // Requête SQL
+                cmd.CommandText = "SELECT id, technical_id FROM beacon";
+
+                var result = cmd.ExecuteReader(System.Data.CommandBehavior.SingleRow);
+                while (result.Read())
+                {
+                    beaconList.Add(new Beacon()
+                    {
+                        Id = result.GetInt32("id"),
+                        TechnicalId = result.GetString("technical_id")
+                    });
+                };
+
+                // Fermeture de la connexion
+                connection.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            };
+
+            return beaconList;
+        }
     }
 }

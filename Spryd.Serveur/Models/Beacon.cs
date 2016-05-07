@@ -8,6 +8,6 @@ namespace Spryd.Serveur.Models
     public class Beacon
     {
         public int Id { get; set; }
-        public int TechnicalId { get; set; }
+        public string TechnicalId { get; set; }
     }
 }
