@@ -13,6 +13,7 @@ namespace Spryd.Serveur.Tests
     public class FakeDal : IDal
     {
         private List<User> listUsers;
+        private List<Session> listSessions;
 
         /// <summary>
         /// Constructeur par défaut
@@ -20,6 +21,7 @@ namespace Spryd.Serveur.Tests
         public FakeDal()
         {
             listUsers = new List<User>();
+            listSessions = new List<Session>();
         }
 
         /// <summary>
@@ -44,6 +46,15 @@ namespace Spryd.Serveur.Tests
         public List<User> ListUsers()
         {
             return listUsers;
+        }
+
+        /// <summary>
+        /// Add session
+        /// </summary>
+        /// <param name="user"></param>
+        public void AddSession(Session session)
+        {
+            listSessions.Add(session);
         }
     }
 }
