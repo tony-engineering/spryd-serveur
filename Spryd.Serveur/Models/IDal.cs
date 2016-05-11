@@ -13,6 +13,7 @@ namespace Spryd.Serveur.Models
     {
         User GetUserById(int id);
         void AddUser(User user);
+        void AddSession(Session session);
         List<User> ListUsers();
         List<Beacon> GetBeacons();
     }
