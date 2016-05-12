@@ -38,5 +38,7 @@ namespace Spryd.Serveur.Models
         public DateTime? CreateDate { get; set; }
         [JsonProperty("updateDate")]
         public DateTime? UpdateDate { get; set; }
+
+        // a retenir : , NullValueHandling=NullValueHandling.Ignore permet de supprimer champs vides
     }
 }

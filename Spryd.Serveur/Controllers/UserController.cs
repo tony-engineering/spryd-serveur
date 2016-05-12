@@ -13,7 +13,6 @@ namespace Spryd.Serveur.Controllers
     /// <summary>
     /// User controller
     /// </summary>
-    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class UserController : ApiController
     {
         private IDal dal;
@@ -68,7 +67,7 @@ namespace Spryd.Serveur.Controllers
         /// List Users
         /// </summary>
         /// <param name="user"></param>
-        [Route("Users/all")]
+        [Route("User/all")]
         [HttpGet]
         public List<User> ListUsers()
         {

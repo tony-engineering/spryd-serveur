@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace Spryd.Serveur
 {
@@ -25,9 +26,8 @@ namespace Spryd.Serveur
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
 
             // Enable Cross Origin Requests
-            config.EnableCors();
-            //var corsAttr = new EnableCorsAttribute("http://example.com", "*", "*");
-            //config.EnableCors(corsAttr);
+            var corsAttr = new EnableCorsAttribute("*", "*", "*");
+            config.EnableCors(corsAttr);
         }
     }
 }
