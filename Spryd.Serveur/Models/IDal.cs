@@ -15,6 +15,6 @@ namespace Spryd.Serveur.Models
         void AddUser(User user);
         void AddSession(Session session);
         List<User> ListUsers();
-
+        List<Beacon> GetBeacons();
     }
 }
