@@ -30,6 +30,14 @@ Dans Spryd.Serveur -> Models -> Dal.cs, vérifier que le connectionString soit b
 
 - Ouvrir Gestionnaire de services IIS
 - Créer un site DEMANDER A HAROON LA SUITE
+- Vérifier que la version .NET utilisée est V4 pour le Site
+- Si non, passer en V4 via les paramètres.
+  (si il y a une erreur, c'est que V4 n'est pas bien installé, il faut lancer la commande <todo: retrouver>)
+  
+- Il faut également vérifier que dans Panneau de config windows > Parefeu > Paramètres avancés > Connexions entrantes > 
+  vérif que le port associé au serveur est bien autorisé en TCP pour toutes les machines
+  
+Attention on ne peut pas déployer l'application sur IIS en mode debug. Sur IIS Express (intégré à VS) on peut.
 
 --- LANCEMENT ---
 

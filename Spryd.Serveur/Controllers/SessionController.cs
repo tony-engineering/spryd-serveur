@@ -1,4 +1,5 @@
-﻿using Spryd.Serveur.Models;
+﻿using Spryd.Serveur;
+using Spryd.Serveur.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,23 +16,14 @@ namespace Spryd.Server.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class SessionController : ApiController
     {
-        private IDal dal;
+        private ISessionDal dal;
 
         /// <summary>
         /// Default constructor
         /// </summary>
         public SessionController()
         {
-            dal = new Dal();
-        }
-
-        /// <summary>
-        /// Tests constructor
-        /// </summary>
-        /// <param name="fakeDal"></param>
-        public SessionController(IDal fakeDal)
-        {
-            dal = fakeDal;
+            dal = new SessionDal(WebApiConfig.connectionString);
         }
 
         /// <summary>

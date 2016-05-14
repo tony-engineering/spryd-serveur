@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Web.Configuration;
 using System.Web.Http;
 using System.Web.Http.Cors;
 
@@ -9,9 +11,12 @@ namespace Spryd.Serveur
 {
     public static class WebApiConfig
     {
+        public static ConnectionStringSettings connectionString;
+
         public static void Register(HttpConfiguration config)
         {
-            // Web API services configuration
+            // Connection String
+            connectionString = ConfigurationManager.ConnectionStrings["DatabaseAuthString"];
 
             // Web API Routes
             config.MapHttpAttributeRoutes();

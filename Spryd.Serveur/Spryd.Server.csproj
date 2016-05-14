@@ -186,7 +186,9 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -221,19 +223,25 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
-<Compile Include="Controllers\SessionController.cs" />
+    <Compile Include="Models\Beacon\BeaconDal.cs" />
+    <Compile Include="Models\Beacon\IBeaconDal.cs" />
+    <Compile Include="Controllers\SessionController.cs" />
     <Compile Include="Controllers\BeaconController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Exceptions\NotValidUserException.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Beacon.cs" />
-    <Compile Include="Models\Dal.cs" />
-    <Compile Include="Models\IDal.cs" />
-    <Compile Include="Models\Session.cs" />
-    <Compile Include="Models\SharedItem.cs" />
-    <Compile Include="Models\SprydZone.cs" />
-    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\Beacon\Beacon.cs" />
+    <Compile Include="Models\Session\ISessionDal.cs" />
+    <Compile Include="Models\Session\SessionDal.cs" />
+    <Compile Include="Models\User\UserDal.cs" />
+    <Compile Include="Models\User\IUserDal.cs" />
+    <Compile Include="Models\Session\Session.cs" />
+    <Compile Include="Models\Session\SharedItem.cs" />
+    <Compile Include="Models\SprydZone\SprydZone.cs" />
+    <Compile Include="Models\User\User.cs" />
+    <Compile Include="Exceptions\UserNotFoundException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

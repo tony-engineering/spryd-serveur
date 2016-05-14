@@ -15,21 +15,21 @@ namespace Spryd.Serveur.Controllers
     /// </summary>
     public class UserController : ApiController
     {
-        private IDal dal;
+        private IUserDal dal;
 
         /// <summary>
         /// Default constructor
         /// </summary>
         public UserController()
         {
-            dal = new Dal();
+            dal = new UserDal(WebApiConfig.connectionString);
         }
 
         /// <summary>
         /// Tests constructor
         /// </summary>
         /// <param name="fakeDal"></param>
-        public UserController(IDal fakeDal)
+        public UserController(IUserDal fakeDal)
         {
             dal = fakeDal;
         }
@@ -58,9 +58,9 @@ namespace Spryd.Serveur.Controllers
         public User AddUser([FromBody] User user)
         {
             CheckUser(user);
-            dal.AddUser(user);
+            long newUserId = dal.AddUser(user);
 
-            return user;
+            return dal.GetUserById((int) newUserId);
         }
 
         /// <summary>

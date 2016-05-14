@@ -10,27 +10,18 @@ namespace Spryd.Serveur.Controllers
 {
     public class BeaconController : ApiController
     {
-        private IDal dal;
+        private IBeaconDal dal;
 
         /// <summary>
-        /// Constructeur par défaut
+        /// Default constructor
         /// </summary>
         public BeaconController()
         {
-            dal = new Dal();
+            dal = new BeaconDal(WebApiConfig.connectionString);
         }
 
         /// <summary>
-        /// Constructeur pour les tests
-        /// </summary>
-        /// <param name="fakeDal"></param>
-        public BeaconController(IDal fakeDal)
-        {
-            dal = fakeDal;
-        }
-
-        /// <summary>
-        /// Récupère la liste de tous les beacons
+        /// Lists all Beacons
         /// </summary>
         /// <returns></returns>
         [Route("Beacons")]

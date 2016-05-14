@@ -4,41 +4,61 @@ using Spryd.Serveur.Models;
 using Spryd.Serveur.Controllers;
 using System.Web.Http;
 using System.Net.Http;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Web.Configuration;
 
 namespace Spryd.Serveur.Tests
 {
     [TestClass]
     public class UserTest
     {
-        private IDal dal;
+        private IUserDal dal;
         private UserController userController;
 
         /// <summary>
-        /// Méthode lancée au début de chaque test pour initialiser le controlleur et la DAL
+        /// Init test environement
         /// </summary>
         [TestInitialize]
         public void InitializeTestingEnvironnement()
         {
-            dal = new FakeDal();
+            ConnectionStringSettings connectionString = ConfigurationManager.ConnectionStrings["DatabaseAuthString"];
+
+            dal = new UserDal(connectionString);
             userController = new UserController(dal);
             userController.Request = new HttpRequestMessage();
             userController.Configuration = new HttpConfiguration();
         }
 
         /// <summary>
-        /// Ajout et récupération d'un utilisateur complet
+        /// Gets a user from database and checks if it is valid
         /// </summary>
         [TestMethod]
         public void GetExistingUser_Success()
         {
-            User newUser = new User() { Id = 1, Name = "Haroon", Surname = "ANWARBAIG", Email = "haroon@spryd.io", Password = "azerty" };
-            dal.AddUser(newUser);
-            Assert.AreEqual(userController.GetUser(1), newUser);
+            User gotUser = userController.GetUser(1);
+
+            Assert.IsTrue(gotUser.IsValid());
         }
 
         /// <summary>
-        /// Ajoute un utilisateur sans donnée
-        /// Jète une exception car Email et Password sont obligatoire
+        /// Checks if all users in database are valid
+        /// </summary>
+        [TestMethod]
+        public void AllUsersAreValid_Success()
+        {
+            List<User> users = dal.ListUsers();
+
+            users.ForEach(user => {
+                if (!user.IsValid())
+                    throw new NotValidUserException("User "+user+" is not valid.");
+                }
+            );
+        }
+
+
+        /// <summary>
+        /// Adds a user with no data, exception expected
         /// </summary>
         [TestMethod]
         [ExpectedException(typeof(HttpResponseException))]
@@ -49,13 +69,25 @@ namespace Spryd.Serveur.Tests
         }
 
         /// <summary>
-        /// Récupère un user inexistant et renvoi une exception not found
+        /// Adds a user with no data, exception expected
         /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
+        public void AddUser_Success()
+        {
+            User newUser = new User("Spriiid", "Youre", "data@spryd.io", "superpwd");
+            User addedUser = userController.AddUser(newUser);
+
+            Assert.IsTrue(addedUser.IsValid());
+        }
+
+        /// <summary>
+        /// Tries to get a non existing user
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(UserNotFoundException))]
         public void GetNotExistingUser_ThrowsException()
         {
-            userController.GetUser(1);
+            userController.GetUser(-1);
         }
 
     }

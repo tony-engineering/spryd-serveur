@@ -10,7 +10,7 @@ namespace Spryd.Serveur.Tests
     /// <summary>
     /// Couche d'accès aux données statics pour les tests unitaires
     /// </summary>
-    public class FakeDal : IDal
+    public class FakeDal : IUserDal
     {
         private List<User> listUsers;
 		private List<Beacon> listBeacons;
@@ -30,9 +30,10 @@ namespace Spryd.Serveur.Tests
         /// Ajouter un utilisateur
         /// </summary>
         /// <param name="user"></param>
-        public void AddUser(User user)
+        public long AddUser(User user)
         {
             listUsers.Add(user);
+            return 1;
         }
 
         public List<Beacon> GetBeacons()
