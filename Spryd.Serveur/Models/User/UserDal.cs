@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using Spryd.Server.Models.User;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -49,13 +50,13 @@ namespace Spryd.Serveur.Models
             return cmd.LastInsertedId;
         }
 
-        public AuthenticationResult Authenticate(string identifier, string password)
+        public AuthenticationResult Authenticate(AuthentificationRequest authenticationRequest)
         {
             AuthenticationResult authResult = new AuthenticationResult();
 
             try
             {
-                authResult.User = GetUserByIdPassword(identifier, password);
+                authResult.User = GetUserByIdPassword(authenticationRequest.Identifier, authenticationRequest.Password);
                 authResult.IsSuccess = true;
             }
             catch(UserNotFoundException e)

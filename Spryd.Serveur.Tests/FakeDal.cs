@@ -1,4 +1,5 @@
-﻿using Spryd.Serveur.Models;
+﻿using Spryd.Server.Models.User;
+using Spryd.Serveur.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -74,7 +75,7 @@ namespace Spryd.Serveur.Tests
             throw new NotImplementedException();
         }
 
-        AuthenticationResult IUserDal.Authenticate(string identifier, string password)
+        AuthenticationResult IUserDal.Authenticate(AuthentificationRequest authenticationRequest)
         {
             throw new NotImplementedException();
         }

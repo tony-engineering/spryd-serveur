@@ -1,4 +1,5 @@
-﻿using Spryd.Serveur.Models;
+﻿using Spryd.Server.Models.User;
+using Spryd.Serveur.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -85,9 +86,9 @@ namespace Spryd.Serveur.Controllers
         /// <returns>The result of authentification</returns>
         [Route("User/authenticate")]
         [HttpPost]
-        public AuthenticationResult Authenticate(string identifier, string password)
+        public AuthenticationResult Authenticate([FromBody] AuthentificationRequest authentificationRequest)
         {
-            return dal.Authenticate(identifier, password);
+            return dal.Authenticate(authentificationRequest);
         }
 
         /// <summary>

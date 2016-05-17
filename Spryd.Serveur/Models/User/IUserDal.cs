@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Spryd.Server.Models.User;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,6 @@ namespace Spryd.Serveur.Models
         User GetUserById(int id);
         long AddUser(User user);
         List<User> ListUsers();
-        AuthenticationResult Authenticate(string identifier, string password);
+        AuthenticationResult Authenticate(AuthentificationRequest authenticationRequest);
     }
 }

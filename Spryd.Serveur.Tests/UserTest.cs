@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Web.Configuration;
+using Spryd.Server.Models.User;
 
 namespace Spryd.Serveur.Tests
 {
@@ -102,7 +103,7 @@ namespace Spryd.Serveur.Tests
             string identifier = "data@spryd.io";
             string password = "superpwd";
 
-            AuthenticationResult authResult = dal.Authenticate(identifier, password);
+            AuthenticationResult authResult = dal.Authenticate(new AuthentificationRequest(identifier, password));
             if (authResult.IsSuccess)
                 authenticatedUser = authResult.User;
 
@@ -120,7 +121,7 @@ namespace Spryd.Serveur.Tests
             string identifier = "data@spryd.io";
             string password = "superpwd_fail";
 
-            AuthenticationResult authResult = dal.Authenticate(identifier, password);
+            AuthenticationResult authResult = dal.Authenticate(new AuthentificationRequest(identifier, password));
 
             Assert.IsFalse(authResult.IsSuccess);
         }
