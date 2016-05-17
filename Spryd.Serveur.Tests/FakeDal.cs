@@ -68,5 +68,15 @@ namespace Spryd.Serveur.Tests
         {
             listSessions.Add(session);
         }
+
+        public User Authenticate(string identifier, string password)
+        {
+            throw new NotImplementedException();
+        }
+
+        AuthentificationResult IUserDal.Authenticate(string identifier, string password)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

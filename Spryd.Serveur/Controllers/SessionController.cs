@@ -2,6 +2,7 @@
 using Spryd.Serveur.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -27,6 +28,15 @@ namespace Spryd.Server.Controllers
         }
 
         /// <summary>
+        /// Constructor used for tests (possible to put a different DB)
+        /// </summary>
+        /// <param name="connectionString"></param>
+        public SessionController(ISessionDal testDal)
+        {
+            dal = testDal;
+        }
+
+        /// <summary>
         /// Create session
         /// </summary>
         /// <param name="session"></param>
@@ -34,8 +44,9 @@ namespace Spryd.Server.Controllers
         [HttpPost]
         public Session AddSession([FromBody] Session session)
         {
-            dal.AddSession(session);
+            long newSessionId = dal.AddSession(session);
 
+            // TODO: remplacer session par dal.getSessionById();
             return session;
         }
     }

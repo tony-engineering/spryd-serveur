@@ -21,7 +21,6 @@ namespace Spryd.Serveur.Models
         /// </summary>
         public UserDal(ConnectionStringSettings connectionString)
         {
-
             // Create DB connection
             connection = new MySqlConnection(connectionString.ConnectionString);
         }
@@ -50,6 +49,53 @@ namespace Spryd.Serveur.Models
             return cmd.LastInsertedId;
         }
 
+        public AuthentificationResult Authenticate(string identifier, string password)
+        {
+            AuthentificationResult authResult = new AuthentificationResult();
+
+            try
+            {
+                authResult.User = GetUserByIdPassword(identifier, password);
+                authResult.IsSuccess = true;
+            }
+            catch(UserNotFoundException e)
+            {
+                authResult.IsSuccess = false;
+            }
+
+            return authResult;
+        }
+
+        private User GetUserByIdPassword(string identifier, string password)
+        {
+            User user = new User();
+            connection.Open();
+
+            using (MySqlCommand cmd = connection.CreateCommand())
+            {
+                cmd.CommandText = "SELECT id,name,surname,email,create_date,update_date FROM user where email = @email AND password = @password";
+                cmd.Parameters.AddWithValue("@email", identifier);
+                cmd.Parameters.AddWithValue("@password", password);
+
+                var result = cmd.ExecuteReader(System.Data.CommandBehavior.SingleRow);
+                if (result.Read())
+                {
+                    user.Id = result.GetInt32("id");
+                    user.Name = result.GetString("name");
+                    user.Surname = result.GetString("surname");
+                    user.Email = result.GetString("email");
+                    user.CreateDate = result.GetDateTime("create_date");
+                    user.UpdateDate = result.GetDateTime("update_date");
+                }
+                else
+                {
+                    throw new UserNotFoundException("User with identifier " + identifier + " and password password " + password + " not found.");
+                }
+            }
+
+            return user;
+        }
+
         /// <summary>
         /// Get user by ID
         /// </summary>
@@ -62,7 +108,7 @@ namespace Spryd.Serveur.Models
 
             MySqlCommand cmd = connection.CreateCommand();
 
-            cmd.CommandText = "SELECT id,name, surname,email,create_date,update_date FROM user where id = @id";
+            cmd.CommandText = "SELECT id,name,surname,email,create_date,update_date FROM user where id = @id";
             cmd.Parameters.AddWithValue("@id", id);
 
             var result = cmd.ExecuteReader(System.Data.CommandBehavior.SingleRow);

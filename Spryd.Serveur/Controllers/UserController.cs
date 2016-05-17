@@ -1,6 +1,7 @@
 ﻿using Spryd.Serveur.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -26,12 +27,12 @@ namespace Spryd.Serveur.Controllers
         }
 
         /// <summary>
-        /// Tests constructor
+        /// Constructor used for tests (possible to put a different DB )
         /// </summary>
-        /// <param name="fakeDal"></param>
-        public UserController(IUserDal fakeDal)
+        /// <param name="connectionString"></param>
+        public UserController(IUserDal testDal)
         {
-            dal = fakeDal;
+            dal = testDal;
         }
 
         /// <summary>
@@ -77,7 +78,21 @@ namespace Spryd.Serveur.Controllers
         }
 
         /// <summary>
+        /// Authenticates a User
+        /// </summary>
+        /// <param name="identifier"></param>
+        /// <param name="password"></param>
+        /// <returns>The result of authentification</returns>
+        [Route("User/authenticate")]
+        [HttpPost]
+        public AuthentificationResult Authenticate(string identifier, string password)
+        {
+            return dal.Authenticate(identifier, password);
+        }
+
+        /// <summary>
         /// Check user
+        /// TODO: should this method stay here ?
         /// </summary>
         /// <param name="user"></param>
         private void CheckUser(User user)

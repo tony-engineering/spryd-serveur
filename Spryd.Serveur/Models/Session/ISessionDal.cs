@@ -11,6 +11,6 @@ namespace Spryd.Serveur.Models
     /// </summary>
     public interface ISessionDal
     {
-        void AddSession(Session session);
+        long AddSession(Session session);
     }
 }

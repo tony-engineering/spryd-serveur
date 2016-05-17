@@ -23,8 +23,8 @@ namespace Spryd.Serveur.Tests
         public void InitializeTestingEnvironnement()
         {
             ConnectionStringSettings connectionString = ConfigurationManager.ConnectionStrings["DatabaseAuthString"];
-
             dal = new UserDal(connectionString);
+
             userController = new UserController(dal);
             userController.Request = new HttpRequestMessage();
             userController.Configuration = new HttpConfiguration();
@@ -90,5 +90,39 @@ namespace Spryd.Serveur.Tests
             userController.GetUser(-1);
         }
 
+        /// <summary>
+        /// Success to authenticate a User
+        /// Gets an identifier and password in input
+        /// Outputs the AuthentificationResult object
+        /// </summary>
+        [TestMethod]
+        public void AuthenticateUser_Success()
+        {
+            User authenticatedUser = null;
+            string identifier = "data@spryd.io";
+            string password = "superpwd";
+
+            AuthentificationResult authResult = dal.Authenticate(identifier, password);
+            if (authResult.IsSuccess)
+                authenticatedUser = authResult.User;
+
+            Assert.IsTrue(authenticatedUser.IsValid());
+        }
+
+        /// <summary>
+        /// Fails to authenticate a User
+        /// Gets an identifier and password in input
+        /// Outputs the AuthentificationResult object
+        /// </summary>
+        [TestMethod]
+        public void AuthenticateUser_Fail()
+        {
+            string identifier = "data@spryd.io";
+            string password = "superpwd_fail";
+
+            AuthentificationResult authResult = dal.Authenticate(identifier, password);
+
+            Assert.IsFalse(authResult.IsSuccess);
+        }
     }
 }

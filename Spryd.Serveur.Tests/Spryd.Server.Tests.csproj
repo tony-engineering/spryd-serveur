@@ -33,7 +33,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
@@ -131,6 +133,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="FakeDal.cs" />
+    <Compile Include="SessionTest.cs" />
     <Compile Include="UserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
