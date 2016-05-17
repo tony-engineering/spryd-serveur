@@ -85,7 +85,7 @@ namespace Spryd.Serveur.Controllers
         /// <returns>The result of authentification</returns>
         [Route("User/authenticate")]
         [HttpPost]
-        public AuthentificationResult Authenticate(string identifier, string password)
+        public AuthenticationResult Authenticate(string identifier, string password)
         {
             return dal.Authenticate(identifier, password);
         }

@@ -74,7 +74,7 @@ namespace Spryd.Serveur.Tests
             throw new NotImplementedException();
         }
 
-        AuthentificationResult IUserDal.Authenticate(string identifier, string password)
+        AuthenticationResult IUserDal.Authenticate(string identifier, string password)
         {
             throw new NotImplementedException();
         }

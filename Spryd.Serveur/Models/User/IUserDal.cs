@@ -14,6 +14,6 @@ namespace Spryd.Serveur.Models
         User GetUserById(int id);
         long AddUser(User user);
         List<User> ListUsers();
-        AuthentificationResult Authenticate(string identifier, string password);
+        AuthenticationResult Authenticate(string identifier, string password);
     }
 }

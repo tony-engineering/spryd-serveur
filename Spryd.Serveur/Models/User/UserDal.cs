@@ -49,9 +49,9 @@ namespace Spryd.Serveur.Models
             return cmd.LastInsertedId;
         }
 
-        public AuthentificationResult Authenticate(string identifier, string password)
+        public AuthenticationResult Authenticate(string identifier, string password)
         {
-            AuthentificationResult authResult = new AuthentificationResult();
+            AuthenticationResult authResult = new AuthenticationResult();
 
             try
             {

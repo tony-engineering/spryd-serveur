@@ -93,7 +93,7 @@ namespace Spryd.Serveur.Tests
         /// <summary>
         /// Success to authenticate a User
         /// Gets an identifier and password in input
-        /// Outputs the AuthentificationResult object
+        /// Outputs the AuthenticationResult object
         /// </summary>
         [TestMethod]
         public void AuthenticateUser_Success()
@@ -102,7 +102,7 @@ namespace Spryd.Serveur.Tests
             string identifier = "data@spryd.io";
             string password = "superpwd";
 
-            AuthentificationResult authResult = dal.Authenticate(identifier, password);
+            AuthenticationResult authResult = dal.Authenticate(identifier, password);
             if (authResult.IsSuccess)
                 authenticatedUser = authResult.User;
 
@@ -112,7 +112,7 @@ namespace Spryd.Serveur.Tests
         /// <summary>
         /// Fails to authenticate a User
         /// Gets an identifier and password in input
-        /// Outputs the AuthentificationResult object
+        /// Outputs the AuthenticationResult object
         /// </summary>
         [TestMethod]
         public void AuthenticateUser_Fail()
@@ -120,7 +120,7 @@ namespace Spryd.Serveur.Tests
             string identifier = "data@spryd.io";
             string password = "superpwd_fail";
 
-            AuthentificationResult authResult = dal.Authenticate(identifier, password);
+            AuthenticationResult authResult = dal.Authenticate(identifier, password);
 
             Assert.IsFalse(authResult.IsSuccess);
         }
