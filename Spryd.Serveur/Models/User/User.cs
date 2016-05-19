@@ -1,12 +1,14 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
 
 namespace Spryd.Serveur.Models
 {
+    [Table("user")]
     public class User
     {
         /// <summary>
@@ -48,8 +50,12 @@ namespace Spryd.Serveur.Models
         public string Email { get; set; }
         [JsonProperty("password", NullValueHandling=NullValueHandling.Ignore)]
         public string Password { get; set; }
+
+        
+        [Column("create_date")]
         [JsonProperty("createDate")]
         public DateTime? CreateDate { get; set; }
+        [Column("update_date")]
         [JsonProperty("updateDate")]
         public DateTime? UpdateDate { get; set; }
 

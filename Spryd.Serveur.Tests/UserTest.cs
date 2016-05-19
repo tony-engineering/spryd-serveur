@@ -23,8 +23,7 @@ namespace Spryd.Serveur.Tests
         [TestInitialize]
         public void InitializeTestingEnvironnement()
         {
-            ConnectionStringSettings connectionString = ConfigurationManager.ConnectionStrings["DatabaseAuthString"];
-            dal = new UserDal(connectionString);
+            dal = new UserDal();
 
             userController = new UserController(dal);
             userController.Request = new HttpRequestMessage();

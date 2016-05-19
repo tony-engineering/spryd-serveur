@@ -16,7 +16,7 @@ namespace Spryd.Serveur
         public static void Register(HttpConfiguration config)
         {
             // Connection String
-            connectionString = ConfigurationManager.ConnectionStrings["DatabaseAuthString"];
+            connectionString = ConfigurationManager.ConnectionStrings["DbConnection"];
 
             // Web API Routes
             config.MapHttpAttributeRoutes();

@@ -20,7 +20,7 @@ namespace Spryd.Server.Tests
         [TestInitialize]
         public void InitializeTestingEnvironnement()
         {
-            ConnectionStringSettings connectionString = ConfigurationManager.ConnectionStrings["DatabaseAuthString"];
+            ConnectionStringSettings connectionString = ConfigurationManager.ConnectionStrings["DbConnection"];
             dal = new SessionDal(connectionString);
 
             sessionController = new SessionController(dal);

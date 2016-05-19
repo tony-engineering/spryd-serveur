@@ -24,7 +24,7 @@ namespace Spryd.Serveur.Controllers
         /// </summary>
         public UserController()
         {
-            dal = new UserDal(WebApiConfig.connectionString);
+            dal = new UserDal();
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Spryd.Serveur.Controllers
         [HttpPost]
         public User AddUser([FromBody] User user)
         {
-            CheckUser(user);
+            ValidateUser(user);
             long newUserId = dal.AddUser(user);
 
             return dal.GetUserById((int) newUserId);
@@ -96,10 +96,12 @@ namespace Spryd.Serveur.Controllers
         /// TODO: should this method stay here ?
         /// </summary>
         /// <param name="user"></param>
-        private void CheckUser(User user)
+        private void ValidateUser(User user)
         {
             if(String.IsNullOrEmpty(user.Email) || String.IsNullOrEmpty(user.Password) || String.IsNullOrEmpty(user.Name) || String.IsNullOrEmpty(user.Surname))
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "One or more missing parameters."));
+            user.CreateDate = DateTime.Now;
+            user.UpdateDate = DateTime.Now;
         }
     }
 }
