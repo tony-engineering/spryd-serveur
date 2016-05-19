@@ -1,5 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
-using Spryd.Server.Models.User;
+
 using System;
 using System.Collections.Generic;
 using System.Configuration;

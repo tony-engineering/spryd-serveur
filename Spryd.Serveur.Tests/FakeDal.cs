@@ -1,4 +1,4 @@
-﻿using Spryd.Server.Models.User;
+﻿
 using Spryd.Serveur.Models;
 using System;
 using System.Collections.Generic;

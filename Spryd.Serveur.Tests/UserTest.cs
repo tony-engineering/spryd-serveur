@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Web.Configuration;
-using Spryd.Server.Models.User;
+
 
 namespace Spryd.Serveur.Tests
 {
