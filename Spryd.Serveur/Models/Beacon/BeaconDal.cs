@@ -3,20 +3,18 @@ using System.Collections.Generic;
 using Spryd.Serveur.Models;
 using MySql.Data.MySqlClient;
 using System.Configuration;
+using Spryd.Server.Models;
+using System.Linq;
 
 namespace Spryd.Serveur.Controllers
 {
     internal class BeaconDal : IBeaconDal
     {
-        private MySqlConnection connection;
-
         /// <summary>
         /// Default constructor
         /// </summary>
-        public BeaconDal(ConnectionStringSettings connectionString)
+        public BeaconDal()
         {
-            // Create DB connection
-            connection = new MySqlConnection(connectionString.ConnectionString);
         }
 
         /// <summary>
@@ -25,27 +23,10 @@ namespace Spryd.Serveur.Controllers
         /// <returns></returns>
         public List<Beacon> GetBeacons()
         {
-            List<Beacon> beaconList = new List<Beacon>();
-
-            connection.Open();
-
-            MySqlCommand cmd = connection.CreateCommand();
-
-            cmd.CommandText = "SELECT id, technical_id FROM beacon";
-
-            var result = cmd.ExecuteReader(System.Data.CommandBehavior.SingleRow);
-            while (result.Read())
+            using (DbConnection c = new DbConnection())
             {
-                beaconList.Add(new Beacon()
-                {
-                    Id = result.GetInt32("id"),
-                    TechnicalId = result.GetString("technical_id")
-                });
-            };
-
-            connection.Close();
-
-            return beaconList;
+                return c.Beacons.ToList();
+            }
         }
     }
 }

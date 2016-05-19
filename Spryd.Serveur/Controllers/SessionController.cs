@@ -24,7 +24,7 @@ namespace Spryd.Server.Controllers
         /// </summary>
         public SessionController()
         {
-            dal = new SessionDal(WebApiConfig.connectionString);
+            dal = new SessionDal();
         }
 
         /// <summary>

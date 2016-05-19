@@ -18,7 +18,7 @@ namespace Spryd.Serveur.Controllers
         /// </summary>
         public BeaconController()
         {
-            dal = new BeaconDal(WebApiConfig.connectionString);
+            dal = new BeaconDal();
         }
 
         /// <summary>
