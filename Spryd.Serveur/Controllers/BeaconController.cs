@@ -40,5 +40,19 @@ namespace Spryd.Serveur.Controllers
         {
             return dal.GetBeacons();
         }
+
+        /// <summary>
+        /// Get beacon by id
+        /// </summary>
+        /// <returns></returns>
+        [Route("Beacon/{id}")]
+        [HttpGet]
+        public Beacon GetBeaconById(int id)
+        {
+            var beacon = dal.GetBeaconById(id);
+            if (beacon == null)
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Beacon " + id + " is null."));
+            return dal.GetBeaconById(id);
+        }
     }
 }

@@ -234,6 +234,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\SprydZoneController.cs" />
     <Compile Include="Models\DbConnection.cs" />
     <Compile Include="Models\Beacon\BeaconDal.cs" />
     <Compile Include="Models\Beacon\IBeaconDal.cs" />
@@ -247,6 +248,8 @@
     <Compile Include="Models\Beacon\Beacon.cs" />
     <Compile Include="Models\Session\ISessionDal.cs" />
     <Compile Include="Models\Session\SessionDal.cs" />
+    <Compile Include="Models\SprydZone\ISprydZoneDal.cs" />
+    <Compile Include="Models\SprydZone\SprydZoneDal.cs" />
     <Compile Include="Models\User\AuthentificationRequest.cs" />
     <Compile Include="Models\User\AuthentificationResult.cs" />
     <Compile Include="Models\User\UserDal.cs" />

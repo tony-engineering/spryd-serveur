@@ -151,6 +151,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="FakeDal.cs" />
     <Compile Include="SessionTest.cs" />
+    <Compile Include="BeaconTest.cs" />
     <Compile Include="UserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

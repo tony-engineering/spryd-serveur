@@ -6,5 +6,7 @@ namespace Spryd.Serveur.Controllers
     public interface IBeaconDal
     {
         List<Beacon> GetBeacons();
+        Beacon GetBeaconById(int id);
+        Beacon GetBeaconByTechnicalId(string technicalId);
     }
 }
