@@ -16,6 +16,15 @@ namespace Spryd.Server.Models
 
         }
 
+        public List<SprydZone> GetAllSprydZones()
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                return (from sprydZone in c.SprydZones
+                        select sprydZone).ToList();
+            }
+        }
+
         /// <summary>
         /// Get nearby SprydZone searched by beacons technical ID
         /// </summary>
@@ -30,6 +39,16 @@ namespace Spryd.Server.Models
                         select sprydZone).ToList();
             }
             
+        }
+
+        public SprydZone GetSprydZoneById(int id)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                var sprydZone = c.SprydZones.Where(z => z.Id == id).FirstOrDefault();
+                
+                return sprydZone;
+            }
         }
     }
 }

@@ -26,7 +26,11 @@ namespace Spryd.Serveur
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
-
+            config.Routes.MapHttpRoute(
+                name: "DefaultApi2",
+                routeTemplate: "api/Beacons/zones/{id}",
+                defaults: new { id = RouteParameter.Optional }
+            );
             // Output in JSON
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
 

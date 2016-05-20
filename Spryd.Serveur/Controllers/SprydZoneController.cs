@@ -23,9 +23,23 @@ namespace Spryd.Server.Controllers
 
         [Route("Beacons/zones")]
         [HttpPost]
-        public List<SprydZone> GetNearbySprydZone([FromBody] List<Beacon> listBeacons)
+        public List<SprydZone> GetNearbySprydZones([FromBody] List<Beacon> listBeacons)
         {
-            return dal.GetNearbySprydZone(listBeacons); ;
+            return dal.GetNearbySprydZone(listBeacons);
+        }
+
+        [Route("Beacons/zones/all")]
+        [HttpGet]
+        public List<SprydZone> GetAllSprydZones()
+        {
+            return dal.GetAllSprydZones();
+        }
+
+        [Route("Beacons/zones/{zoneId}")]
+        [HttpGet]
+        public SprydZone GetSprydZoneById(int sprydZoneId)
+        {
+            return dal.GetSprydZoneById(sprydZoneId);
         }
     }
 }
