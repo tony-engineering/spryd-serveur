@@ -45,8 +45,7 @@ namespace Spryd.Serveur.Controllers
         [HttpGet]
         public User GetUser(int userId)
         {
-            User user = dal.GetUserById(userId);
-            if(user == null)
+            if (!dal.IsUserExist(userId))
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "User " + userId + " is null."));
             return dal.GetUserById(userId);
         }
@@ -89,6 +88,20 @@ namespace Spryd.Serveur.Controllers
         public AuthenticationResult Authenticate([FromBody] AuthentificationRequest authentificationRequest)
         {
             return dal.Authenticate(authentificationRequest);
+        }
+
+        /// <summary>
+        /// Get current session of a user who joined it by his mobile application
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [Route("User/{userId}/currentSession")]
+        [HttpGet]
+        public Session GetCurrentSession(int userId)
+        {
+            if(!dal.IsUserExist(userId))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "User " + userId + " is null."));
+            return dal.GetCurrentSession(userId);
         }
 
         /// <summary>

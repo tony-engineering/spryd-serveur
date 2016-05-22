@@ -259,6 +259,7 @@
     <Compile Include="Models\SprydZone\SprydZone.cs" />
     <Compile Include="Models\User\User.cs" />
     <Compile Include="Exceptions\UserNotFoundException.cs" />
+    <Compile Include="Models\User\UserSession.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

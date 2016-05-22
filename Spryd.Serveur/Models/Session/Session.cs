@@ -33,7 +33,7 @@ namespace Spryd.Serveur.Models
         public DateTime StartDate { get; set; }
         [Column("end_date")]
         [JsonProperty("endDate")]
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
         [JsonProperty("password")]
         public string Password { get; set; }
         [Column("spryd_zone_id")]

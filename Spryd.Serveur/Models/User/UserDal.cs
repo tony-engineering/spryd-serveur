@@ -98,5 +98,35 @@ namespace Spryd.Serveur.Models
                 return c.Users.ToList();
             }
         }
+
+        /// <summary>
+        /// Get current session join by the mobile application
+        /// A current session is identified when there is a StartDate but no EndDate
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public Session GetCurrentSession(int userId)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                int? sessionId = c.UserSession.Where(u => u.UserId == userId && u.StartDate != null && u.EndDate == null).Select(u => u.SessionId).FirstOrDefault();
+                if(sessionId == null)
+                    return null;
+                return c.Sessions.Where(s => s.Id == sessionId).FirstOrDefault();
+            }
+        }
+
+        /// <summary>
+        /// Indicate if user exist
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool IsUserExist(int id)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                return c.Users.Any(u => u.Id == id);
+            }
+        }
     }
 }

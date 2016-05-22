@@ -14,5 +14,6 @@ namespace Spryd.Server.Models
         public DbSet<Session> Sessions { get; set; }
         public DbSet<SprydZone> SprydZones { get; set; }
         public DbSet<SharedItem> SharedItems { get; set; }
+        public DbSet<UserSession> UserSession { get; set; }
     }
 }

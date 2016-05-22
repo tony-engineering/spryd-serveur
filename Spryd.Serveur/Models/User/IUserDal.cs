@@ -13,8 +13,10 @@ namespace Spryd.Serveur.Models
     public interface IUserDal
     {
         User GetUserById(int id);
+        bool IsUserExist(int id);
         long AddUser(User user);
         List<User> ListUsers();
         AuthenticationResult Authenticate(AuthentificationRequest authenticationRequest);
+        Session GetCurrentSession(int userId);
     }
 }
