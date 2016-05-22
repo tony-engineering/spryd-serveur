@@ -54,9 +54,9 @@ namespace Spryd.Server.Controllers
         /// <returns></returns>
         [Route("zone/{zoneId}")]
         [HttpGet]
-        public SprydZone GetSprydZoneById(int sprydZoneId)
+        public SprydZone GetSprydZoneById(int zoneId)
         {
-            return dal.GetSprydZoneById(sprydZoneId);
+            return dal.GetSprydZoneById(zoneId);
         }
     }
 

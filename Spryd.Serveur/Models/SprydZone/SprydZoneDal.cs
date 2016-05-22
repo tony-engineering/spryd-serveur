@@ -50,9 +50,7 @@ namespace Spryd.Server.Models
         {
             using (DbConnection c = new DbConnection())
             {
-                var sprydZone = c.SprydZones.Where(z => z.Id == id).FirstOrDefault();
-                
-                return sprydZone;
+                return c.SprydZones.Include("Beacon").ToList().Where(z => z.Id == id).FirstOrDefault();
             }
         }
     }

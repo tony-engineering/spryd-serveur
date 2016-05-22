@@ -45,9 +45,7 @@ namespace Spryd.Server.Controllers
         public Session AddSession([FromBody] Session session)
         {
             long newSessionId = dal.AddSession(session);
-
-            // TODO: remplacer session par dal.getSessionById();
-            return session;
+            return dal.GetSessionById(newSessionId);
         }
     }
 }

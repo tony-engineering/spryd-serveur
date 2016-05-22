@@ -34,5 +34,18 @@ namespace Spryd.Serveur.Models
                 return session.Id;
             }
         }
+
+        /// <summary>
+        /// Get session by Id
+        /// </summary>
+        /// <param name="sessionId"></param>
+        /// <returns></returns>
+        public Session GetSessionById(long sessionId)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                return c.Sessions.Where(s =>s.Id == sessionId).FirstOrDefault() ;
+            }
+        }
     }
 }
