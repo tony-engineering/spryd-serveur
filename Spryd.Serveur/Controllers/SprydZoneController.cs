@@ -21,25 +21,53 @@ namespace Spryd.Server.Controllers
             dal = new SprydZoneDal();
         }
 
-        [Route("Beacons/zones")]
+        /// <summary>
+        /// Get nearby SprydZone searched by beacons technical ID
+        /// Need technicalId in URL parameters
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        [Route("zone/nearby")]
         [HttpPost]
-        public List<SprydZone> GetNearbySprydZones([FromBody] List<Beacon> listBeacons)
+        public List<SprydZone> GetNearbySprydZones([FromUri] string[] values)
         {
-            return dal.GetNearbySprydZone(listBeacons);
+            if (values.IsNullOrEmpty())
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Need a list of beacon technical Id"));
+            return dal.GetNearbySprydZone(values.ToList());
         }
-
-        [Route("Beacons/zones/all")]
+        
+        /// <summary>
+        /// Get all Spryd Zones
+        /// </summary>
+        /// <returns></returns>
+        [Route("zone/all")]
         [HttpGet]
         public List<SprydZone> GetAllSprydZones()
         {
             return dal.GetAllSprydZones();
         }
 
-        [Route("Beacons/zones/{zoneId}")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sprydZoneId"></param>
+        /// <returns></returns>
+        [Route("zone/{zoneId}")]
         [HttpGet]
         public SprydZone GetSprydZoneById(int sprydZoneId)
         {
             return dal.GetSprydZoneById(sprydZoneId);
+        }
+    }
+
+    public static class MyExtensions
+    {
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable)
+        {
+            if (enumerable == null)
+                return true;
+
+            return !enumerable.Any();
         }
     }
 }

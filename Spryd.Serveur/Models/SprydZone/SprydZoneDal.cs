@@ -16,12 +16,15 @@ namespace Spryd.Server.Models
 
         }
 
+        /// <summary>
+        /// Get all SprydZones
+        /// </summary>
+        /// <returns></returns>
         public List<SprydZone> GetAllSprydZones()
         {
             using (DbConnection c = new DbConnection())
             {
-                return (from sprydZone in c.SprydZones
-                        select sprydZone).ToList();
+                return c.SprydZones.Include("Beacon").ToList();
             }
         }
 
@@ -30,12 +33,14 @@ namespace Spryd.Server.Models
         /// </summary>
         /// <param name="listBeacons"></param>
         /// <returns></returns>
-        public List<SprydZone> GetNearbySprydZone(List<Beacon> listBeacons)
+        public List<SprydZone> GetNearbySprydZone(List<string> listBeaconId)
         {
+            if (listBeaconId == null)
+                return new List<SprydZone>();
             using (DbConnection c = new DbConnection())
             {
-                return (from sprydZone in c.SprydZones
-                        join beacon in listBeacons on sprydZone.Beacon.TechnicalId equals beacon.TechnicalId
+                return (from sprydZone in c.SprydZones.Include("Beacon").ToList()
+                        join beaconId in listBeaconId on sprydZone.Beacon.TechnicalId equals beaconId
                         select sprydZone).ToList();
             }
             

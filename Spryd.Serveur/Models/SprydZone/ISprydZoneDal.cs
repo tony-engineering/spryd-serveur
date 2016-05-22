@@ -9,7 +9,7 @@ namespace Spryd.Server.Models
 {
     public interface ISprydZoneDal
     {
-        List<SprydZone> GetNearbySprydZone(List<Beacon> listBeacons);
+        List<SprydZone> GetNearbySprydZone(List<string> listBeaconsId);
         List<SprydZone> GetAllSprydZones();
         SprydZone GetSprydZoneById(int id);
     }
