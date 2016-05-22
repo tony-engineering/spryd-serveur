@@ -46,6 +46,11 @@ namespace Spryd.Server.Models
             
         }
 
+        /// <summary>
+        /// Get SprydZone by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public SprydZone GetSprydZoneById(int id)
         {
             using (DbConnection c = new DbConnection())

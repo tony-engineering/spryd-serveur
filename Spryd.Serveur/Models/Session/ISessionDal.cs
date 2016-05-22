@@ -12,7 +12,8 @@ namespace Spryd.Serveur.Models
     public interface ISessionDal
     {
         long AddSession(Session session);
-
+        List<User> GetSessionUsers(int sessionId);
         Session GetSessionById(long sessionId);
+        bool IsSessionExist(int idSession);
     }
 }

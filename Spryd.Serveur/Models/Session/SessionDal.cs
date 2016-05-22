@@ -47,5 +47,33 @@ namespace Spryd.Serveur.Models
                 return c.Sessions.Where(s =>s.Id == sessionId).FirstOrDefault() ;
             }
         }
+
+        /// <summary>
+        /// Get session users
+        /// </summary>
+        /// <returns></returns>
+        public List<User> GetSessionUsers(int sessionId)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                return (from user in c.Users
+                 join userSession in c.UserSession on user.Id equals userSession.UserId
+                 where userSession.SessionId == sessionId
+                 select user).ToList();
+            }
+        }
+
+        /// <summary>
+        /// Indicate if the session exist
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <returns></returns>
+        public bool IsSessionExist(int idSession)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                return c.Sessions.Any(s => s.Id == idSession);
+            }
+        }
     }
 }

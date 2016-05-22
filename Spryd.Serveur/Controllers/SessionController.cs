@@ -47,5 +47,19 @@ namespace Spryd.Server.Controllers
             long newSessionId = dal.AddSession(session);
             return dal.GetSessionById(newSessionId);
         }
+
+        /// <summary>
+        /// Get session users
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <returns></returns>
+        [Route("Session/{idSession}/Users")]
+        [HttpGet]
+        public List<User> GetSessionUsers(int idSession)
+        {
+            if (!dal.IsSessionExist(idSession))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Session " + idSession + " is null."));
+            return dal.GetSessionUsers(idSession);
+        }
     }
 }
