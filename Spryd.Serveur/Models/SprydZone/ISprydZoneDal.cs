@@ -12,5 +12,7 @@ namespace Spryd.Server.Models
         List<SprydZone> GetNearbySprydZone(List<string> listBeaconsId);
         List<SprydZone> GetAllSprydZones();
         SprydZone GetSprydZoneById(int id);
+        Session GetSprydZoneCurrentession(int zoneId);
+        bool IsSprydZoneExist(int zoneId);
     }
 }

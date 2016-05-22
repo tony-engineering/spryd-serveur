@@ -48,7 +48,7 @@ namespace Spryd.Server.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Get Spryd Zone by Id
         /// </summary>
         /// <param name="sprydZoneId"></param>
         /// <returns></returns>
@@ -56,7 +56,23 @@ namespace Spryd.Server.Controllers
         [HttpGet]
         public SprydZone GetSprydZoneById(int zoneId)
         {
+            if (!dal.IsSprydZoneExist(zoneId))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "SprydZone " + zoneId + " is null."));
             return dal.GetSprydZoneById(zoneId);
+        }
+
+        /// <summary>
+        /// Get the current session of a spryd zone
+        /// </summary>
+        /// <param name="zoneId"></param>
+        /// <returns></returns>
+        [Route("zone/{zoneId}/currentSession")]
+        [HttpGet]
+        public Session GetSprydZoneCurrentSession(int zoneId)
+        {
+            if (!dal.IsSprydZoneExist(zoneId))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "SprydZone " + zoneId + " is null."));
+            return dal.GetSprydZoneCurrentession(zoneId);
         }
     }
 

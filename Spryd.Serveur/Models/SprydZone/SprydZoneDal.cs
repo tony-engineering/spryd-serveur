@@ -58,5 +58,31 @@ namespace Spryd.Server.Models
                 return c.SprydZones.Include("Beacon").ToList().Where(z => z.Id == id).FirstOrDefault();
             }
         }
+
+        /// <summary>
+        /// Get Spryd Zone current session
+        /// </summary>
+        /// <param name="zoneId"></param>
+        /// <returns></returns>
+        public Session GetSprydZoneCurrentession(int zoneId)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                return c.Sessions.Where(s => s.SprydZoneId == zoneId && s.StartDate != null && s.EndDate == null).FirstOrDefault();
+            }
+        }
+
+        /// <summary>
+        /// Indicate if the SprydZone exist
+        /// </summary>
+        /// <param name="zoneId"></param>
+        /// <returns></returns>
+        public bool IsSprydZoneExist(int zoneId)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                return c.SprydZones.Any(s => s.Id == zoneId);
+            }
+        }
     }
 }
