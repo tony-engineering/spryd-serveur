@@ -48,13 +48,17 @@ namespace Spryd.Serveur.Models
         public string Surname { get; set; }
         [JsonProperty("email")]
         public string Email { get; set; }
+
+        [JsonIgnore]
         [JsonProperty("password", NullValueHandling=NullValueHandling.Ignore)]
         public string Password { get; set; }
 
-        
+        [JsonIgnore]
         [Column("create_date")]
         [JsonProperty("createDate")]
         public DateTime? CreateDate { get; set; }
+
+        [JsonIgnore]
         [Column("update_date")]
         [JsonProperty("updateDate")]
         public DateTime? UpdateDate { get; set; }
