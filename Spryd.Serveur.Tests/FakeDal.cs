@@ -79,5 +79,15 @@ namespace Spryd.Serveur.Tests
         {
             throw new NotImplementedException();
         }
+
+        public bool IsUserExist(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Session GetCurrentSession(int userId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
