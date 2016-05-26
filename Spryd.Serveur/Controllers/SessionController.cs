@@ -40,7 +40,7 @@ namespace Spryd.Server.Controllers
         /// Create session
         /// </summary>
         /// <param name="session"></param>
-        [Route("Session")]
+        [Route("session")]
         [HttpPost]
         public Session AddSession([FromBody] Session session)
         {
@@ -53,7 +53,7 @@ namespace Spryd.Server.Controllers
         /// </summary>
         /// <param name="idSession"></param>
         /// <returns></returns>
-        [Route("Session/{idSession}/Users")]
+        [Route("session/{idSession}/users")]
         [HttpGet]
         public List<User> GetSessionUsers(int idSession)
         {

@@ -41,7 +41,7 @@ namespace Spryd.Serveur.Controllers
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        [Route("User/{userId}")]
+        [Route("user/{userId}")]
         [HttpGet]
         public User GetUser(int userId)
         {
@@ -54,7 +54,7 @@ namespace Spryd.Serveur.Controllers
         /// Create user
         /// </summary>
         /// <param name="user"></param>
-        [Route("User")]
+        [Route("user")]
         [HttpPost]
         public User AddUser([FromBody] User user)
         {
@@ -68,7 +68,7 @@ namespace Spryd.Serveur.Controllers
         /// List Users
         /// </summary>
         /// <param name="user"></param>
-        [Route("User/all")]
+        [Route("user/all")]
         [HttpGet]
         public List<User> ListUsers()
         {
@@ -83,7 +83,7 @@ namespace Spryd.Serveur.Controllers
         /// <param name="identifier"></param>
         /// <param name="password"></param>
         /// <returns>The result of authentification</returns>
-        [Route("User/authenticate")]
+        [Route("user/authenticate")]
         [HttpPost]
         public AuthenticationResult Authenticate([FromBody] AuthentificationRequest authentificationRequest)
         {
@@ -95,7 +95,7 @@ namespace Spryd.Serveur.Controllers
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        [Route("User/{userId}/currentSession")]
+        [Route("user/{userId}/currentSession")]
         [HttpGet]
         public Session GetCurrentSession(int userId)
         {

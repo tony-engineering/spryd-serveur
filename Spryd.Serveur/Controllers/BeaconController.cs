@@ -34,7 +34,7 @@ namespace Spryd.Serveur.Controllers
         /// Lists all Beacons
         /// </summary>
         /// <returns></returns>
-        [Route("Beacons")]
+        [Route("beacon/all")]
         [HttpGet]
         public List<Beacon> GetBeacons()
         {
@@ -45,7 +45,7 @@ namespace Spryd.Serveur.Controllers
         /// Get beacon by id
         /// </summary>
         /// <returns></returns>
-        [Route("Beacon/{id}")]
+        [Route("beacon/{id}")]
         [HttpGet]
         public Beacon GetBeaconById(int id)
         {
