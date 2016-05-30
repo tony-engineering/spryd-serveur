@@ -24,6 +24,7 @@ namespace Spryd.Server.Models
         [Column("session_id")] 
         public Session Session { get; set; }
 
+        [JsonIgnore]
         [JsonProperty("isCreator")]
         [Column("is_creator")]
         public bool IsCreator { get; set; }
