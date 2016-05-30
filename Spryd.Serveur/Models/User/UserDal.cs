@@ -109,7 +109,7 @@ namespace Spryd.Serveur.Models
         {
             using (DbConnection c = new DbConnection())
             {
-                int? sessionId = c.UserSession.Where(u => u.UserId == userId && u.StartDate != null && u.EndDate == null).Select(u => u.SessionId).FirstOrDefault();
+                int? sessionId = c.UserSession.Where(u => u.UserId == userId && u.StartDate != null && u.EndDate == null).Select(u => u.Session.Id).FirstOrDefault();
                 if(sessionId == null)
                     return null;
                 return c.Sessions.Where(s => s.Id == sessionId).FirstOrDefault();
@@ -126,6 +126,19 @@ namespace Spryd.Serveur.Models
             using (DbConnection c = new DbConnection())
             {
                 return c.Users.Any(u => u.Id == id);
+            }
+        }
+
+        /// <summary>
+        /// Add a user in a session
+        /// </summary>
+        /// <param name="userSession"></param>
+        public void AddUserSession(UserSession userSession)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                c.UserSession.Add(userSession);
+                c.SaveChanges();
             }
         }
     }

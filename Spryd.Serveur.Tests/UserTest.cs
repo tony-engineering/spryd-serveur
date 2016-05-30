@@ -84,7 +84,7 @@ namespace Spryd.Serveur.Tests
         /// Tries to get a non existing user
         /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(UserNotFoundException))]
+        [ExpectedException(typeof(HttpResponseException))]
         public void GetNotExistingUser_ThrowsException()
         {
             userController.GetUser(-1);

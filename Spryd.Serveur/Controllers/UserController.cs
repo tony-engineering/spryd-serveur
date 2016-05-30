@@ -101,7 +101,10 @@ namespace Spryd.Serveur.Controllers
         {
             if(!dal.IsUserExist(userId))
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "User " + userId + " is null."));
-            return dal.GetCurrentSession(userId);
+            var currentSession = dal.GetCurrentSession(userId);
+            if (currentSession == null)
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "User " + userId + " has not join a session."));
+            return currentSession;
         }
 
         /// <summary>

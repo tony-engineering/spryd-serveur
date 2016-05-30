@@ -11,9 +11,10 @@ namespace Spryd.Serveur.Models
     /// </summary>
     public interface ISessionDal
     {
-        long AddSession(Session session);
+        int AddSession(Session session);
         List<User> GetSessionUsers(int sessionId);
         Session GetSessionById(long sessionId);
         bool IsSessionExist(int idSession);
+        bool IsAlreadySessionRunningInSprydZone(int sprydZoneId);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Spryd.Serveur;
+﻿using Spryd.Server.Models;
+using Spryd.Serveur;
 using Spryd.Serveur.Models;
 using System;
 using System.Collections.Generic;
@@ -17,14 +18,16 @@ namespace Spryd.Server.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class SessionController : ApiController
     {
-        private ISessionDal dal;
+        private ISessionDal sessionDal;
+        private IUserDal userDal;
 
         /// <summary>
         /// Default constructor
         /// </summary>
         public SessionController()
         {
-            dal = new SessionDal();
+            sessionDal = new SessionDal();
+            userDal = new UserDal();
         }
 
         /// <summary>
@@ -33,7 +36,7 @@ namespace Spryd.Server.Controllers
         /// <param name="connectionString"></param>
         public SessionController(ISessionDal testDal)
         {
-            dal = testDal;
+            sessionDal = testDal;
         }
 
         /// <summary>
@@ -42,10 +45,32 @@ namespace Spryd.Server.Controllers
         /// <param name="session"></param>
         [Route("session")]
         [HttpPost]
-        public Session AddSession([FromBody] Session session)
+        public Session AddSession([FromBody] UserSession userSession)
         {
-            long newSessionId = dal.AddSession(session);
-            return dal.GetSessionById(newSessionId);
+            ValidateUserSession(userSession);
+
+            // Create session and add the user to the session 
+            userDal.AddUserSession(userSession);
+            return userSession.Session;
+        }
+
+        /// <summary>
+        /// Validate user session informations before creating the session
+        /// </summary>
+        /// <param name="userSession"></param>
+        private void ValidateUserSession(UserSession userSession)
+        {
+            // Check if the creator user exist
+            if (!userDal.IsUserExist(userSession.UserId))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "User " + userSession.UserId + " is null."));
+
+            // Check if there is not already a running session in this spryd zone
+            if (sessionDal.IsAlreadySessionRunningInSprydZone(userSession.Session.SprydZoneId))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "There is already a running session in Spryd Zone : " + userSession.Session.SprydZoneId + "."));
+
+            userSession.Session.StartDate = DateTime.Now;
+            userSession.StartDate = DateTime.Now;
+            userSession.IsCreator = true;
         }
 
         /// <summary>
@@ -57,9 +82,9 @@ namespace Spryd.Server.Controllers
         [HttpGet]
         public List<User> GetSessionUsers(int idSession)
         {
-            if (!dal.IsSessionExist(idSession))
+            if (!sessionDal.IsSessionExist(idSession))
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Session " + idSession + " is null."));
-            return dal.GetSessionUsers(idSession);
+            return sessionDal.GetSessionUsers(idSession);
         }
     }
 }

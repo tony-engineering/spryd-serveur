@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Spryd.Server.Models;
 
 namespace Spryd.Serveur.Tests
 {
@@ -86,6 +87,11 @@ namespace Spryd.Serveur.Tests
         }
 
         public Session GetCurrentSession(int userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddUserSession(UserSession userSession)
         {
             throw new NotImplementedException();
         }

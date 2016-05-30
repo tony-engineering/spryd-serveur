@@ -1,4 +1,5 @@
 ﻿
+using Spryd.Server.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,5 +19,6 @@ namespace Spryd.Serveur.Models
         List<User> ListUsers();
         AuthenticationResult Authenticate(AuthentificationRequest authenticationRequest);
         Session GetCurrentSession(int userId);
+        void AddUserSession(UserSession userSession);
     }
 }

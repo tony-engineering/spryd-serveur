@@ -25,7 +25,7 @@ namespace Spryd.Serveur.Models
         /// Add session
         /// </summary>
         /// <param name="session"></param>
-        public long AddSession(Session session)
+        public int AddSession(Session session)
         {
             using (DbConnection c = new DbConnection())
             {
@@ -58,8 +58,21 @@ namespace Spryd.Serveur.Models
             {
                 return (from user in c.Users
                  join userSession in c.UserSession on user.Id equals userSession.UserId
-                 where userSession.SessionId == sessionId
+                 where userSession.Session.Id == sessionId
                  select user).ToList();
+            }
+        }
+
+        /// <summary>
+        /// Indicates if there is already a session running in this sprydZone
+        /// </summary>
+        /// <param name="sprydZoneId"></param>
+        /// <returns></returns>
+        public bool IsAlreadySessionRunningInSprydZone(int sprydZoneId)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                return c.Sessions.Any(s => s.SprydZoneId == sprydZoneId && s.EndDate == null);
             }
         }
 
