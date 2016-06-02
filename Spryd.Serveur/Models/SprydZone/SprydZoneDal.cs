@@ -31,7 +31,7 @@ namespace Spryd.Server.Models
         /// <summary>
         /// Get nearby SprydZone searched by beacons technical ID
         /// </summary>
-        /// <param name="listBeacons"></param>
+        /// <param name="listBeaconId"></param>
         /// <returns></returns>
         public List<SprydZone> GetNearbySprydZone(List<string> listBeaconId)
         {

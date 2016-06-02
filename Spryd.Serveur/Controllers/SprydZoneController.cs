@@ -50,7 +50,7 @@ namespace Spryd.Server.Controllers
         /// <summary>
         /// Get Spryd Zone by Id
         /// </summary>
-        /// <param name="sprydZoneId"></param>
+        /// <param name="zoneId"></param>
         /// <returns></returns>
         [Route("zone/{zoneId}")]
         [HttpGet]

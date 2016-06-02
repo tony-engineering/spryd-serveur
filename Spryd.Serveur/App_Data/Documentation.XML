@@ -63,11 +63,6 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="T:Spryd.Serveur.Controllers.UserController">
-            <summary>
-            User controller
-            </summary>
-        </member>
         <member name="M:Spryd.Serveur.Controllers.UserController.#ctor">
             <summary>
             Default constructor
@@ -771,11 +766,6 @@
             </summary>
             <param name="zoneId"></param>
             <returns></returns>
-        </member>
-        <member name="T:Spryd.Server.Controllers.SessionController">
-            <summary>
-            User controller
-            </summary>
         </member>
         <member name="M:Spryd.Server.Controllers.SessionController.#ctor">
             <summary>

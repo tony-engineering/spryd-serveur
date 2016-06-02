@@ -12,10 +12,6 @@ using System.Web.Http.Cors;
 
 namespace Spryd.Server.Controllers
 {
-    /// <summary>
-    /// User controller
-    /// </summary>
-    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class SessionController : ApiController
     {
         private ISessionDal sessionDal;

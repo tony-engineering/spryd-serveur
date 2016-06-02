@@ -12,9 +12,6 @@ using System.Web.Http.Cors;
 
 namespace Spryd.Serveur.Controllers
 {
-    /// <summary>
-    /// User controller
-    /// </summary>
     public class UserController : ApiController
     {
         private IUserDal dal;
@@ -30,7 +27,7 @@ namespace Spryd.Serveur.Controllers
         /// <summary>
         /// Constructor used for tests (possible to put a different DB )
         /// </summary>
-        /// <param name="connectionString"></param>
+        /// <param name="testDal"></param>
         public UserController(IUserDal testDal)
         {
             dal = testDal;
@@ -67,7 +64,6 @@ namespace Spryd.Serveur.Controllers
         /// <summary>
         /// List Users
         /// </summary>
-        /// <param name="user"></param>
         [Route("user/all")]
         [HttpGet]
         public List<User> ListUsers()
@@ -80,8 +76,6 @@ namespace Spryd.Serveur.Controllers
         /// <summary>
         /// Authenticates a User
         /// </summary>
-        /// <param name="identifier"></param>
-        /// <param name="password"></param>
         /// <returns>The result of authentification</returns>
         [Route("user/authenticate")]
         [HttpPost]

@@ -89,7 +89,6 @@ namespace Spryd.Serveur.Models
         /// <summary>
         /// List users
         /// </summary>
-        /// <param name="id"></param>
         /// <returns></returns>
         public List<User> ListUsers()
         {
