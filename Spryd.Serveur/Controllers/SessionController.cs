@@ -33,7 +33,7 @@ namespace Spryd.Server.Controllers
         /// <summary>
         /// Constructor used for tests (possible to put a different DB)
         /// </summary>
-        /// <param name="connectionString"></param>
+        /// <param name="testDal"></param>
         public SessionController(ISessionDal testDal)
         {
             sessionDal = testDal;
@@ -42,7 +42,8 @@ namespace Spryd.Server.Controllers
         /// <summary>
         /// Create session
         /// </summary>
-        /// <param name="session"></param>
+        /// <param name="userSession"></param>
+        /// <returns></returns>
         [Route("session")]
         [HttpPost]
         public Session AddSession([FromBody] UserSession userSession)
@@ -69,6 +70,7 @@ namespace Spryd.Server.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "There is already a running session in Spryd Zone : " + userSession.Session.SprydZoneId + "."));
 
             userSession.Session.StartDate = DateTime.Now;
+            userSession.LastActivity = DateTime.Now;
             userSession.StartDate = DateTime.Now;
             userSession.IsCreator = true;
         }
