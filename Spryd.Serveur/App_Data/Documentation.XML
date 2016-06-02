@@ -72,7 +72,7 @@
             <summary>
             Constructor used for tests (possible to put a different DB )
             </summary>
-            <param name="connectionString"></param>
+            <param name="testDal"></param>
         </member>
         <member name="M:Spryd.Serveur.Controllers.UserController.GetUser(System.Int32)">
             <summary>
@@ -91,14 +91,11 @@
             <summary>
             List Users
             </summary>
-            <param name="user"></param>
         </member>
         <member name="M:Spryd.Serveur.Controllers.UserController.Authenticate(Spryd.Serveur.Models.AuthentificationRequest)">
             <summary>
             Authenticates a User
             </summary>
-            <param name="identifier"></param>
-            <param name="password"></param>
             <returns>The result of authentification</returns>
         </member>
         <member name="M:Spryd.Serveur.Controllers.UserController.GetCurrentSession(System.Int32)">
@@ -203,7 +200,6 @@
             <summary>
             List users
             </summary>
-            <param name="id"></param>
             <returns></returns>
         </member>
         <member name="M:Spryd.Serveur.Models.UserDal.GetCurrentSession(System.Int32)">
@@ -757,7 +753,7 @@
             <summary>
             Get Spryd Zone by Id
             </summary>
-            <param name="sprydZoneId"></param>
+            <param name="zoneId"></param>
             <returns></returns>
         </member>
         <member name="M:Spryd.Server.Controllers.SprydZoneController.GetSprydZoneCurrentSession(System.Int32)">
@@ -813,7 +809,7 @@
             <summary>
             Get nearby SprydZone searched by beacons technical ID
             </summary>
-            <param name="listBeacons"></param>
+            <param name="listBeaconId"></param>
             <returns></returns>
         </member>
         <member name="M:Spryd.Server.Models.SprydZoneDal.GetSprydZoneById(System.Int32)">
