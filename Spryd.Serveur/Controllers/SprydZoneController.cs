@@ -37,14 +37,18 @@ namespace Spryd.Server.Controllers
         }
         
         /// <summary>
-        /// Get all Spryd Zones
+        /// Get all Spryd Zones with their current session
         /// </summary>
         /// <returns></returns>
         [Route("zone/all")]
         [HttpGet]
-        public List<SprydZone> GetAllSprydZones()
+        public List<KeyValuePair<SprydZone, Session>> GetAllSprydZones()
         {
-            return dal.GetAllSprydZones();
+            var listSprydZoneState = new Dictionary<SprydZone, Session>();
+            foreach (var sprydZone in dal.GetAllSprydZones())
+                listSprydZoneState.Add(sprydZone, dal.GetSprydZoneCurrentession(sprydZone.Id));
+            
+            return listSprydZoneState.ToList();
         }
 
         /// <summary>
@@ -54,15 +58,15 @@ namespace Spryd.Server.Controllers
         /// <returns></returns>
         [Route("zone/{zoneId}")]
         [HttpGet]
-        public SprydZone GetSprydZoneById(int zoneId)
+        public KeyValuePair<SprydZone, Session> GetSprydZoneById(int zoneId)
         {
             if (!dal.IsSprydZoneExist(zoneId))
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "SprydZone " + zoneId + " is null."));
-            return dal.GetSprydZoneById(zoneId);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "SprydZone " + zoneId + " does not exist."));
+            return new KeyValuePair<SprydZone, Session>(dal.GetSprydZoneById(zoneId),dal.GetSprydZoneCurrentession(zoneId));
         }
 
         /// <summary>
-        /// Get the current session of a spryd zone
+        /// Get the current session of a spryd zone 
         /// </summary>
         /// <param name="zoneId"></param>
         /// <returns></returns>

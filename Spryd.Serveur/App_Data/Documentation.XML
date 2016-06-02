@@ -758,7 +758,7 @@
         </member>
         <member name="M:Spryd.Server.Controllers.SprydZoneController.GetSprydZoneCurrentSession(System.Int32)">
             <summary>
-            Get the current session of a spryd zone
+            Get the current session of a spryd zone 
             </summary>
             <param name="zoneId"></param>
             <returns></returns>

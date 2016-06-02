@@ -16,6 +16,7 @@ namespace Spryd.Server.Controllers
     {
         private ISessionDal sessionDal;
         private IUserDal userDal;
+        private ISprydZoneDal sprydZoneDal;
 
         /// <summary>
         /// Default constructor
@@ -24,6 +25,7 @@ namespace Spryd.Server.Controllers
         {
             sessionDal = new SessionDal();
             userDal = new UserDal();
+            sprydZoneDal = new SprydZoneDal();
         }
 
         /// <summary>
@@ -59,7 +61,11 @@ namespace Spryd.Server.Controllers
         {
             // Check if the creator user exist
             if (!userDal.IsUserExist(userSession.UserId))
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "User " + userSession.UserId + " is null."));
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "User " + userSession.UserId + " does not exist."));
+
+            // Check if the new session's sprydzone exist
+            if (!sprydZoneDal.IsSprydZoneExist(userSession.Session.SprydZoneId))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "There is no existing Spryd Zone with ID : " + userSession.Session.SprydZoneId + "."));
 
             // Check if there is not already a running session in this spryd zone
             if (sessionDal.IsAlreadySessionRunningInSprydZone(userSession.Session.SprydZoneId))
