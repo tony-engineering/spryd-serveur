@@ -28,7 +28,7 @@ namespace Spryd.Server.Controllers
         /// <param name="values"></param>
         /// <returns></returns>
         [Route("zone/nearby")]
-        [HttpPost]
+        [HttpGet]
         public List<SprydZone> GetNearbySprydZones([FromUri] string[] values)
         {
             if (values.IsNullOrEmpty())
