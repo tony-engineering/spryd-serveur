@@ -165,6 +165,13 @@
             <param name="idSession"></param>
             <returns></returns>
         </member>
+        <member name="M:Spryd.Serveur.Models.SessionDal.IsSessionRunning(System.Int32)">
+            <summary>
+            Indicate if the session is still running
+            </summary>
+            <param name="idSession"></param>
+            <returns></returns>
+        </member>
         <member name="T:Spryd.Serveur.Models.UserDal">
             <summary>
             Data access layer for User
@@ -222,6 +229,14 @@
             Add a user in a session
             </summary>
             <param name="userSession"></param>
+        </member>
+        <member name="M:Spryd.Serveur.Models.UserDal.IsUserInSession(System.Int32,System.Int32)">
+            <summary>
+            Indicate if the user is already in the session
+            </summary>
+            <param name="idSession"></param>
+            <param name="idUser"></param>
+            <returns></returns>
         </member>
         <member name="T:Spryd.Serveur.Models.IUserDal">
             <summary>
@@ -745,7 +760,7 @@
         </member>
         <member name="M:Spryd.Server.Controllers.SprydZoneController.GetAllSprydZones">
             <summary>
-            Get all Spryd Zones
+            Get all Spryd Zones with their current session
             </summary>
             <returns></returns>
         </member>
@@ -793,6 +808,21 @@
             </summary>
             <param name="idSession"></param>
             <returns></returns>
+        </member>
+        <member name="M:Spryd.Server.Controllers.SessionController.JoinSession(System.Int32,System.Int32)">
+            <summary>
+            Join a session
+            </summary>
+            <param name="idSession"></param>
+            <param name="idUser"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spryd.Server.Controllers.SessionController.CheckUserAndSession(System.Int32,System.Int32)">
+            <summary>
+            Check if this session is available and if this user can join it
+            </summary>
+            <param name="idSession"></param>
+            <param name="idUser"></param>
         </member>
         <member name="M:Spryd.Server.Models.SprydZoneDal.#ctor">
             <summary>

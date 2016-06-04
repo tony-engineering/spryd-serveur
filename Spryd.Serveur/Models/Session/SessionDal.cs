@@ -58,7 +58,7 @@ namespace Spryd.Serveur.Models
             {
                 return (from user in c.Users
                  join userSession in c.UserSession on user.Id equals userSession.UserId
-                 where userSession.Session.Id == sessionId
+                 where userSession.SessionId == sessionId
                  select user).ToList();
             }
         }
@@ -86,6 +86,19 @@ namespace Spryd.Serveur.Models
             using (DbConnection c = new DbConnection())
             {
                 return c.Sessions.Any(s => s.Id == idSession);
+            }
+        }
+
+        /// <summary>
+        /// Indicate if the session is still running
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <returns></returns>
+        public bool IsSessionRunning(int idSession)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                return c.Sessions.Any(s => s.Id == idSession && s.EndDate == null);
             }
         }
     }

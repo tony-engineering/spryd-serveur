@@ -20,5 +20,6 @@ namespace Spryd.Serveur.Models
         AuthenticationResult Authenticate(AuthentificationRequest authenticationRequest);
         Session GetCurrentSession(int userId);
         void AddUserSession(UserSession userSession);
+        bool IsUserInSession(int idSession, int idUser);
     }
 }

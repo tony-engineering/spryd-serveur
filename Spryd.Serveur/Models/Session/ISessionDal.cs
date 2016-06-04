@@ -16,5 +16,6 @@ namespace Spryd.Serveur.Models
         Session GetSessionById(long sessionId);
         bool IsSessionExist(int idSession);
         bool IsAlreadySessionRunningInSprydZone(int sprydZoneId);
+        bool IsSessionRunning(int idSession);
     }
 }

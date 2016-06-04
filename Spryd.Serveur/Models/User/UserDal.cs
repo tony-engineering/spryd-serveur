@@ -6,6 +6,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Data.Entity;
 using System.Web.Configuration;
 
 namespace Spryd.Serveur.Models
@@ -108,7 +109,7 @@ namespace Spryd.Serveur.Models
         {
             using (DbConnection c = new DbConnection())
             {
-                int? sessionId = c.UserSession.Where(u => u.UserId == userId && u.StartDate != null && u.EndDate == null).Select(u => u.Session.Id).FirstOrDefault();
+                int? sessionId = c.UserSession.Where(u => u.UserId == userId && u.StartDate != null && u.EndDate == null).Select(u => u.SessionId).FirstOrDefault();
                 if(sessionId == null)
                     return null;
                 return c.Sessions.Where(s => s.Id == sessionId).FirstOrDefault();
@@ -138,6 +139,20 @@ namespace Spryd.Serveur.Models
             {
                 c.UserSession.Add(userSession);
                 c.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// Indicate if the user is already in the session
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <param name="idUser"></param>
+        /// <returns></returns>
+        public bool IsUserInSession(int idSession, int idUser)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                return c.UserSession.Any(us => us.UserId == idUser && us.SessionId == idUser && us.EndDate == null);
             }
         }
     }

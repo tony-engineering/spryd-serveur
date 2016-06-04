@@ -95,5 +95,10 @@ namespace Spryd.Serveur.Tests
         {
             throw new NotImplementedException();
         }
+
+        public bool IsUserInSession(int idSession, int idUser)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

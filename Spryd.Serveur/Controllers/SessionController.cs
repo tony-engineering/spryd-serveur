@@ -47,9 +47,10 @@ namespace Spryd.Server.Controllers
         public Session AddSession([FromBody] UserSession userSession)
         {
             ValidateUserSession(userSession);
+                        
+            sessionDal.AddSession(userSession.Session); // Create the session            
+            userDal.AddUserSession(userSession); // Add the creator to the session 
 
-            // Create session and add the user to the session 
-            userDal.AddUserSession(userSession);
             return userSession.Session;
         }
 
@@ -87,8 +88,57 @@ namespace Spryd.Server.Controllers
         public List<User> GetSessionUsers(int idSession)
         {
             if (!sessionDal.IsSessionExist(idSession))
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Session " + idSession + " is null."));
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Session " + idSession + " does not exist."));
             return sessionDal.GetSessionUsers(idSession);
+        }
+
+        /// <summary>
+        /// Join a session
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <param name="idUser"></param>
+        /// <returns></returns>
+        [Route("session/{idSession}/user/{idUser}/join")]
+        [HttpPost]
+        public Session JoinSession(int idSession, int idUser)
+        {
+            CheckUserAndSession(idSession, idUser);
+            
+            var userSession = new UserSession()
+            {
+                UserId = idUser,
+                SessionId = idSession,
+                IsCreator = false,
+                StartDate = DateTime.Now,
+                LastActivity = DateTime.Now
+            };
+
+            userDal.AddUserSession(userSession);
+            return sessionDal.GetSessionById(idSession);
+        }
+
+        /// <summary>
+        /// Check if this session is available and if this user can join it
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <param name="idUser"></param>
+        private void CheckUserAndSession(int idSession, int idUser)
+        {
+            // Check if the session exist
+            if (!sessionDal.IsSessionExist(idSession))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Session " + idSession + " does not exist."));
+
+            // Check if the creator user exist
+            if (!userDal.IsUserExist(idUser))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "User " + idUser + " does not exist."));
+
+            // Check if the user has already join this session
+            if (userDal.IsUserInSession(idSession, idUser))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Conflict, "User " + idUser + " already join session " + idSession + "."));
+
+            // Check if session is still going on
+            if (!sessionDal.IsSessionRunning(idSession))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Conflict, "Session " + idSession + " is over."));
         }
     }
 }

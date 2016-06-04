@@ -22,6 +22,9 @@ namespace Spryd.Server.Models
 
         [JsonProperty("sessionId")]
         [Column("session_id")] 
+        public int SessionId { get; set; }
+
+        [ForeignKey("SessionId")]
         public Session Session { get; set; }
 
         [JsonIgnore]
