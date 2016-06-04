@@ -77,10 +77,7 @@ namespace Spryd.Serveur.Models
         {
             using (DbConnection c = new DbConnection())
             {
-                var user = c.Users.Where(u => u.Id == id).FirstOrDefault();
-                if(user == null)
-                    throw new UserNotFoundException("User with id " + id + " not found.");
-                return user;
+                return c.Users.Where(u => u.Id == id).FirstOrDefault(); ;
             }
         }
 
