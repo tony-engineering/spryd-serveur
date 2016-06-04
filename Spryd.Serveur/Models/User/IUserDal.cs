@@ -18,6 +18,7 @@ namespace Spryd.Serveur.Models
         long AddUser(User user);
         List<User> ListUsers();
         AuthenticationResult Authenticate(AuthentificationRequest authenticationRequest);
+        User GetUserByIdPassword(string identifier, string password);
         Session GetCurrentSession(int userId);
         void AddUserSession(UserSession userSession);
         bool IsUserInSession(int idSession, int idUser);

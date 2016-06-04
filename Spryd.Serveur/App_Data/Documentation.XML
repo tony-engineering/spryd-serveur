@@ -783,11 +783,13 @@
             Default constructor
             </summary>
         </member>
-        <member name="M:Spryd.Server.Controllers.SessionController.#ctor(Spryd.Serveur.Models.ISessionDal)">
+        <member name="M:Spryd.Server.Controllers.SessionController.#ctor(Spryd.Serveur.Models.ISessionDal,Spryd.Serveur.Models.IUserDal,Spryd.Server.Models.ISprydZoneDal)">
             <summary>
             Constructor used for tests (possible to put a different DB)
             </summary>
-            <param name="testDal"></param>
+            <param name="sessionFakeDal"></param>
+            <param name="userFakeDal"></param>
+            <param name="sprydZoneFakeDal"></param>
         </member>
         <member name="M:Spryd.Server.Controllers.SessionController.AddSession(Spryd.Server.Models.UserSession)">
             <summary>
@@ -828,6 +830,12 @@
             <summary>
             Default constructor
             </summary>
+        </member>
+        <member name="M:Spryd.Server.Models.SprydZoneDal.AddSprydZone(Spryd.Serveur.Models.SprydZone)">
+            <summary>
+            Add a spryd zone
+            </summary>
+            <param name="sprydZone"></param>
         </member>
         <member name="M:Spryd.Server.Models.SprydZoneDal.GetAllSprydZones">
             <summary>

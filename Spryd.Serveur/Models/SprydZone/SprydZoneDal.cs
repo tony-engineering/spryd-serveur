@@ -17,6 +17,18 @@ namespace Spryd.Server.Models
         }
 
         /// <summary>
+        /// Add a spryd zone
+        /// </summary>
+        /// <param name="sprydZone"></param>
+        public void AddSprydZone(SprydZone sprydZone)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                c.SprydZones.Add(sprydZone);
+            }
+        }
+
+        /// <summary>
         /// Get all SprydZones
         /// </summary>
         /// <returns></returns>

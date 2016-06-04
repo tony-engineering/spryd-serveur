@@ -39,16 +39,16 @@ namespace Spryd.Serveur.Models
 
         public AuthenticationResult Authenticate(AuthentificationRequest authenticationRequest)
         {
+            var user = GetUserByIdPassword(authenticationRequest.Identifier, authenticationRequest.Password);
+            
             AuthenticationResult authResult = new AuthenticationResult();
 
-            try
-            {
-                authResult.User = GetUserByIdPassword(authenticationRequest.Identifier, authenticationRequest.Password);
-                authResult.IsSuccess = true;
-            }
-            catch(UserNotFoundException e)
-            {
+            if (user == null)
                 authResult.IsSuccess = false;
+            else
+            {
+                authResult.User = user;
+                authResult.IsSuccess = true;
             }
 
             return authResult;
@@ -60,14 +60,11 @@ namespace Spryd.Serveur.Models
         /// <param name="identifier"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        private User GetUserByIdPassword(string identifier, string password)
+        public User GetUserByIdPassword(string identifier, string password)
         {
             using (DbConnection c = new DbConnection())
             {
-                var user = c.Users.Where(u => u.Email == identifier && u.Password == password).FirstOrDefault();
-                if (user == null)
-                    throw new UserNotFoundException("User with identifier " + identifier + " and password password " + password + " not found.");
-                return user;
+                return c.Users.Where(u => u.Email == identifier && u.Password == password).FirstOrDefault();
             }
         }
 

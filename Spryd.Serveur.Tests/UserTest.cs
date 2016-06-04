@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Spryd.Serveur.Models;
 using Spryd.Serveur.Controllers;
@@ -14,7 +14,7 @@ namespace Spryd.Serveur.Tests
     [TestClass]
     public class UserTest
     {
-        private IUserDal dal;
+        private FakeDal dal;
         private UserController userController;
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace Spryd.Serveur.Tests
         [TestInitialize]
         public void InitializeTestingEnvironnement()
         {
-            dal = new UserDal();
+            dal = new FakeDal();
 
             userController = new UserController(dal);
             userController.Request = new HttpRequestMessage();
@@ -31,34 +31,19 @@ namespace Spryd.Serveur.Tests
         }
 
         /// <summary>
-        /// Gets a user from database and checks if it is valid
+        /// Get valid user
         /// </summary>
         [TestMethod]
         public void GetExistingUser_Success()
         {
-            User gotUser = userController.GetUser(1);
-
-            Assert.IsTrue(gotUser.IsValid());
+            User newUser = new User() { Id = 1, Name = "Haroon", Surname = "ANWARBAIG", Email = "haroon@spryd.io", Password = "azerty" };
+            dal.AddUser(newUser);
+            Assert.AreEqual(userController.GetUser(1), newUser);
         }
 
         /// <summary>
-        /// Checks if all users in database are valid
-        /// </summary>
-        [TestMethod]
-        public void AllUsersAreValid_Success()
-        {
-            List<User> users = dal.ListUsers();
-
-            users.ForEach(user => {
-                if (!user.IsValid())
-                    throw new NotValidUserException("User "+user+" is not valid.");
-                }
-            );
-        }
-
-
-        /// <summary>
-        /// Adds a user with no data, exception expected
+        /// Add user without info
+        /// throws exception because some attributes are imposed
         /// </summary>
         [TestMethod]
         [ExpectedException(typeof(HttpResponseException))]
@@ -66,6 +51,16 @@ namespace Spryd.Serveur.Tests
         {
             User newUser = new User();
             userController.AddUser(newUser);
+        }
+
+        /// <summary>
+        /// Get not existing user throws exception
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(HttpResponseException))]
+        public void GetNotExistingUser_ThrowsException()
+        {
+            userController.GetUser(-1);
         }
 
         /// <summary>
@@ -77,17 +72,7 @@ namespace Spryd.Serveur.Tests
             User newUser = new User("Spriiid", "Youre", "data@spryd.io", "superpwd");
             User addedUser = userController.AddUser(newUser);
 
-            Assert.IsTrue(addedUser.IsValid());
-        }
-
-        /// <summary>
-        /// Tries to get a non existing user
-        /// </summary>
-        [TestMethod]
-        [ExpectedException(typeof(HttpResponseException))]
-        public void GetNotExistingUser_ThrowsException()
-        {
-            userController.GetUser(-1);
+            Assert.AreEqual(newUser.Id, 1);
         }
 
         /// <summary>
@@ -98,15 +83,12 @@ namespace Spryd.Serveur.Tests
         [TestMethod]
         public void AuthenticateUser_Success()
         {
-            User authenticatedUser = null;
             string identifier = "data@spryd.io";
             string password = "superpwd";
+            dal.AddUser(new User() { Email = identifier, Password = password });
+            AuthenticationResult authResult = userController.Authenticate(new AuthentificationRequest(identifier, password));
 
-            AuthenticationResult authResult = dal.Authenticate(new AuthentificationRequest(identifier, password));
-            if (authResult.IsSuccess)
-                authenticatedUser = authResult.User;
-
-            Assert.IsTrue(authenticatedUser.IsValid());
+            Assert.IsTrue(authResult.IsSuccess);
         }
 
         /// <summary>
@@ -120,7 +102,7 @@ namespace Spryd.Serveur.Tests
             string identifier = "data@spryd.io";
             string password = "superpwd_fail";
 
-            AuthenticationResult authResult = dal.Authenticate(new AuthentificationRequest(identifier, password));
+            AuthenticationResult authResult = userController.Authenticate(new AuthentificationRequest(identifier, password));
 
             Assert.IsFalse(authResult.IsSuccess);
         }

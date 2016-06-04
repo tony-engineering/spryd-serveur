@@ -21,6 +21,11 @@ namespace Spryd.Server.Controllers
             dal = new SprydZoneDal();
         }
 
+        public SprydZoneController(ISprydZoneDal sprydZoneDal)
+        {
+            dal = sprydZoneDal;
+        }
+
         /// <summary>
         /// Get nearby SprydZone searched by beacons technical ID
         /// Need technicalId in URL parameters

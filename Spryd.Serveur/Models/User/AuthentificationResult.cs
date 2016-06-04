@@ -10,8 +10,8 @@ namespace Spryd.Serveur.Models
         }
 
         [JsonProperty("isSuccess")]
-        public bool IsSuccess { get; internal set; }
+        public bool IsSuccess { get; set; }
         [JsonProperty("user", NullValueHandling = NullValueHandling.Ignore)]
-        public User User { get; internal set; }
+        public User User { get; set; }
     }
 }

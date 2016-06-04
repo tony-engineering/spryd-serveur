@@ -5,13 +5,16 @@ using Spryd.Serveur.Models;
 using System.Configuration;
 using System.Net.Http;
 using System.Web.Http;
+using Spryd.Serveur.Tests;
+using Spryd.Server.Models;
+using System.Linq;
 
 namespace Spryd.Server.Tests
 {
     [TestClass]
     public class SessionTest
     {
-        private ISessionDal dal;
+        private FakeDal dal;
         private SessionController sessionController;
 
         /// <summary>
@@ -20,9 +23,9 @@ namespace Spryd.Server.Tests
         [TestInitialize]
         public void InitializeTestingEnvironnement()
         {
-            dal = new SessionDal();
+            dal = new FakeDal();
 
-            sessionController = new SessionController(dal);
+            sessionController = new SessionController(dal,dal,dal);
             sessionController.Request = new HttpRequestMessage();
             sessionController.Configuration = new HttpConfiguration();
         }
@@ -33,11 +36,18 @@ namespace Spryd.Server.Tests
         [TestMethod]
         public void CreateSession_Success()
         {
-            Session newSessionParameters = new Session("Session test", 1);
+            dal.AddUser(new User());
+            dal.AddSprydZone(new SprydZone() { Id = 3 });
+            UserSession newSessionParameters = new UserSession()
+            {
+                UserId = 1,
+                Session = new Session() { SprydZoneId = 3}
+            };
 
-            long newSessionId = dal.AddSession(newSessionParameters);
+            Session newSession = sessionController.AddSession(newSessionParameters);
 
-            // TODO: getSessionByID + checkSession
+            Assert.AreEqual(dal.GetSessionById(1), newSession);
+            Assert.AreEqual(dal.GetSessionUsers(newSession.Id).First().Id, 1);
         }
     }
 }

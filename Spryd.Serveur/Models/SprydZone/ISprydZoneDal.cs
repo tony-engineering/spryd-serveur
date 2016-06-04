@@ -14,5 +14,6 @@ namespace Spryd.Server.Models
         SprydZone GetSprydZoneById(int id);
         Session GetSprydZoneCurrentession(int zoneId);
         bool IsSprydZoneExist(int zoneId);
+        void AddSprydZone(SprydZone sprydZone);
     }
 }

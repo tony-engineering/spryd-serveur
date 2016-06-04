@@ -31,10 +31,14 @@ namespace Spryd.Server.Controllers
         /// <summary>
         /// Constructor used for tests (possible to put a different DB)
         /// </summary>
-        /// <param name="testDal"></param>
-        public SessionController(ISessionDal testDal)
+        /// <param name="sessionFakeDal"></param>
+        /// <param name="userFakeDal"></param>
+        /// <param name="sprydZoneFakeDal"></param>
+        public SessionController(ISessionDal sessionFakeDal, IUserDal userFakeDal, ISprydZoneDal sprydZoneFakeDal)
         {
-            sessionDal = testDal;
+            sessionDal = sessionFakeDal;
+            userDal = userFakeDal;
+            sprydZoneDal = sprydZoneFakeDal;
         }
 
         /// <summary>
