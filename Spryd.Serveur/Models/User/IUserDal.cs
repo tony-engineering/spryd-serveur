@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Spryd.Serveur.Models
+namespace Spryd.Server.Models
 {
     /// <summary>
     /// Interface de la couche d'accès aux données

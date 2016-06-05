@@ -1,5 +1,5 @@
 ﻿
-using Spryd.Serveur.Models;
+using Spryd.Server.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -10,7 +10,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
 
-namespace Spryd.Serveur.Controllers
+namespace Spryd.Server.Controllers
 {
     public class UserController : ApiController
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Spryd.Serveur.Models;
+using Spryd.Server.Models;
 
 namespace Spryd.Server.Models
 {

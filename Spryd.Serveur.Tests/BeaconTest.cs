@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Spryd.Serveur.Controllers;
+using Spryd.Server.Controllers;
 using System.Net.Http;
 using System.Web.Http;
-using Spryd.Serveur.Models;
+using Spryd.Server.Models;
 using System.Linq;
 
 namespace Spryd.Server.Tests

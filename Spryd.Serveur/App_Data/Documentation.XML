@@ -4,269 +4,16 @@
         <name>Spryd.Server</name>
     </assembly>
     <members>
-        <member name="T:Spryd.Serveur.BundleConfig">
+        <member name="T:Spryd.Server.BundleConfig">
             <summary>
             BundleConfig
             </summary>
         </member>
-        <member name="M:Spryd.Serveur.BundleConfig.RegisterBundles(System.Web.Optimization.BundleCollection)">
+        <member name="M:Spryd.Server.BundleConfig.RegisterBundles(System.Web.Optimization.BundleCollection)">
             <summary>
             RegisterBundles
             </summary>
             <param name="bundles"></param>
-        </member>
-        <member name="M:Spryd.Serveur.Controllers.BeaconDal.#ctor">
-            <summary>
-            Default constructor
-            </summary>
-        </member>
-        <member name="M:Spryd.Serveur.Controllers.BeaconDal.GetBeaconById(System.Int32)">
-            <summary>
-            Get beacon by it's Id
-            </summary>
-            <param name="id"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Spryd.Serveur.Controllers.BeaconDal.GetBeaconByTechnicalId(System.String)">
-            <summary>
-            Get beacon by technical ID
-            </summary>
-            <param name="technicalId"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Spryd.Serveur.Controllers.BeaconDal.GetBeacons">
-            <summary>
-            Lists all Beacons
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Spryd.Serveur.Controllers.BeaconController.#ctor">
-            <summary>
-            Default constructor
-            </summary>
-        </member>
-        <member name="M:Spryd.Serveur.Controllers.BeaconController.#ctor(Spryd.Serveur.Controllers.IBeaconDal)">
-            <summary>
-            Constructor used for tests (possible to put a different DB)
-            </summary>
-            <param name="testDal"></param>
-        </member>
-        <member name="M:Spryd.Serveur.Controllers.BeaconController.GetBeacons">
-            <summary>
-            Lists all Beacons
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Spryd.Serveur.Controllers.BeaconController.GetBeaconById(System.Int32)">
-            <summary>
-            Get beacon by id
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Spryd.Serveur.Controllers.UserController.#ctor">
-            <summary>
-            Default constructor
-            </summary>
-        </member>
-        <member name="M:Spryd.Serveur.Controllers.UserController.#ctor(Spryd.Serveur.Models.IUserDal)">
-            <summary>
-            Constructor used for tests (possible to put a different DB )
-            </summary>
-            <param name="testDal"></param>
-        </member>
-        <member name="M:Spryd.Serveur.Controllers.UserController.GetUser(System.Int32)">
-            <summary>
-            Get user by id
-            </summary>
-            <param name="userId"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Spryd.Serveur.Controllers.UserController.AddUser(Spryd.Serveur.Models.User)">
-            <summary>
-            Create user
-            </summary>
-            <param name="user"></param>
-        </member>
-        <member name="M:Spryd.Serveur.Controllers.UserController.ListUsers">
-            <summary>
-            List Users
-            </summary>
-        </member>
-        <member name="M:Spryd.Serveur.Controllers.UserController.Authenticate(Spryd.Serveur.Models.AuthentificationRequest)">
-            <summary>
-            Authenticates a User
-            </summary>
-            <returns>The result of authentification</returns>
-        </member>
-        <member name="M:Spryd.Serveur.Controllers.UserController.GetCurrentSession(System.Int32)">
-            <summary>
-            Get current session of a user who joined it by his mobile application
-            </summary>
-            <param name="userId"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Spryd.Serveur.Controllers.UserController.ValidateUser(Spryd.Serveur.Models.User)">
-            <summary>
-            Check user
-            TODO: should this method stay here ?
-            </summary>
-            <param name="user"></param>
-        </member>
-        <member name="M:Spryd.Serveur.WebApiApplication.Application_Start">
-            <summary>
-            Démarrage de l'application
-            </summary>
-        </member>
-        <member name="T:Spryd.Serveur.Models.ISessionDal">
-            <summary>
-            Interface de la couche d'accès aux données
-            </summary>
-        </member>
-        <member name="T:Spryd.Serveur.Models.SessionDal">
-            <summary>
-            Data access layer for Session
-            </summary>
-        </member>
-        <member name="M:Spryd.Serveur.Models.SessionDal.#ctor">
-            <summary>
-            Default constructor
-            </summary>
-        </member>
-        <member name="M:Spryd.Serveur.Models.SessionDal.AddSession(Spryd.Serveur.Models.Session)">
-            <summary>
-            Add session
-            </summary>
-            <param name="session"></param>
-        </member>
-        <member name="M:Spryd.Serveur.Models.SessionDal.GetSessionById(System.Int64)">
-            <summary>
-            Get session by Id
-            </summary>
-            <param name="sessionId"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Spryd.Serveur.Models.SessionDal.GetSessionUsers(System.Int32)">
-            <summary>
-            Get session users
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Spryd.Serveur.Models.SessionDal.IsAlreadySessionRunningInSprydZone(System.Int32)">
-            <summary>
-            Indicates if there is already a session running in this sprydZone
-            </summary>
-            <param name="sprydZoneId"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Spryd.Serveur.Models.SessionDal.IsSessionExist(System.Int32)">
-            <summary>
-            Indicate if the session exist
-            </summary>
-            <param name="idSession"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Spryd.Serveur.Models.SessionDal.IsSessionRunning(System.Int32)">
-            <summary>
-            Indicate if the session is still running
-            </summary>
-            <param name="idSession"></param>
-            <returns></returns>
-        </member>
-        <member name="T:Spryd.Serveur.Models.UserDal">
-            <summary>
-            Data access layer for User
-            </summary>
-        </member>
-        <member name="M:Spryd.Serveur.Models.UserDal.#ctor">
-            <summary>
-            Default constructor
-            </summary>
-        </member>
-        <member name="M:Spryd.Serveur.Models.UserDal.AddUser(Spryd.Serveur.Models.User)">
-            <summary>
-            Add user
-            </summary>
-            <param name="user"></param>
-        </member>
-        <member name="M:Spryd.Serveur.Models.UserDal.GetUserByIdPassword(System.String,System.String)">
-            <summary>
-            Get user by mail and password
-            </summary>
-            <param name="identifier"></param>
-            <param name="password"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Spryd.Serveur.Models.UserDal.GetUserById(System.Int32)">
-            <summary>
-            Get user by ID
-            </summary>
-            <param name="id"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Spryd.Serveur.Models.UserDal.ListUsers">
-            <summary>
-            List users
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Spryd.Serveur.Models.UserDal.GetCurrentSession(System.Int32)">
-            <summary>
-            Get current session join by the mobile application
-            A current session is identified when there is a StartDate but no EndDate
-            </summary>
-            <param name="userId"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Spryd.Serveur.Models.UserDal.IsUserExist(System.Int32)">
-            <summary>
-            Indicate if user exist
-            </summary>
-            <param name="id"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Spryd.Serveur.Models.UserDal.AddUserSession(Spryd.Server.Models.UserSession)">
-            <summary>
-            Add a user in a session
-            </summary>
-            <param name="userSession"></param>
-        </member>
-        <member name="M:Spryd.Serveur.Models.UserDal.IsUserInSession(System.Int32,System.Int32)">
-            <summary>
-            Indicate if the user is already in the session
-            </summary>
-            <param name="idSession"></param>
-            <param name="idUser"></param>
-            <returns></returns>
-        </member>
-        <member name="T:Spryd.Serveur.Models.IUserDal">
-            <summary>
-            Interface de la couche d'accès aux données
-            </summary>
-        </member>
-        <member name="M:Spryd.Serveur.Models.User.#ctor">
-            <summary>
-            Empty constructor for User class
-            </summary>
-        </member>
-        <member name="M:Spryd.Serveur.Models.User.#ctor(System.String,System.String,System.String,System.String,System.DateTime,System.DateTime)">
-            <summary>
-            Constructor for User class
-            ", NullValueHandling=NullValueHandling.Ignore" ignores empty fields for JSON generation
-            </summary>
-            <param name="name"></param>
-            <param name="surname"></param>
-            <param name="email"></param>
-            <param name="password"></param>
-            <param name="createDate"></param>
-            <param name="updateDate"></param>
-        </member>
-        <member name="M:Spryd.Serveur.Models.User.Equals(Spryd.Serveur.Models.User)">
-            <summary>
-            Overrides Equality
-            We don't test password because we don't always get it's value
-            </summary>
-            <param name="comparedUser"></param>
-            <returns></returns>
         </member>
         <member name="M:Spryd.Server.Areas.HelpPage.ApiDescriptionExtensions.GetFriendlyId(System.Web.Http.Description.ApiDescription)">
             <summary>
@@ -778,12 +525,37 @@
             <param name="zoneId"></param>
             <returns></returns>
         </member>
+        <member name="M:Spryd.Server.Controllers.BeaconDal.#ctor">
+            <summary>
+            Default constructor
+            </summary>
+        </member>
+        <member name="M:Spryd.Server.Controllers.BeaconDal.GetBeaconById(System.Int32)">
+            <summary>
+            Get beacon by it's Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spryd.Server.Controllers.BeaconDal.GetBeaconByTechnicalId(System.String)">
+            <summary>
+            Get beacon by technical ID
+            </summary>
+            <param name="technicalId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spryd.Server.Controllers.BeaconDal.GetBeacons">
+            <summary>
+            Lists all Beacons
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Spryd.Server.Controllers.SessionController.#ctor">
             <summary>
             Default constructor
             </summary>
         </member>
-        <member name="M:Spryd.Server.Controllers.SessionController.#ctor(Spryd.Serveur.Models.ISessionDal,Spryd.Serveur.Models.IUserDal,Spryd.Server.Models.ISprydZoneDal)">
+        <member name="M:Spryd.Server.Controllers.SessionController.#ctor(Spryd.Server.Models.ISessionDal,Spryd.Server.Models.IUserDal,Spryd.Server.Models.ISprydZoneDal)">
             <summary>
             Constructor used for tests (possible to put a different DB)
             </summary>
@@ -826,12 +598,151 @@
             <param name="idSession"></param>
             <param name="idUser"></param>
         </member>
+        <member name="M:Spryd.Server.Controllers.BeaconController.#ctor">
+            <summary>
+            Default constructor
+            </summary>
+        </member>
+        <member name="M:Spryd.Server.Controllers.BeaconController.#ctor(Spryd.Server.Controllers.IBeaconDal)">
+            <summary>
+            Constructor used for tests (possible to put a different DB)
+            </summary>
+            <param name="testDal"></param>
+        </member>
+        <member name="M:Spryd.Server.Controllers.BeaconController.GetBeacons">
+            <summary>
+            Lists all Beacons
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Spryd.Server.Controllers.BeaconController.GetBeaconById(System.Int32)">
+            <summary>
+            Get beacon by id
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Spryd.Server.Controllers.UserController.#ctor">
+            <summary>
+            Default constructor
+            </summary>
+        </member>
+        <member name="M:Spryd.Server.Controllers.UserController.#ctor(Spryd.Server.Models.IUserDal)">
+            <summary>
+            Constructor used for tests (possible to put a different DB )
+            </summary>
+            <param name="testDal"></param>
+        </member>
+        <member name="M:Spryd.Server.Controllers.UserController.GetUser(System.Int32)">
+            <summary>
+            Get user by id
+            </summary>
+            <param name="userId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spryd.Server.Controllers.UserController.AddUser(Spryd.Server.Models.User)">
+            <summary>
+            Create user
+            </summary>
+            <param name="user"></param>
+        </member>
+        <member name="M:Spryd.Server.Controllers.UserController.ListUsers">
+            <summary>
+            List Users
+            </summary>
+        </member>
+        <member name="M:Spryd.Server.Controllers.UserController.Authenticate(Spryd.Server.Models.AuthentificationRequest)">
+            <summary>
+            Authenticates a User
+            </summary>
+            <returns>The result of authentification</returns>
+        </member>
+        <member name="M:Spryd.Server.Controllers.UserController.GetCurrentSession(System.Int32)">
+            <summary>
+            Get current session of a user who joined it by his mobile application
+            </summary>
+            <param name="userId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spryd.Server.Controllers.UserController.ValidateUser(Spryd.Server.Models.User)">
+            <summary>
+            Check user
+            TODO: should this method stay here ?
+            </summary>
+            <param name="user"></param>
+        </member>
+        <member name="T:Spryd.Server.Models.ISessionDal">
+            <summary>
+            Interface de la couche d'accès aux données
+            </summary>
+        </member>
+        <member name="T:Spryd.Server.Models.SessionDal">
+            <summary>
+            Data access layer for Session
+            </summary>
+        </member>
+        <member name="M:Spryd.Server.Models.SessionDal.#ctor">
+            <summary>
+            Default constructor
+            </summary>
+        </member>
+        <member name="M:Spryd.Server.Models.SessionDal.AddSession(Spryd.Server.Models.Session)">
+            <summary>
+            Add session
+            </summary>
+            <param name="session"></param>
+        </member>
+        <member name="M:Spryd.Server.Models.SessionDal.EndSession(System.Int32)">
+            <summary>
+            End session
+            </summary>
+            <param name="idSession"></param>
+        </member>
+        <member name="M:Spryd.Server.Models.SessionDal.GetSessionById(System.Int64)">
+            <summary>
+            Get session by Id
+            </summary>
+            <param name="sessionId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spryd.Server.Models.SessionDal.GetSessionUsers(System.Int32)">
+            <summary>
+            Get session users
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Spryd.Server.Models.SessionDal.GetUsersOutOfSession(System.Int32)">
+            <summary>
+            Before ending a session, this method end user's current session by sending userSession endDate to Now
+            </summary>
+            <param name="idSession"></param>
+        </member>
+        <member name="M:Spryd.Server.Models.SessionDal.IsAlreadySessionRunningInSprydZone(System.Int32)">
+            <summary>
+            Indicates if there is already a session running in this sprydZone
+            </summary>
+            <param name="sprydZoneId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spryd.Server.Models.SessionDal.IsSessionExist(System.Int32)">
+            <summary>
+            Indicate if the session exist
+            </summary>
+            <param name="idSession"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spryd.Server.Models.SessionDal.IsSessionRunning(System.Int32)">
+            <summary>
+            Indicate if the session is still running
+            </summary>
+            <param name="idSession"></param>
+            <returns></returns>
+        </member>
         <member name="M:Spryd.Server.Models.SprydZoneDal.#ctor">
             <summary>
             Default constructor
             </summary>
         </member>
-        <member name="M:Spryd.Server.Models.SprydZoneDal.AddSprydZone(Spryd.Serveur.Models.SprydZone)">
+        <member name="M:Spryd.Server.Models.SprydZoneDal.AddSprydZone(Spryd.Server.Models.SprydZone)">
             <summary>
             Add a spryd zone
             </summary>
@@ -870,6 +781,107 @@
             </summary>
             <param name="zoneId"></param>
             <returns></returns>
+        </member>
+        <member name="T:Spryd.Server.Models.UserDal">
+            <summary>
+            Data access layer for User
+            </summary>
+        </member>
+        <member name="M:Spryd.Server.Models.UserDal.#ctor">
+            <summary>
+            Default constructor
+            </summary>
+        </member>
+        <member name="M:Spryd.Server.Models.UserDal.AddUser(Spryd.Server.Models.User)">
+            <summary>
+            Add user
+            </summary>
+            <param name="user"></param>
+        </member>
+        <member name="M:Spryd.Server.Models.UserDal.GetUserByIdPassword(System.String,System.String)">
+            <summary>
+            Get user by mail and password
+            </summary>
+            <param name="identifier"></param>
+            <param name="password"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spryd.Server.Models.UserDal.GetUserById(System.Int32)">
+            <summary>
+            Get user by ID
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spryd.Server.Models.UserDal.ListUsers">
+            <summary>
+            List users
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Spryd.Server.Models.UserDal.GetCurrentSession(System.Int32)">
+            <summary>
+            Get current session join by the mobile application
+            A current session is identified when there is a StartDate but no EndDate
+            </summary>
+            <param name="userId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spryd.Server.Models.UserDal.IsUserExist(System.Int32)">
+            <summary>
+            Indicate if user exist
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spryd.Server.Models.UserDal.AddUserSession(Spryd.Server.Models.UserSession)">
+            <summary>
+            Add a user in a session
+            </summary>
+            <param name="userSession"></param>
+        </member>
+        <member name="M:Spryd.Server.Models.UserDal.IsUserInSession(System.Int32,System.Int32)">
+            <summary>
+            Indicate if the user is already in the session
+            </summary>
+            <param name="idSession"></param>
+            <param name="idUser"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Spryd.Server.Models.IUserDal">
+            <summary>
+            Interface de la couche d'accès aux données
+            </summary>
+        </member>
+        <member name="M:Spryd.Server.Models.User.#ctor">
+            <summary>
+            Empty constructor for User class
+            </summary>
+        </member>
+        <member name="M:Spryd.Server.Models.User.#ctor(System.String,System.String,System.String,System.String,System.DateTime,System.DateTime)">
+            <summary>
+            Constructor for User class
+            ", NullValueHandling=NullValueHandling.Ignore" ignores empty fields for JSON generation
+            </summary>
+            <param name="name"></param>
+            <param name="surname"></param>
+            <param name="email"></param>
+            <param name="password"></param>
+            <param name="createDate"></param>
+            <param name="updateDate"></param>
+        </member>
+        <member name="M:Spryd.Server.Models.User.Equals(Spryd.Server.Models.User)">
+            <summary>
+            Overrides Equality
+            We don't test password because we don't always get it's value
+            </summary>
+            <param name="comparedUser"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spryd.Server.WebApiApplication.Application_Start">
+            <summary>
+            Démarrage de l'application
+            </summary>
         </member>
     </members>
 </doc>

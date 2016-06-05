@@ -1,4 +1,4 @@
-﻿using Spryd.Serveur.Models;
+﻿using Spryd.Server.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 
-namespace Spryd.Serveur
+namespace Spryd.Server
 {
     public class WebApiApplication : System.Web.HttpApplication
     {

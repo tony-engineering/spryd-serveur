@@ -1,7 +1,7 @@
 ﻿ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Spryd.Serveur.Models;
-using Spryd.Serveur.Controllers;
+using Spryd.Server.Models;
+using Spryd.Server.Controllers;
 using System.Web.Http;
 using System.Net.Http;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Configuration;
 using System.Web.Configuration;
 
 
-namespace Spryd.Serveur.Tests
+namespace Spryd.Server.Tests
 {
     [TestClass]
     public class UserTest

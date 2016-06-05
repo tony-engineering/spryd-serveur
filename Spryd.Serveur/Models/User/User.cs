@@ -6,7 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
 
-namespace Spryd.Serveur.Models
+namespace Spryd.Server.Models
 {
     [Table("user")]
     public class User

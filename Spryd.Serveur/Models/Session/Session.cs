@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
-namespace Spryd.Serveur.Models
+namespace Spryd.Server.Models
 {
     [Table("session")]
     public class Session

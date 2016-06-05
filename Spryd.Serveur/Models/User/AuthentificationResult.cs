@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Spryd.Serveur.Models
+namespace Spryd.Server.Models
 {
     public class AuthenticationResult
     {

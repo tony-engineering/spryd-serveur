@@ -1,11 +1,10 @@
-﻿using Spryd.Serveur.Models;
+﻿using Spryd.Server.Models;
 using System.Collections.Generic;
 using System.Linq;
-using Spryd.Server.Models;
-using Spryd.Serveur.Controllers;
+using Spryd.Server.Controllers;
 using System;
 
-namespace Spryd.Serveur.Tests
+namespace Spryd.Server.Tests
 {
     /// <summary>
     /// Couche d'accès aux données statics pour les tests unitaires
@@ -92,21 +91,25 @@ namespace Spryd.Serveur.Tests
 
         public Session GetCurrentSession(int userId)
         {
-            int? sessionId = listUserSessions.Where(u => u.UserId == userId && u.StartDate != null && u.EndDate == null).Select(u => u.SessionId).FirstOrDefault();
-            if (sessionId == null)
+            var userSession = listUserSessions.Where(u => u.UserId == userId && u.StartDate != null && u.EndDate == null).FirstOrDefault();
+            if (userSession == null)
                 return null;
-            return listSessions.Where(s => s.Id == sessionId).FirstOrDefault();
+            return userSession.Session;
         }
 
         public void AddUserSession(UserSession userSession)
         {
-            userSession.SessionId = userSession.Session.Id;
+            if (userSession.SessionId == 0)
+                userSession.SessionId = GetSessionById(userSession.Session.Id).Id;
+            else if (userSession.Session == null)
+                userSession.Session = GetSessionById(userSession.SessionId);
+                
             listUserSessions.Add(userSession);
         }
 
         public bool IsUserInSession(int idSession, int idUser)
         {
-            return listUserSessions.Any(us => us.UserId == idUser && us.SessionId == idUser && us.EndDate == null);
+            return listUserSessions.Any(us => us.UserId == idUser && us.Session.Id == idUser && us.EndDate == null);
         }
 
         public User GetUserByIdPassword(string identifier, string password)
@@ -205,5 +208,18 @@ namespace Spryd.Serveur.Tests
             listSprydZones.Add(sprydZone);
         }
 
+        public void EndSession(int idSession)
+        {
+            var session = listSessions.Where(s => s.Id == idSession).FirstOrDefault();
+            if (session == null)
+                return;
+            session.EndDate = DateTime.Now;
+        }
+
+        public void GetUsersOutOfSession(int idSession)
+        {
+            listUserSessions.Where(us => us.Session.Id == idSession && us.EndDate == null).ToList().ForEach(u => u.EndDate = DateTime.Now);
+            var i = 0;
+        }
     }
 }

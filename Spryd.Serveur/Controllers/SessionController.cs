@@ -1,6 +1,4 @@
 ﻿using Spryd.Server.Models;
-using Spryd.Serveur;
-using Spryd.Serveur.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -8,7 +6,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.Http.Cors;
 
 namespace Spryd.Server.Controllers
 {
@@ -119,6 +116,21 @@ namespace Spryd.Server.Controllers
 
             userDal.AddUserSession(userSession);
             return sessionDal.GetSessionById(idSession);
+        }
+
+        [Route("session/{idSession}/end")]
+        [HttpPost]
+        public void EndSession(int idSession)
+        {
+            // Check if the session exist
+            if (!sessionDal.IsSessionExist(idSession))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Session " + idSession + " does not exist."));
+            // Check if session is still going on
+            if (!sessionDal.IsSessionRunning(idSession))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Conflict, "Session " + idSession + " is already over."));
+
+            sessionDal.GetUsersOutOfSession(idSession);
+            sessionDal.EndSession(idSession);
         }
 
         /// <summary>

@@ -5,7 +5,7 @@ using System.Web;
 using Newtonsoft.Json;
 using System.Web.Script.Serialization;
 
-namespace Spryd.Serveur.Models
+namespace Spryd.Server.Models
 {
     public class AuthentificationRequest
     {

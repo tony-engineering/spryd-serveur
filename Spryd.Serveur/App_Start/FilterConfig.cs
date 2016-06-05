@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 
-namespace Spryd.Serveur
+namespace Spryd.Server
 {
     public class FilterConfig
     {

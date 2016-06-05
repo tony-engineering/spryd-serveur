@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Spryd.Serveur.Models;
-using MySql.Data.MySqlClient;
-using System.Configuration;
 using Spryd.Server.Models;
+using System.Configuration;
 using System.Linq;
 
-namespace Spryd.Serveur.Controllers
+namespace Spryd.Server.Controllers
 {
     public class BeaconDal : IBeaconDal
     {

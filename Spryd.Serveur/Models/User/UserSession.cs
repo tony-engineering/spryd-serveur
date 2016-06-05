@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Spryd.Serveur.Models;
+using Spryd.Server.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;

@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 
-namespace Spryd.Serveur.Models
+namespace Spryd.Server.Models
 {
     /// <summary>
     /// Data access layer for Session
@@ -32,6 +32,22 @@ namespace Spryd.Serveur.Models
                 c.Sessions.Add(session);
                 c.SaveChanges();
                 return session.Id;
+            }
+        }
+
+        /// <summary>
+        /// End session
+        /// </summary>
+        /// <param name="idSession"></param>
+        public void EndSession(int idSession)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                var session = c.Sessions.Where(s => s.Id == idSession).FirstOrDefault();
+                if (session == null)
+                    return;
+                session.EndDate = DateTime.Now;
+                c.SaveChanges();
             }
         }
 
@@ -61,6 +77,19 @@ namespace Spryd.Serveur.Models
                  where userSession.SessionId == sessionId
                  select user).ToList();
             }
+        }
+
+        /// <summary>
+        /// Before ending a session, this method end user's current session by sending userSession endDate to Now
+        /// </summary>
+        /// <param name="idSession"></param>
+        public void GetUsersOutOfSession(int idSession)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                c.UserSession.Where(us => us.SessionId == idSession && us.EndDate == null).ToList().ForEach(u => u.EndDate = DateTime.Now);
+                c.SaveChanges();
+            }            
         }
 
         /// <summary>

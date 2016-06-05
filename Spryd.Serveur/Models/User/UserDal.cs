@@ -9,7 +9,7 @@ using System.Web;
 using System.Data.Entity;
 using System.Web.Configuration;
 
-namespace Spryd.Serveur.Models
+namespace Spryd.Server.Models
 {
     /// <summary>
     /// Data access layer for User
