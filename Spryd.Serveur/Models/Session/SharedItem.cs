@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Spryd.Serveur.Models
+namespace Spryd.Server.Models
 {
     public class SharedItem
     {

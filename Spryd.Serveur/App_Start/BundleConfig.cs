@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Optimization;
 
-namespace Spryd.Serveur
+namespace Spryd.Server
 {
     /// <summary>
     /// BundleConfig

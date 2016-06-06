@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 
-namespace Spryd.Serveur.Models
+namespace Spryd.Server.Models
 {
     /// <summary>
     /// Data access layer for Session
@@ -36,6 +36,22 @@ namespace Spryd.Serveur.Models
         }
 
         /// <summary>
+        /// End session
+        /// </summary>
+        /// <param name="idSession"></param>
+        public void EndSession(int idSession)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                var session = c.Sessions.Where(s => s.Id == idSession).FirstOrDefault();
+                if (session == null)
+                    return;
+                session.EndDate = DateTime.Now;
+                c.SaveChanges();
+            }
+        }
+
+        /// <summary>
         /// Get session by Id
         /// </summary>
         /// <param name="sessionId"></param>
@@ -58,9 +74,22 @@ namespace Spryd.Serveur.Models
             {
                 return (from user in c.Users
                  join userSession in c.UserSession on user.Id equals userSession.UserId
-                 where userSession.Session.Id == sessionId
+                 where userSession.SessionId == sessionId
                  select user).ToList();
             }
+        }
+
+        /// <summary>
+        /// Before ending a session, this method end user's current session by sending userSession endDate to Now
+        /// </summary>
+        /// <param name="idSession"></param>
+        public void GetUsersOutOfSession(int idSession)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                c.UserSession.Where(us => us.SessionId == idSession && us.EndDate == null).ToList().ForEach(u => u.EndDate = DateTime.Now);
+                c.SaveChanges();
+            }            
         }
 
         /// <summary>
@@ -86,6 +115,19 @@ namespace Spryd.Serveur.Models
             using (DbConnection c = new DbConnection())
             {
                 return c.Sessions.Any(s => s.Id == idSession);
+            }
+        }
+
+        /// <summary>
+        /// Indicate if the session is still running
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <returns></returns>
+        public bool IsSessionRunning(int idSession)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                return c.Sessions.Any(s => s.Id == idSession && s.EndDate == null);
             }
         }
     }

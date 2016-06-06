@@ -1,5 +1,4 @@
 ﻿using Spryd.Server.Models;
-using Spryd.Serveur.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +18,11 @@ namespace Spryd.Server.Controllers
         public SprydZoneController()
         {
             dal = new SprydZoneDal();
+        }
+
+        public SprydZoneController(ISprydZoneDal sprydZoneDal)
+        {
+            dal = sprydZoneDal;
         }
 
         /// <summary>

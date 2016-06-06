@@ -6,9 +6,10 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Data.Entity;
 using System.Web.Configuration;
 
-namespace Spryd.Serveur.Models
+namespace Spryd.Server.Models
 {
     /// <summary>
     /// Data access layer for User
@@ -38,16 +39,16 @@ namespace Spryd.Serveur.Models
 
         public AuthenticationResult Authenticate(AuthentificationRequest authenticationRequest)
         {
+            var user = GetUserByIdPassword(authenticationRequest.Identifier, authenticationRequest.Password);
+            
             AuthenticationResult authResult = new AuthenticationResult();
 
-            try
-            {
-                authResult.User = GetUserByIdPassword(authenticationRequest.Identifier, authenticationRequest.Password);
-                authResult.IsSuccess = true;
-            }
-            catch(UserNotFoundException e)
-            {
+            if (user == null)
                 authResult.IsSuccess = false;
+            else
+            {
+                authResult.User = user;
+                authResult.IsSuccess = true;
             }
 
             return authResult;
@@ -59,14 +60,11 @@ namespace Spryd.Serveur.Models
         /// <param name="identifier"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        private User GetUserByIdPassword(string identifier, string password)
+        public User GetUserByIdPassword(string identifier, string password)
         {
             using (DbConnection c = new DbConnection())
             {
-                var user = c.Users.Where(u => u.Email == identifier && u.Password == password).FirstOrDefault();
-                if (user == null)
-                    throw new UserNotFoundException("User with identifier " + identifier + " and password password " + password + " not found.");
-                return user;
+                return c.Users.Where(u => u.Email == identifier && u.Password == password).FirstOrDefault();
             }
         }
 
@@ -79,10 +77,7 @@ namespace Spryd.Serveur.Models
         {
             using (DbConnection c = new DbConnection())
             {
-                var user = c.Users.Where(u => u.Id == id).FirstOrDefault();
-                if(user == null)
-                    throw new UserNotFoundException("User with id " + id + " not found.");
-                return user;
+                return c.Users.Where(u => u.Id == id).FirstOrDefault(); ;
             }
         }
 
@@ -108,7 +103,7 @@ namespace Spryd.Serveur.Models
         {
             using (DbConnection c = new DbConnection())
             {
-                int? sessionId = c.UserSession.Where(u => u.UserId == userId && u.StartDate != null && u.EndDate == null).Select(u => u.Session.Id).FirstOrDefault();
+                int? sessionId = c.UserSession.Where(u => u.UserId == userId && u.StartDate != null && u.EndDate == null).Select(u => u.SessionId).FirstOrDefault();
                 if(sessionId == null)
                     return null;
                 return c.Sessions.Where(s => s.Id == sessionId).FirstOrDefault();
@@ -138,6 +133,20 @@ namespace Spryd.Serveur.Models
             {
                 c.UserSession.Add(userSession);
                 c.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// Indicate if the user is already in the session
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <param name="idUser"></param>
+        /// <returns></returns>
+        public bool IsUserInSession(int idSession, int idUser)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                return c.UserSession.Any(us => us.UserId == idUser && us.SessionId == idUser && us.EndDate == null);
             }
         }
     }

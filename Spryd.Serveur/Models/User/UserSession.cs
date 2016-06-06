@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Spryd.Serveur.Models;
+using Spryd.Server.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -22,6 +22,9 @@ namespace Spryd.Server.Models
 
         [JsonProperty("sessionId")]
         [Column("session_id")] 
+        public int SessionId { get; set; }
+
+        [ForeignKey("SessionId")]
         public Session Session { get; set; }
 
         [JsonIgnore]

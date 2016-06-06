@@ -243,7 +243,6 @@
     <Compile Include="Controllers\SessionController.cs" />
     <Compile Include="Controllers\BeaconController.cs" />
     <Compile Include="Controllers\UserController.cs" />
-    <Compile Include="Exceptions\NotValidUserException.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -260,7 +259,6 @@
     <Compile Include="Models\Session\SharedItem.cs" />
     <Compile Include="Models\SprydZone\SprydZone.cs" />
     <Compile Include="Models\User\User.cs" />
-    <Compile Include="Exceptions\UserNotFoundException.cs" />
     <Compile Include="Models\User\UserSession.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -300,9 +298,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>3396</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:8005</IISUrl>
-          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
-          <IISAppRootUrl>http://localhost:8005/</IISAppRootUrl>
+          <IISUrl>http://localhost:1111</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

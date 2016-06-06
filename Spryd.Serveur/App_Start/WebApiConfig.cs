@@ -7,7 +7,7 @@ using System.Web.Configuration;
 using System.Web.Http;
 using System.Web.Http.Cors;
 
-namespace Spryd.Serveur
+namespace Spryd.Server
 {
     public static class WebApiConfig
     {

@@ -1,4 +1,4 @@
-﻿using Spryd.Serveur.Models;
+﻿using Spryd.Server.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +14,6 @@ namespace Spryd.Server.Models
         SprydZone GetSprydZoneById(int id);
         Session GetSprydZoneCurrentession(int zoneId);
         bool IsSprydZoneExist(int zoneId);
+        void AddSprydZone(SprydZone sprydZone);
     }
 }

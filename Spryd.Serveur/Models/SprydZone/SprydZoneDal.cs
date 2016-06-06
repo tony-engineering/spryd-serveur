@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Spryd.Serveur.Models;
+using Spryd.Server.Models;
 
 namespace Spryd.Server.Models
 {
@@ -14,6 +14,18 @@ namespace Spryd.Server.Models
         public SprydZoneDal()
         {
 
+        }
+
+        /// <summary>
+        /// Add a spryd zone
+        /// </summary>
+        /// <param name="sprydZone"></param>
+        public void AddSprydZone(SprydZone sprydZone)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                c.SprydZones.Add(sprydZone);
+            }
         }
 
         /// <summary>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Spryd.Serveur.Models
+namespace Spryd.Server.Models
 {
     /// <summary>
     /// Interface de la couche d'accès aux données
@@ -16,5 +16,8 @@ namespace Spryd.Serveur.Models
         Session GetSessionById(long sessionId);
         bool IsSessionExist(int idSession);
         bool IsAlreadySessionRunningInSprydZone(int sprydZoneId);
+        bool IsSessionRunning(int idSession);
+        void EndSession(int idSession);
+        void GetUsersOutOfSession(int idSession);
     }
 }
