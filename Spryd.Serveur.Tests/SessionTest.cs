@@ -32,13 +32,13 @@ namespace Spryd.Server.Tests
         [TestMethod]
         public void CreateSession_Success()
         {
-            dal.AddUser(new User());
-            dal.AddSprydZone(new SprydZone() { Id = 3 });
+            dal.AddUser(new User()); // id = 1
+            dal.AddSprydZone(new SprydZone()); // id = 1
             UserSession newSessionParameters = new UserSession()
             {
                 UserId = 1,
                 SessionId = 1,
-                Session = new Session() { SprydZoneId = 3}
+                Session = new Session() { SprydZoneId = 1}
             };
 
             Session newSession = sessionController.AddSession(newSessionParameters);
@@ -88,18 +88,18 @@ namespace Spryd.Server.Tests
         [ExpectedException(typeof(HttpResponseException))]
         public void CreateSessionInSameSprydZone_Failed_ThrowsException()
         {
-            dal.AddUser(new User());
-            dal.AddSprydZone(new SprydZone() { Id = 3 });
+            dal.AddUser(new User()); // id = 1
+            dal.AddSprydZone(new SprydZone()); // id = 1
             UserSession firstSessionParameters = new UserSession()
             {
                 UserId = 1,
-                Session = new Session() { SprydZoneId = 3 }
+                Session = new Session() { SprydZoneId = 1 }
             };
 
             UserSession secondSessionParameters = new UserSession()
             {
                 UserId = 1,
-                Session = new Session() { SprydZoneId = 3 }
+                Session = new Session() { SprydZoneId = 1 }
             };
             sessionController.AddSession(firstSessionParameters);
             sessionController.AddSession(secondSessionParameters);
@@ -111,27 +111,25 @@ namespace Spryd.Server.Tests
         [TestMethod]
         public void CreateSessionInSameSprydZoneButAfterEndingFirstSession_Success()
         {
-            dal.AddUser(new User());
-            dal.AddSprydZone(new SprydZone() { Id = 3 });
+            dal.AddUser(new User()); // id = 1
+            dal.AddSprydZone(new SprydZone()); // id = 1
             UserSession firstSessionParameters = new UserSession()
             {
                 UserId = 1,
-                Session = new Session() { SprydZoneId = 3 }
+                Session = new Session() { SprydZoneId = 1 }
             };
 
             UserSession secondSessionParameters = new UserSession()
             {
                 UserId = 1,
-                Session = new Session() { SprydZoneId = 3 }
+                Session = new Session() { SprydZoneId = 1 }
             };
+
             sessionController.AddSession(firstSessionParameters);
-
             sessionController.EndSession(1);
-
             sessionController.AddSession(secondSessionParameters);
-            var i = dal.GetSprydZoneCurrentession(3);
-            var z = dal.GetCurrentSession(1);
-            Assert.AreEqual(dal.GetSprydZoneCurrentession(3), dal.GetCurrentSession(1));
+
+            Assert.AreEqual(dal.GetSprydZoneCurrentession(1), dal.GetCurrentSession(1));
         }
 
         /// <summary>
@@ -140,19 +138,19 @@ namespace Spryd.Server.Tests
         [TestMethod]
         public void JoinSession_Success()
         {
-            dal.AddUser(new User());
-            dal.AddUser(new User());
-            dal.AddSprydZone(new SprydZone() { Id = 3 });
+            dal.AddUser(new User()); // id = 1
+            dal.AddUser(new User()); // id = 2
+            dal.AddSprydZone(new SprydZone()); // id = 1
             UserSession sessionParameters = new UserSession()
             {
                 UserId = 1,
-                Session = new Session() { SprydZoneId = 3 }
+                Session = new Session() { SprydZoneId = 1 }
             };
             sessionController.AddSession(sessionParameters);
             sessionController.JoinSession(1, 2);
 
             Assert.AreEqual(1, dal.GetCurrentSession(2).Id);
-            Assert.AreEqual(dal.GetSprydZoneCurrentession(3), dal.GetCurrentSession(2));
+            Assert.AreEqual(dal.GetSprydZoneCurrentession(1), dal.GetCurrentSession(2));
         }
 
         /// <summary>

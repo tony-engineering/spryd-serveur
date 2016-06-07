@@ -853,6 +853,18 @@
             Interface de la couche d'accès aux données
             </summary>
         </member>
+        <member name="M:Spryd.Server.Models.SprydZone.#ctor">
+            <summary>
+            Empty constructor
+            </summary>
+        </member>
+        <member name="M:Spryd.Server.Models.SprydZone.#ctor(System.String,Spryd.Server.Models.Beacon)">
+            <summary>
+            Constructeur
+            </summary>
+            <param name="name"></param>
+            <param name="beacon"></param>
+        </member>
         <member name="M:Spryd.Server.Models.User.#ctor">
             <summary>
             Empty constructor for User class

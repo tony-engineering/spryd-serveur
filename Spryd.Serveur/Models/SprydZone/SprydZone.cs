@@ -18,5 +18,28 @@ namespace Spryd.Server.Models
         [Column("beacon_id")]
         [JsonProperty("beacon")]
         public Beacon Beacon { get; set; }
+
+        [NotMapped]
+        [JsonProperty("currentSession")]
+        public Session CurrentSession { get; set; }
+
+        /// <summary>
+        /// Empty constructor
+        /// </summary>
+        public SprydZone()
+        {
+
+        }
+
+        /// <summary>
+        /// Constructeur
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="beacon"></param>
+        public SprydZone(string name, Beacon beacon)
+        {
+            Name = name;
+            Beacon = beacon;
+        }
     }
 }

@@ -37,7 +37,12 @@ namespace Spryd.Server.Controllers
         {
             if (values.IsNullOrEmpty())
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Need a list of beacon technical Id"));
-            return dal.GetNearbySprydZone(values.ToList());
+
+            var listSprydZone = dal.GetNearbySprydZone(values.ToList());
+            foreach (var sprydZone in listSprydZone)
+                sprydZone.CurrentSession = dal.GetSprydZoneCurrentession(sprydZone.Id);
+
+            return listSprydZone;
         }
         
         /// <summary>
@@ -46,13 +51,12 @@ namespace Spryd.Server.Controllers
         /// <returns></returns>
         [Route("zone/all")]
         [HttpGet]
-        public List<KeyValuePair<SprydZone, Session>> GetAllSprydZones()
+        public List<SprydZone> GetAllSprydZones()
         {
-            var listSprydZoneState = new Dictionary<SprydZone, Session>();
-            foreach (var sprydZone in dal.GetAllSprydZones())
-                listSprydZoneState.Add(sprydZone, dal.GetSprydZoneCurrentession(sprydZone.Id));
-            
-            return listSprydZoneState.ToList();
+            var listSprydZone = dal.GetAllSprydZones();
+            foreach (var sprydZone in listSprydZone)
+                sprydZone.CurrentSession = dal.GetSprydZoneCurrentession(sprydZone.Id);
+            return listSprydZone;
         }
 
         /// <summary>
@@ -62,11 +66,15 @@ namespace Spryd.Server.Controllers
         /// <returns></returns>
         [Route("zone/{zoneId}")]
         [HttpGet]
-        public KeyValuePair<SprydZone, Session> GetSprydZoneById(int zoneId)
+        public SprydZone GetSprydZoneById(int zoneId)
         {
             if (!dal.IsSprydZoneExist(zoneId))
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "SprydZone " + zoneId + " does not exist."));
-            return new KeyValuePair<SprydZone, Session>(dal.GetSprydZoneById(zoneId),dal.GetSprydZoneCurrentession(zoneId));
+
+            var sprydZone = dal.GetSprydZoneById(zoneId);
+            sprydZone.CurrentSession = dal.GetSprydZoneCurrentession(zoneId);
+
+            return sprydZone;
         }
 
         /// <summary>

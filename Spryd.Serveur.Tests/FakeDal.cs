@@ -205,6 +205,11 @@ namespace Spryd.Server.Tests
 
         public void AddSprydZone(SprydZone sprydZone)
         {
+            if (listSprydZones.Count == 0)
+                sprydZone.Id = 1;
+            else
+                sprydZone.Id = listSprydZones.Max(u => u.Id) + 1;
+
             listSprydZones.Add(sprydZone);
         }
 
