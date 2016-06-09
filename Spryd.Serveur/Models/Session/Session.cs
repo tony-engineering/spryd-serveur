@@ -28,14 +28,20 @@ namespace Spryd.Server.Models
         public int Id { get; set; }
         [JsonProperty("name")]
         public string Name { get; set; }
+
         [Column("start_date")]
+        [JsonIgnore]
         [JsonProperty("startDate")]
         public DateTime StartDate { get; set; }
+
         [Column("end_date")]
+        [JsonIgnore]
         [JsonProperty("endDate")]
         public DateTime? EndDate { get; set; }
+
         [JsonProperty("password")]
         public string Password { get; set; }
+
         [Column("spryd_zone_id")]
         [JsonProperty("sprydZoneId")]
         public int SprydZoneId { get; set; }
