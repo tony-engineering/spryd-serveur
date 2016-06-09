@@ -137,6 +137,23 @@ namespace Spryd.Server.Models
         }
 
         /// <summary>
+        /// End the user session by setting the user session date at now
+        /// </summary>
+        /// <param name="idUser"></param>
+        /// <param name="idSession"></param>
+        public void EndUserSession(int idUser, int idSession)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                var userSessionToEnd = c.UserSession.Where(us => us.UserId == idUser && us.SessionId == idSession).FirstOrDefault();
+                if (userSessionToEnd == null)
+                    return;
+                userSessionToEnd.EndDate = DateTime.Now;
+                c.SaveChanges();
+            }
+        }
+
+        /// <summary>
         /// Indicate if the user is already in the session
         /// </summary>
         /// <param name="idSession"></param>
@@ -146,7 +163,7 @@ namespace Spryd.Server.Models
         {
             using (DbConnection c = new DbConnection())
             {
-                return c.UserSession.Any(us => us.UserId == idUser && us.SessionId == idUser && us.EndDate == null);
+                return c.UserSession.Any(us => us.UserId == idUser && us.SessionId == idSession && us.EndDate == null);
             }
         }
     }

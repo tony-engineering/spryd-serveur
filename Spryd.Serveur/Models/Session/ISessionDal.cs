@@ -19,5 +19,6 @@ namespace Spryd.Server.Models
         bool IsSessionRunning(int idSession);
         void EndSession(int idSession);
         void GetUsersOutOfSession(int idSession);
+        bool IsCreatorOfSession(int idSession, int idUser);
     }
 }

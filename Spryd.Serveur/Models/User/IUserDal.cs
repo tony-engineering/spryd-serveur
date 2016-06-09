@@ -22,5 +22,6 @@ namespace Spryd.Server.Models
         Session GetCurrentSession(int userId);
         void AddUserSession(UserSession userSession);
         bool IsUserInSession(int idSession, int idUser);
+        void EndUserSession(int idUser, int idSession);
     }
 }

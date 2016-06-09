@@ -109,7 +109,7 @@ namespace Spryd.Server.Tests
 
         public bool IsUserInSession(int idSession, int idUser)
         {
-            return listUserSessions.Any(us => us.UserId == idUser && us.Session.Id == idUser && us.EndDate == null);
+            return listUserSessions.Any(us => us.UserId == idUser && us.Session.Id == idSession && us.EndDate == null);
         }
 
         public User GetUserByIdPassword(string identifier, string password)
@@ -224,7 +224,19 @@ namespace Spryd.Server.Tests
         public void GetUsersOutOfSession(int idSession)
         {
             listUserSessions.Where(us => us.Session.Id == idSession && us.EndDate == null).ToList().ForEach(u => u.EndDate = DateTime.Now);
-            var i = 0;
+        }
+
+        public void EndUserSession(int idUser, int idSession)
+        {
+            var userSessionToEnd = listUserSessions.Where(us => us.UserId == idUser && us.SessionId == idSession).FirstOrDefault();
+            if (userSessionToEnd == null)
+                return;
+            userSessionToEnd.EndDate = DateTime.Now;
+        }
+
+        public bool IsCreatorOfSession(int idSession, int idUser)
+        {
+            return listUserSessions.Any(us => us.SessionId == idSession && us.UserId == idUser && us.IsCreator == true);
         }
     }
 }

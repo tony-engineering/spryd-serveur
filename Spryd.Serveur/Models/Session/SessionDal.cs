@@ -75,6 +75,7 @@ namespace Spryd.Server.Models
                 return (from user in c.Users
                  join userSession in c.UserSession on user.Id equals userSession.UserId
                  where userSession.SessionId == sessionId
+                 && userSession.EndDate == null
                  select user).ToList();
             }
         }
@@ -102,6 +103,20 @@ namespace Spryd.Server.Models
             using (DbConnection c = new DbConnection())
             {
                 return c.Sessions.Any(s => s.SprydZoneId == sprydZoneId && s.EndDate == null);
+            }
+        }
+
+        /// <summary>
+        /// Indicate if this user is the creator of this session
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <param name="idUser"></param>
+        /// <returns></returns>
+        public bool IsCreatorOfSession(int idSession, int idUser)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                return c.UserSession.Any(us => us.SessionId == idSession && us.UserId == idUser && us.IsCreator == true);
             }
         }
 

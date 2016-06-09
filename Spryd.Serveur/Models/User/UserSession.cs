@@ -24,7 +24,7 @@ namespace Spryd.Server.Models
         [Column("session_id")] 
         public int SessionId { get; set; }
 
-        [ForeignKey("SessionId")]
+        [NotMapped]
         public Session Session { get; set; }
 
         [JsonIgnore]
