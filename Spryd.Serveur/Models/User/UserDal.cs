@@ -166,5 +166,18 @@ namespace Spryd.Server.Models
                 return c.UserSession.Any(us => us.UserId == idUser && us.SessionId == idSession && us.EndDate == null);
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        public bool IsUserExist(string email)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                return c.Users.Any(u => u.Email == email);
+            }
+        }
     }
 }

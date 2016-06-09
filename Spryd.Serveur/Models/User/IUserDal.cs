@@ -23,5 +23,6 @@ namespace Spryd.Server.Models
         void AddUserSession(UserSession userSession);
         bool IsUserInSession(int idSession, int idUser);
         void EndUserSession(int idUser, int idSession);
+        bool IsUserExist(string email);
     }
 }

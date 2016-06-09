@@ -110,6 +110,8 @@ namespace Spryd.Server.Controllers
         {
             if(String.IsNullOrEmpty(user.Email) || String.IsNullOrEmpty(user.Password) || String.IsNullOrEmpty(user.Name) || String.IsNullOrEmpty(user.Surname))
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "One or more missing parameters."));
+            if(dal.IsUserExist(user.Email))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "User " + user.Email + " already exist."));
             user.CreateDate = DateTime.Now;
             user.UpdateDate = DateTime.Now;
         }

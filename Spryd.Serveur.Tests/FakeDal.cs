@@ -238,5 +238,10 @@ namespace Spryd.Server.Tests
         {
             return listUserSessions.Any(us => us.SessionId == idSession && us.UserId == idUser && us.IsCreator == true);
         }
+
+        public bool IsUserExist(string email)
+        {
+            return listUsers.Any(u => u.Email == email);
+        }
     }
 }
