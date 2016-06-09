@@ -243,5 +243,15 @@ namespace Spryd.Server.Tests
         {
             return listUsers.Any(u => u.Email == email);
         }
+
+        public void AddSharedItem(SharedItem sharedItem)
+        {
+            if (listSharedItems.Count == 0)
+                sharedItem.Id = 1;
+            else
+                sharedItem.Id = listSharedItems.Max(u => u.Id) + 1;
+
+            listSharedItems.Add(sharedItem);
+        }
     }
 }

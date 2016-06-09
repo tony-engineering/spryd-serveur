@@ -36,6 +36,19 @@ namespace Spryd.Server.Models
         }
 
         /// <summary>
+        /// Add a shared item to the session
+        /// </summary>
+        /// <param name="sharedItem"></param>
+        public void AddSharedItem(SharedItem sharedItem)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                c.SharedItems.Add(sharedItem);
+                c.SaveChanges();
+            }
+        }
+
+        /// <summary>
         /// End session
         /// </summary>
         /// <param name="idSession"></param>
