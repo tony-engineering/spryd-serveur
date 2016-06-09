@@ -126,11 +126,13 @@ namespace Spryd.Server.Controllers
         /// <param name="idUser"></param>
         [Route("session/{idSession}/user/{idUser}/leave")]
         [HttpPost]
-        public void LeaveSession(int idSession, int idUser)
+        public Session LeaveSession(int idSession, int idUser)
         {
             CheckLeavingUserAndSession(idSession, idUser);
             userDal.EndUserSession(idUser, idSession);
             IfLeavingUserIsCreator_EndSession(idSession, idUser);
+
+            return sessionDal.GetSessionById(idSession);
         }
 
         /// <summary>
@@ -153,7 +155,7 @@ namespace Spryd.Server.Controllers
         /// <param name="idSession"></param>
         [Route("session/{idSession}/end")]
         [HttpPost]
-        public void EndSession(int idSession)
+        public Session EndSession(int idSession)
         {
             // Check if the session exist
             if (!sessionDal.IsSessionExist(idSession))
@@ -164,10 +166,12 @@ namespace Spryd.Server.Controllers
 
             sessionDal.GetUsersOutOfSession(idSession);
             sessionDal.EndSession(idSession);
+
+            return sessionDal.GetSessionById(idSession);
         }
 
         /// <summary>
-        /// Check if this session is available and if this user can join it
+        /// Checks if this session is available and if this user can join it
         /// </summary>
         /// <param name="idSession"></param>
         /// <param name="idUser"></param>
