@@ -131,11 +131,13 @@ namespace Spryd.Server.Controllers
         /// <param name="idUser"></param>
         [Route("session/{idSession}/user/{idUser}/leave")]
         [HttpPost]
-        public void LeaveSession(int idSession, int idUser)
+        public Session LeaveSession(int idSession, int idUser)
         {
             CheckLeavingUserAndSession(idSession, idUser);
             userDal.EndUserSession(idUser, idSession);
             IfLeavingUserIsCreator_EndSession(idSession, idUser);
+
+            return sessionDal.GetSessionById(idSession);
         }
 
         /// <summary>
@@ -158,11 +160,13 @@ namespace Spryd.Server.Controllers
         /// <param name="idSession"></param>
         [Route("session/{idSession}/end")]
         [HttpPost]
-        public void EndSession(int idSession)
+        public Session EndSession(int idSession)
         {
             IsSessionRunning(idSession);
             sessionDal.GetUsersOutOfSession(idSession);
             sessionDal.EndSession(idSession);
+
+            return sessionDal.GetSessionById(idSession);
         }
 
         /// <summary>
@@ -257,8 +261,6 @@ namespace Spryd.Server.Controllers
             }
 
             return Request.CreateResponse(HttpStatusCode.Created);
-
-
         }
     }
 }
