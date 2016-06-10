@@ -21,7 +21,7 @@ namespace Spryd.Server.Models
         [Column("session_id")]
         public int SessionId { get; set; }
 
-        [Column("path_url")]
-        public string PathUrl { get; set; }
+        [Column("path")]
+        public string Path { get; set; }
     }
 }
