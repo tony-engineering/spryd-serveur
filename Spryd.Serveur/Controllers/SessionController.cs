@@ -254,7 +254,7 @@ namespace Spryd.Server.Controllers
                 sessionDal.AddSharedItem(new SharedItem()
                 {
                     CreateDate = DateTime.Now,
-                    PathUrl = WebApiConfig.SharedItemsRepository + postedFile.FileName,
+                    Path = WebApiConfig.ApiUrl + ConfigurationManager.AppSettings["SharedItemsRepository"] + postedFile.FileName,
                     Text = postedFile.FileName,
                     SessionId = idSession
                 });
