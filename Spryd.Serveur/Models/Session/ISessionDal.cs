@@ -21,5 +21,6 @@ namespace Spryd.Server.Models
         void GetUsersOutOfSession(int idSession);
         bool IsCreatorOfSession(int idSession, int idUser);
         void AddSharedItem(SharedItem sharedItem);
+        List<SharedItem> GetSharedItems(int idSession);
     }
 }

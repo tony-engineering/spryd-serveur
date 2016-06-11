@@ -183,5 +183,23 @@ namespace Spryd.Server.Models
                 return c.Users.Any(u => u.Email == email);
             }
         }
+
+        /// <summary>
+        /// Update user last activity
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <param name="idUser"></param>
+        public void UpdateUserLastActivity(int idSession, int idUser)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                var userSession = c.UserSession
+                    .Where(u => u.UserId == idUser && u.SessionId == idSession)
+                    .OrderByDescending(u =>u.Id)
+                    .FirstOrDefault();
+                userSession.LastActivity = DateTime.Now;
+                c.SaveChanges();
+            }
+        }
     }
 }

@@ -58,30 +58,6 @@ namespace Spryd.Server.Controllers
         }
 
         /// <summary>
-        /// Validate user session informations before creating the session
-        /// </summary>
-        /// <param name="userSession"></param>
-        private void ValidateUserSession(UserSession userSession)
-        {
-            // Check if the creator user exist
-            if (!userDal.IsUserExist(userSession.UserId))
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "User " + userSession.UserId + " does not exist."));
-
-            // Check if the new session's sprydzone exist
-            if (!sprydZoneDal.IsSprydZoneExist(userSession.Session.SprydZoneId))
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "There is no existing Spryd Zone with ID : " + userSession.Session.SprydZoneId + "."));
-
-            // Check if there is not already a running session in this spryd zone
-            if (sessionDal.IsAlreadySessionRunningInSprydZone(userSession.Session.SprydZoneId))
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "There is already a running session in Spryd Zone : " + userSession.Session.SprydZoneId + "."));
-
-            userSession.Session.StartDate = DateTime.Now;
-            userSession.LastActivity = DateTime.Now;
-            userSession.StartDate = DateTime.Now;
-            userSession.IsCreator = true;
-        }
-
-        /// <summary>
         /// Get session users
         /// </summary>
         /// <param name="idSession"></param>
@@ -170,72 +146,11 @@ namespace Spryd.Server.Controllers
         }
 
         /// <summary>
-        /// Check if session is running
-        /// </summary>
-        /// <param name="idSession"></param>
-        private void IsSessionRunning(int idSession)
-        {
-            // Check if the session exist
-            if (!sessionDal.IsSessionExist(idSession))
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Session " + idSession + " does not exist."));
-            // Check if session is still going on
-            if (!sessionDal.IsSessionRunning(idSession))
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Conflict, "Session " + idSession + " is already over."));
-        }
-
-        /// <summary>
-        /// Check if this session is available and if this user can join it
-        /// </summary>
-        /// <param name="idSession"></param>
-        /// <param name="idUser"></param>
-        private void CheckJoiningUserAndSession(int idSession, int idUser)
-        {
-            // Check if the session exist
-            if (!sessionDal.IsSessionExist(idSession))
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Session " + idSession + " does not exist."));
-
-            // Check if the creator user exist
-            if (!userDal.IsUserExist(idUser))
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "User " + idUser + " does not exist."));
-
-            // Check if the user has already join this session
-            if (userDal.IsUserInSession(idSession, idUser))
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Conflict, "User " + idUser + " already join session " + idSession + "."));
-
-            // Check if session is still going on
-            if (!sessionDal.IsSessionRunning(idSession))
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Conflict, "Session " + idSession + " is over."));
-        }
-
-        /// <summary>
-        /// Check if the session is still available and user info
-        /// </summary>
-        /// <param name="idSession"></param>
-        /// <param name="idUser"></param>
-        private void CheckLeavingUserAndSession(int idSession, int idUser)
-        {
-            // Check if the session exist
-            if (!sessionDal.IsSessionExist(idSession))
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Session " + idSession + " does not exist."));
-
-            // Check if the creator user exist
-            if (!userDal.IsUserExist(idUser))
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "User " + idUser + " does not exist."));
-
-            // Check if the user is still in this session
-            if (!userDal.IsUserInSession(idSession, idUser))
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Conflict, "User " + idUser + " is not in session " + idSession + "."));
-
-            // Check if session is still going on
-            if (!sessionDal.IsSessionRunning(idSession))
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Conflict, "Session " + idSession + " is over."));
-        }
-
-        /// <summary>
         /// Share an item in this session
+        /// Add files in http body request
         /// </summary>
         /// <returns></returns>
-        [Route("session/{idSession}/sharedItem")]
+        [Route("session/{idSession}/sharedItems")]
         [HttpPost]
         public HttpResponseMessage AddSharedItem(int idSession)
         {
@@ -263,5 +178,161 @@ namespace Spryd.Server.Controllers
             return Request.CreateResponse(HttpStatusCode.Created);
         }
 
+        /// <summary>
+        /// Get items shared in a session
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <returns></returns>
+        [Route("session/{idSession}/sharedItems")]
+        [HttpGet]
+        public List<SharedItem> GetSharedItems(int idSession)
+        {
+            IsSessionExist(idSession);
+
+            var listSharedItems = sessionDal.GetSharedItems(idSession);
+            if(listSharedItems.IsNullOrEmpty())
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Session " + idSession + " doesn't have shared items."));
+            return listSharedItems;
+        }
+
+        /// <summary>
+        /// Set user last activity date in this session
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <param name="idUser"></param>
+        /// <returns></returns>
+        [Route("session/{idSession}/user/{idUser}/i-am-here")]
+        [HttpPut]
+        public Session IAmHere(int idSession, int idUser)
+        {
+            IsSessionRunning(idSession);
+            IsUserExist(idUser);
+            IsUserStillInSession(idSession, idUser);
+            
+            userDal.UpdateUserLastActivity(idSession, idUser);
+            return sessionDal.GetSessionById(idSession);
+        }
+
+        #region Checking and validation
+
+        /// <summary>
+        /// Check if session is running
+        /// </summary>
+        /// <param name="idSession"></param>
+        private void IsSessionRunning(int idSession)
+        {
+            IsSessionExist(idSession);
+            // Check if session is still going on
+            if (!sessionDal.IsSessionRunning(idSession))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Conflict, "Session " + idSession + " is already over."));
+        }
+
+        /// <summary>
+        /// Check if session exist
+        /// </summary>
+        /// <param name="idSession"></param>
+        private void IsSessionExist(int idSession)
+        {
+            // Check if the session exist
+            if (!sessionDal.IsSessionExist(idSession))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Session " + idSession + " does not exist."));
+        }
+
+        /// <summary>
+        /// Check if user is not in session
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <param name="idUser"></param>
+        private void IsUserNotInSession(int idSession, int idUser)
+        {
+            // Check if the user has already join this session
+            if (userDal.IsUserInSession(idSession, idUser))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Conflict, "User " + idUser + " already join session " + idSession + "."));
+        }
+        /// <summary>
+        /// Check if user is in session
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <param name="idUser"></param>
+        private void IsUserStillInSession(int idSession, int idUser)
+        {
+            // Check if the user is still in this session
+            if (!userDal.IsUserInSession(idSession, idUser))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Conflict, "User " + idUser + " is not in session " + idSession + "."));
+        }
+
+        /// <summary>
+        /// Check if user exist
+        /// </summary>
+        /// <param name="idUser"></param>
+        private void IsUserExist(int idUser)
+        {
+            // Check if the creator user exist
+            if (!userDal.IsUserExist(idUser))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "User " + idUser + " does not exist."));
+        }
+
+        /// <summary>
+        /// Check id spryd zone exist
+        /// </summary>
+        /// <param name="sprydZoneId"></param>
+        private void IsSprydZoneExist(int sprydZoneId)
+        {
+            // Check if the new session's sprydzone exist
+            if (!sprydZoneDal.IsSprydZoneExist(sprydZoneId))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "There is no existing Spryd Zone with ID : " + sprydZoneId + "."));
+        }
+
+        /// <summary>
+        /// Check if there is not already a running session in this spryd zone
+        /// </summary>
+        /// <param name="sprydZoneId"></param>
+        private void IsAlreadyASessionRunningInSprydZone(int sprydZoneId)
+        {
+            if (sessionDal.IsAlreadySessionRunningInSprydZone(sprydZoneId))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "There is already a running session in Spryd Zone : " + sprydZoneId + "."));
+        }
+
+        /// <summary>
+        /// Validate user session informations before creating the session
+        /// </summary>
+        /// <param name="userSession"></param>
+        private void ValidateUserSession(UserSession userSession)
+        {
+            IsUserExist(userSession.UserId);
+            IsSprydZoneExist(userSession.Session.SprydZoneId);
+            IsAlreadyASessionRunningInSprydZone(userSession.Session.SprydZoneId);
+            
+            userSession.Session.StartDate = DateTime.Now;
+            userSession.LastActivity = DateTime.Now;
+            userSession.StartDate = DateTime.Now;
+            userSession.IsCreator = true;
+        }
+
+        /// <summary>
+        /// Check if this session is available and if this user can join it
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <param name="idUser"></param>
+        private void CheckJoiningUserAndSession(int idSession, int idUser)
+        {
+            IsSessionRunning(idSession);
+            IsUserExist(idUser);
+            IsUserNotInSession(idSession, idUser);
+        }
+
+        /// <summary>
+        /// Check if the session is still available and user info
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <param name="idUser"></param>
+        private void CheckLeavingUserAndSession(int idSession, int idUser)
+        {
+            IsSessionRunning(idSession);
+            IsUserExist(idUser);
+            IsUserStillInSession(idSession, idUser);
+        }
+
+        #endregion
     }
 }

@@ -262,5 +262,18 @@ namespace Spryd.Server.Tests
 
             listSharedItems.Add(sharedItem);
         }
+
+        public List<SharedItem> GetSharedItems(int idSession)
+        {
+            return listSharedItems.Where(s => s.SessionId == idSession).ToList();
+        }
+
+        public void UpdateUserLastActivity(int idSession, int idUser)
+        {
+            var userSession = listUserSessions.Where(u => u.UserId == idUser && u.SessionId == idSession)
+                    .OrderByDescending(u => u.Id)
+                    .FirstOrDefault();
+            userSession.LastActivity = DateTime.Now;
+        }
     }
 }

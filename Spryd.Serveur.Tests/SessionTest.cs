@@ -253,6 +253,9 @@ namespace Spryd.Server.Tests
             sessionController.LeaveSession(1, 1); // user 1 leave the session 1 but session is already over so exception
         }
 
+        /// <summary>
+        /// User leave session two times, both userSession are ended
+        /// </summary>
         [TestMethod]
         public void UserLeaveSessionTwice_Success()
         {
