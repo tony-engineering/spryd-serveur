@@ -14,11 +14,13 @@ namespace Spryd.Server
     {
         public static ConnectionStringSettings connectionString;
         public static String SharedItemsRepository;
+        public static String ApiUrl;
 
         public static void Register(HttpConfiguration config)
         {
             // Connection String
             connectionString = ConfigurationManager.ConnectionStrings["DbConnection"];
+
 
             // Web API Routes
             config.MapHttpAttributeRoutes();
@@ -35,7 +37,8 @@ namespace Spryd.Server
             var corsAttr = new EnableCorsAttribute("*", "*", "*");
             config.EnableCors(corsAttr);
 
-            SharedItemsRepository = HttpContext.Current.Server.MapPath("~/SharedItems/");
+            ApiUrl = ConfigurationManager.AppSettings["SprydURL"];
+            SharedItemsRepository = HttpContext.Current.Server.MapPath("~/" + ConfigurationManager.AppSettings["SharedItemsRepository"]);
         }
     }
 }

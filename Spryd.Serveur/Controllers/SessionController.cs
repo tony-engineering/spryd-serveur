@@ -249,12 +249,12 @@ namespace Spryd.Server.Controllers
             {
                 var postedFile = httpRequest.Files[file];
                 var filePath = WebApiConfig.SharedItemsRepository + postedFile.FileName;
-                postedFile.SaveAs(filePath);
+                postedFile.SaveAs(filePath); 
                 
                 sessionDal.AddSharedItem(new SharedItem()
                 {
                     CreateDate = DateTime.Now,
-                    PathUrl = filePath,
+                    PathUrl = WebApiConfig.SharedItemsRepository + postedFile.FileName,
                     Text = postedFile.FileName,
                     SessionId = idSession
                 });
@@ -262,5 +262,6 @@ namespace Spryd.Server.Controllers
 
             return Request.CreateResponse(HttpStatusCode.Created);
         }
+
     }
 }

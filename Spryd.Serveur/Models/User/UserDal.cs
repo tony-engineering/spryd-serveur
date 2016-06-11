@@ -145,7 +145,11 @@ namespace Spryd.Server.Models
         {
             using (DbConnection c = new DbConnection())
             {
-                var userSessionToEnd = c.UserSession.Where(us => us.UserId == idUser && us.SessionId == idSession).LastOrDefault();
+                var userSessionToEnd = 
+                    c.UserSession
+                    .Where(us => us.UserId == idUser && us.SessionId == idSession && us.EndDate == null)
+                    .OrderByDescending(us => us .Id)
+                    .FirstOrDefault(); // get the last session joined
                 if (userSessionToEnd == null)
                     return;
                 userSessionToEnd.EndDate = DateTime.Now;

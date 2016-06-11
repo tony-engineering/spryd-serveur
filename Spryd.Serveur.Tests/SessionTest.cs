@@ -252,5 +252,34 @@ namespace Spryd.Server.Tests
             sessionController.EndSession(1);
             sessionController.LeaveSession(1, 1); // user 1 leave the session 1 but session is already over so exception
         }
+
+        [TestMethod]
+        public void UserLeaveSessionTwice_Success()
+        {
+            dal.AddUser(new User()); // id = 1
+            dal.AddUser(new User()); // id = 2
+            dal.AddSprydZone(new SprydZone()); // id = 1
+            UserSession sessionParameters = new UserSession()
+            {
+                UserId = 1,
+                Session = new Session() { SprydZoneId = 1 }
+            };
+            sessionController.AddSession(sessionParameters);
+            sessionController.JoinSession(1, 2); // user 2 join session 1
+
+            Assert.IsTrue(dal.IsUserInSession(1, 2)); // is user 2 in session 1 ?
+            sessionController.LeaveSession(1, 2); // user 2 leave the session 1
+            Assert.IsFalse(dal.IsUserInSession(1, 2)); // is user 2 in session 1 ?
+            
+            Assert.AreEqual(null, dal.GetCurrentSession(2)); // user 2 have no more current session
+
+            sessionController.JoinSession(1, 2); // user 2 join session 1
+            Assert.IsTrue(dal.IsUserInSession(1, 2)); // is user 2 in session 1 ?
+
+            sessionController.LeaveSession(1, 2); // user 2 leave the session 1 again
+            Assert.IsFalse(dal.IsUserInSession(1, 2)); // is user 2 in session 1 ?
+
+            Assert.AreEqual(null, dal.GetCurrentSession(2)); // user 2 have no more current session
+        }
     }
 }
