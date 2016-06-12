@@ -99,11 +99,18 @@ namespace Spryd.Server.Tests
 
         public void AddUserSession(UserSession userSession)
         {
+            // get session info
             if (userSession.SessionId == 0)
                 userSession.SessionId = GetSessionById(userSession.Session.Id).Id;
             else if (userSession.Session == null)
                 userSession.Session = GetSessionById(userSession.SessionId);
-                
+
+            //Get new ID user session
+            if (listUserSessions.Count == 0)
+                userSession.Id = 1;
+            else
+                userSession.Id = listUserSessions.Max(u => u.Id) + 1;
+
             listUserSessions.Add(userSession);
         }
 
@@ -228,7 +235,9 @@ namespace Spryd.Server.Tests
 
         public void EndUserSession(int idUser, int idSession)
         {
-            var userSessionToEnd = listUserSessions.Where(us => us.UserId == idUser && us.SessionId == idSession).FirstOrDefault();
+            var userSessionToEnd = listUserSessions.Where(us => us.UserId == idUser && us.SessionId == idSession && us.EndDate == null)
+                .OrderByDescending(us => us.Id)
+                .FirstOrDefault();
             if (userSessionToEnd == null)
                 return;
             userSessionToEnd.EndDate = DateTime.Now;
@@ -252,6 +261,19 @@ namespace Spryd.Server.Tests
                 sharedItem.Id = listSharedItems.Max(u => u.Id) + 1;
 
             listSharedItems.Add(sharedItem);
+        }
+
+        public List<SharedItem> GetSharedItems(int idSession)
+        {
+            return listSharedItems.Where(s => s.SessionId == idSession).ToList();
+        }
+
+        public void UpdateUserLastActivity(int idSession, int idUser)
+        {
+            var userSession = listUserSessions.Where(u => u.UserId == idUser && u.SessionId == idSession)
+                    .OrderByDescending(u => u.Id)
+                    .FirstOrDefault();
+            userSession.LastActivity = DateTime.Now;
         }
     }
 }

@@ -94,6 +94,19 @@ namespace Spryd.Server.Models
         }
 
         /// <summary>
+        /// Get items shared in a session
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <returns></returns>
+        public List<SharedItem> GetSharedItems(int idSession)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                return c.SharedItems.Where(s => s.SessionId == idSession).ToList();
+            }
+        }
+
+        /// <summary>
         /// Before ending a session, this method end user's current session by sending userSession endDate to Now
         /// </summary>
         /// <param name="idSession"></param>

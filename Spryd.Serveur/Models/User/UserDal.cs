@@ -145,7 +145,11 @@ namespace Spryd.Server.Models
         {
             using (DbConnection c = new DbConnection())
             {
-                var userSessionToEnd = c.UserSession.Where(us => us.UserId == idUser && us.SessionId == idSession).LastOrDefault();
+                var userSessionToEnd = 
+                    c.UserSession
+                    .Where(us => us.UserId == idUser && us.SessionId == idSession && us.EndDate == null)
+                    .OrderByDescending(us => us .Id)
+                    .FirstOrDefault(); // get the last session joined
                 if (userSessionToEnd == null)
                     return;
                 userSessionToEnd.EndDate = DateTime.Now;
@@ -177,6 +181,24 @@ namespace Spryd.Server.Models
             using (DbConnection c = new DbConnection())
             {
                 return c.Users.Any(u => u.Email == email);
+            }
+        }
+
+        /// <summary>
+        /// Update user last activity
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <param name="idUser"></param>
+        public void UpdateUserLastActivity(int idSession, int idUser)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                var userSession = c.UserSession
+                    .Where(u => u.UserId == idUser && u.SessionId == idSession)
+                    .OrderByDescending(u =>u.Id)
+                    .FirstOrDefault();
+                userSession.LastActivity = DateTime.Now;
+                c.SaveChanges();
             }
         }
     }

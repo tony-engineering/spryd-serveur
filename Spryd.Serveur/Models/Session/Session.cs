@@ -30,7 +30,6 @@ namespace Spryd.Server.Models
         public string Name { get; set; }
 
         [Column("start_date")]
-        [JsonIgnore]
         [JsonProperty("startDate")]
         public DateTime StartDate { get; set; }
 
