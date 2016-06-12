@@ -334,6 +334,18 @@ namespace Spryd.Server.Controllers
         }
 
         /// <summary>
+        /// Validate session password
+        /// </summary>
+        /// <param name="password"></param>
+        private void IsSessionPasswordValid(string password)
+        {
+            if (password == null)
+                return;
+            if (password.Length == 0)
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Password not valid (lentgh = 0)."));
+        }
+
+        /// <summary>
         /// Validate user session informations before creating the session
         /// </summary>
         /// <param name="userSession"></param>
@@ -342,7 +354,8 @@ namespace Spryd.Server.Controllers
             IsUserExist(userSession.UserId);
             IsSprydZoneExist(userSession.Session.SprydZoneId);
             IsAlreadyASessionRunningInSprydZone(userSession.Session.SprydZoneId);
-            
+            IsSessionPasswordValid(userSession.Session.Password);
+
             userSession.Session.StartDate = DateTime.Now;
             userSession.LastActivity = DateTime.Now;
             userSession.StartDate = DateTime.Now;
