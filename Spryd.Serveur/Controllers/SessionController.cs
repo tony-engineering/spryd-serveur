@@ -58,7 +58,8 @@ namespace Spryd.Server.Controllers
         }
 
         /// <summary>
-        /// Get session users
+        /// Get inactive users out of session and
+        /// get session active users
         /// </summary>
         /// <param name="idSession"></param>
         /// <returns></returns>
@@ -66,13 +67,29 @@ namespace Spryd.Server.Controllers
         [HttpGet]
         public List<User> GetSessionUsers(int idSession)
         {
-            if (!sessionDal.IsSessionExist(idSession))
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "Session " + idSession + " does not exist."));
+            IsSessionExist(idSession);
+            sessionDal.GetInactiveUsersOutOfSession(idSession);
+            IsSessionExist(idSession); // Check session exist again (if creator was inactive, the session is over)
             var listUsers = sessionDal.GetSessionUsers(idSession);
+            IsListUsersEmpty(listUsers);
+            return listUsers;
+        }
+
+        /// <summary>
+        /// Get sessions users without kick
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <returns></returns>
+        [Route("session/{idSession}/allusers")]
+        [HttpGet]
+        public List<User> GetSessionAllUsers(int idSession)
+        {
+            IsSessionExist(idSession);
+            var listUsers = sessionDal.GetSessionAllUsers(idSession);
 
             if (listUsers.IsNullOrEmpty()) // s'il n'y a aucun
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "There is no users in session " + idSession));
-            return sessionDal.GetSessionUsers(idSession);
+            return listUsers;
         }
 
         /// <summary>
@@ -239,16 +256,17 @@ namespace Spryd.Server.Controllers
         }
 
         /// <summary>
-        /// Check if user is not in session
+        /// If user already have a userSession, end this userSession to create a new one
         /// </summary>
         /// <param name="idSession"></param>
         /// <param name="idUser"></param>
-        private void IsUserNotInSession(int idSession, int idUser)
+        private void EndUserSessionIfAlreadyJoin(int idSession, int idUser)
         {
             // Check if the user has already join this session
             if (userDal.IsUserInSession(idSession, idUser))
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Conflict, "User " + idUser + " already join session " + idSession + "."));
+                userDal.EndUserSession(idUser, idSession);
         }
+
         /// <summary>
         /// Check if user is in session
         /// </summary>
@@ -294,6 +312,16 @@ namespace Spryd.Server.Controllers
         }
 
         /// <summary>
+        /// Indicate if users list is empty
+        /// </summary>
+        /// <param name="listUsers"></param>
+        private void IsListUsersEmpty(List<User> listUsers)
+        {
+            if (listUsers.IsNullOrEmpty()) // s'il n'y a aucun
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "There is no active users in this session."));
+        }
+
+        /// <summary>
         /// Validate user session informations before creating the session
         /// </summary>
         /// <param name="userSession"></param>
@@ -318,7 +346,7 @@ namespace Spryd.Server.Controllers
         {
             IsSessionRunning(idSession);
             IsUserExist(idUser);
-            IsUserNotInSession(idSession, idUser);
+            EndUserSessionIfAlreadyJoin(idSession, idUser);
         }
 
         /// <summary>

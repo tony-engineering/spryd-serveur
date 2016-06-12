@@ -12,7 +12,7 @@ namespace Spryd.Server.Models
     public interface ISessionDal
     {
         int AddSession(Session session);
-        List<User> GetSessionUsers(int sessionId);
+        List<User> GetSessionAllUsers(int sessionId);
         Session GetSessionById(long sessionId);
         bool IsSessionExist(int idSession);
         bool IsAlreadySessionRunningInSprydZone(int sprydZoneId);
@@ -22,5 +22,7 @@ namespace Spryd.Server.Models
         bool IsCreatorOfSession(int idSession, int idUser);
         void AddSharedItem(SharedItem sharedItem);
         List<SharedItem> GetSharedItems(int idSession);
+        List<User> GetSessionUsers(int idSession);
+        void GetInactiveUsersOutOfSession(int idSession);
     }
 }
