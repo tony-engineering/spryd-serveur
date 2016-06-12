@@ -216,5 +216,19 @@ namespace Spryd.Server.Models
                 }
             }
         }
+
+        /// <summary>
+        /// Check if password mathes session password
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public bool IsGoodPassword(int idSession, string password)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                return c.Sessions.Any(s=> s.Id == idSession && s.Password == password);
+            }
+        }
     }
 }

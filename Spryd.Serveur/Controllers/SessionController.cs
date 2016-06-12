@@ -97,12 +97,13 @@ namespace Spryd.Server.Controllers
         /// </summary>
         /// <param name="idSession"></param>
         /// <param name="idUser"></param>
+        /// <param name="password"></param>
         /// <returns></returns>
         [Route("session/{idSession}/user/{idUser}/join")]
         [HttpPost]
-        public Session JoinSession(int idSession, int idUser)
+        public Session JoinSession(int idSession, int idUser, [FromUri] string password = null)
         {
-            CheckJoiningUserAndSession(idSession, idUser);
+            CheckJoiningUserAndSession(idSession, idUser, password);
 
             var userSession = new UserSession()
             {
@@ -322,6 +323,17 @@ namespace Spryd.Server.Controllers
         }
 
         /// <summary>
+        /// Check session password
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <param name="password"></param>
+        private void IsGoodPassword(int idSession, string password)
+        {
+            if (!sessionDal.IsGoodPassword(idSession, password))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Wrong password !"));
+        }
+
+        /// <summary>
         /// Validate user session informations before creating the session
         /// </summary>
         /// <param name="userSession"></param>
@@ -342,13 +354,16 @@ namespace Spryd.Server.Controllers
         /// </summary>
         /// <param name="idSession"></param>
         /// <param name="idUser"></param>
-        private void CheckJoiningUserAndSession(int idSession, int idUser)
+        /// <param name="password"></param>
+        private void CheckJoiningUserAndSession(int idSession, int idUser, string password)
         {
             IsSessionRunning(idSession);
             IsUserExist(idUser);
+            if(sessionDal.GetSessionById(idSession).Password != null) // if there is a password, check it
+                IsGoodPassword(idSession, password);
             EndUserSessionIfAlreadyJoin(idSession, idUser);
         }
-
+        
         /// <summary>
         /// Check if the session is still available and user info
         /// </summary>

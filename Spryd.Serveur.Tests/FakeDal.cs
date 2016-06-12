@@ -295,5 +295,10 @@ namespace Spryd.Server.Tests
                 .ToList()
                 .ForEach(u => u.EndDate = DateTime.Now);
         }
+
+        public bool IsGoodPassword(int idSession, string password)
+        {
+            return listSessions.Any(s => s.Id == idSession && s.Password == password);
+        }
     }
 }
