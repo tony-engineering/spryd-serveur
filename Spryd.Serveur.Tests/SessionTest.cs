@@ -44,7 +44,7 @@ namespace Spryd.Server.Tests
             Session newSession = sessionController.AddSession(newSessionParameters);
 
             Assert.AreEqual(dal.GetSessionById(1), newSession);
-            Assert.AreEqual(dal.GetSessionUsers(newSession.Id).First().Id, 1);
+            Assert.AreEqual(dal.GetSessionAllUsers(newSession.Id).First().Id, 1);
         }
 
         /// <summary>

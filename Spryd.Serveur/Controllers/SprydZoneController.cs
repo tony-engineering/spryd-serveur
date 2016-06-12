@@ -95,7 +95,7 @@ namespace Spryd.Server.Controllers
         }
     }
 
-    public static class MyExtensions
+    internal static class MyExtensions
     {
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable)
         {

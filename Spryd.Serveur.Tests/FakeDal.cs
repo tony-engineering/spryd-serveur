@@ -151,11 +151,12 @@ namespace Spryd.Server.Tests
             return listBeacons.Where(b => b.TechnicalId == technicalId).FirstOrDefault();
         }
 
-        public List<User> GetSessionUsers(int sessionId)
+        public List<User> GetSessionAllUsers(int sessionId)
         {
             return (from user in listUsers
                     join userSession in listUserSessions on user.Id equals userSession.UserId
                     where userSession.SessionId == sessionId
+                    && userSession.EndDate == null
                     select user).ToList();
         }
 
@@ -274,6 +275,25 @@ namespace Spryd.Server.Tests
                     .OrderByDescending(u => u.Id)
                     .FirstOrDefault();
             userSession.LastActivity = DateTime.Now;
+        }
+
+        public List<User> GetSessionUsers(int idSession)
+        {
+            var limitDelayActivity = DateTime.Now.AddMinutes(-1);
+            return (from user in listUsers
+                    join userSession in listUserSessions on user.Id equals userSession.UserId
+                    where userSession.SessionId == idSession
+                    && userSession.EndDate == null
+                    && userSession.LastActivity > limitDelayActivity
+                    select user).ToList();
+        }
+
+        public void GetInactiveUsersOutOfSession(int idSession)
+        {
+            var limitDelayActivity = DateTime.Now.AddMinutes(-1);
+            listUserSessions.Where(us => us.SessionId == idSession && us.EndDate == null && us.LastActivity > limitDelayActivity)
+                .ToList()
+                .ForEach(u => u.EndDate = DateTime.Now);
         }
     }
 }
