@@ -37,6 +37,9 @@ namespace Spryd.Server
             var corsAttr = new EnableCorsAttribute("*", "*", "*");
             config.EnableCors(corsAttr);
 
+            // Set logging configuration
+            log4net.Config.XmlConfigurator.Configure();
+
             ApiUrl = ConfigurationManager.AppSettings["SprydURL"];
             SharedItemsRepository = HttpContext.Current.Server.MapPath("~/" + ConfigurationManager.AppSettings["SharedItemsRepository"]);
         }

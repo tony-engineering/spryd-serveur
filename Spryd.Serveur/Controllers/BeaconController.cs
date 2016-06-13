@@ -1,4 +1,5 @@
-﻿using Spryd.Server.Models;
+﻿using log4net;
+using Spryd.Server.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -11,6 +12,7 @@ namespace Spryd.Server.Controllers
 {
     public class BeaconController : ApiController
     {
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private IBeaconDal dal;
 
         /// <summary>
