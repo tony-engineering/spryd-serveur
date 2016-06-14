@@ -379,7 +379,7 @@ namespace Spryd.Server.Controllers
         /// <param name="idSharedItem"></param>
         private void IsSharedItemExist(int idSession, int idSharedItem)
         {
-            if (!sessionDal.IsSharedItemExist(idSharedItem, idSharedItem))
+            if (!sessionDal.IsSharedItemExist(idSession, idSharedItem))
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "There is no item " + idSharedItem + " in session " + idSession + "."));
         }
 
