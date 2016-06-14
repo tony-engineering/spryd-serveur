@@ -300,5 +300,15 @@ namespace Spryd.Server.Tests
         {
             return listSessions.Any(s => s.Id == idSession && s.Password == password);
         }
+
+        public bool IsSharedItemExist(int idSession, int idSharedItem)
+        {
+            throw new NotImplementedException();
+        }
+
+        public SharedItem GetSharedItemById(int idSession, int idSharedItem)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

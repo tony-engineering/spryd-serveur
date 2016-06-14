@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Web;
@@ -41,7 +42,13 @@ namespace Spryd.Server
             log4net.Config.XmlConfigurator.Configure();
 
             ApiUrl = ConfigurationManager.AppSettings["SprydURL"];
-            SharedItemsRepository = HttpContext.Current.Server.MapPath("~/" + ConfigurationManager.AppSettings["SharedItemsRepository"]);
+
+            string subPath = ConfigurationManager.AppSettings["SharedItemsRepository"]; // your code goes here
+
+            if (!Directory.Exists(HttpContext.Current.Server.MapPath(subPath)))
+                Directory.CreateDirectory(HttpContext.Current.Server.MapPath(subPath));
+
+            SharedItemsRepository = HttpRuntime.AppDomainAppPath + ConfigurationManager.AppSettings["SharedItemsRepository"];
         }
     }
 }

@@ -302,5 +302,43 @@ namespace Spryd.Server.Models
                 throw;
             }
         }
+
+        /// <summary>
+        /// Check if this shared item exist in this session
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <param name="idSharedItem"></param>
+        /// <returns></returns>
+        public bool IsSharedItemExist(int idSession, int idSharedItem)
+        {
+            try
+            {
+                return dal.SharedItems.Any(s => s.SessionId == idSession && s.Id == idSharedItem);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Get shared item in a session
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <param name="idSharedItem"></param>
+        /// <returns></returns>
+        public SharedItem GetSharedItemById(int idSession, int idSharedItem)
+        {
+            try
+            {
+                return dal.SharedItems.Where(s => s.SessionId == idSession && s.Id == idSharedItem).FirstOrDefault() ;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                return null;
+            }
+        }
     }
 }
