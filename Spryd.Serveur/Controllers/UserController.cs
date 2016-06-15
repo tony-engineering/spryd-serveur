@@ -1,4 +1,5 @@
 ﻿
+using log4net;
 using Spryd.Server.Models;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace Spryd.Server.Controllers
 {
     public class UserController : ApiController
     {
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private IUserDal dal;
 
         /// <summary>
@@ -44,6 +46,7 @@ namespace Spryd.Server.Controllers
         {
             if (!dal.IsUserExist(userId))
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "User " + userId + " is null."));
+                
             return dal.GetUserById(userId);
         }
 

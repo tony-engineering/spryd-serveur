@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Spryd.Server.Models;
+using log4net;
 
 namespace Spryd.Server.Models
 {
     public class SprydZoneDal : ISprydZoneDal
     {
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// Default constructor
         /// </summary>

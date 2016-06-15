@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using log4net;
+using MySql.Data.MySqlClient;
 using Spryd.Server.Models;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,9 @@ namespace Spryd.Server.Models
     /// </summary>
     public class SessionDal : ISessionDal
     {
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private DbConnection dal = new DbConnection();
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -27,12 +31,18 @@ namespace Spryd.Server.Models
         /// <param name="session"></param>
         public int AddSession(Session session)
         {
-            using (DbConnection c = new DbConnection())
+            try
             {
-                c.Sessions.Add(session);
-                c.SaveChanges();
+                dal.Sessions.Add(session);
+                dal.SaveChanges();
                 return session.Id;
             }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                return 0;
+            }
+
         }
 
         /// <summary>
@@ -41,10 +51,14 @@ namespace Spryd.Server.Models
         /// <param name="sharedItem"></param>
         public void AddSharedItem(SharedItem sharedItem)
         {
-            using (DbConnection c = new DbConnection())
+            try
             {
-                c.SharedItems.Add(sharedItem);
-                c.SaveChanges();
+                dal.SharedItems.Add(sharedItem);
+                dal.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
             }
         }
 
@@ -54,13 +68,17 @@ namespace Spryd.Server.Models
         /// <param name="idSession"></param>
         public void EndSession(int idSession)
         {
-            using (DbConnection c = new DbConnection())
+            try
             {
-                var session = c.Sessions.Where(s => s.Id == idSession).FirstOrDefault();
+                var session = dal.Sessions.Where(s => s.Id == idSession).FirstOrDefault();
                 if (session == null)
                     return;
                 session.EndDate = DateTime.Now;
-                c.SaveChanges();
+                dal.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
             }
         }
 
@@ -71,9 +89,14 @@ namespace Spryd.Server.Models
         /// <returns></returns>
         public Session GetSessionById(long sessionId)
         {
-            using (DbConnection c = new DbConnection())
+            try
             {
-                return c.Sessions.Where(s =>s.Id == sessionId).FirstOrDefault() ;
+                return dal.Sessions.Where(s => s.Id == sessionId).FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                return null;
             }
         }
 
@@ -83,13 +106,18 @@ namespace Spryd.Server.Models
         /// <returns></returns>
         public List<User> GetSessionAllUsers(int sessionId)
         {
-            using (DbConnection c = new DbConnection())
+            try
             {
-                return (from user in c.Users
-                 join userSession in c.UserSession on user.Id equals userSession.UserId
-                 where userSession.SessionId == sessionId
-                 && userSession.EndDate == null
-                 select user).ToList();
+                return (from user in dal.Users
+                        join userSession in dal.UserSession on user.Id equals userSession.UserId
+                        where userSession.SessionId == sessionId
+                        && userSession.EndDate == null
+                        select user).ToList();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                return null;
             }
         }
 
@@ -100,9 +128,14 @@ namespace Spryd.Server.Models
         /// <returns></returns>
         public List<SharedItem> GetSharedItems(int idSession)
         {
-            using (DbConnection c = new DbConnection())
+            try
             {
-                return c.SharedItems.Where(s => s.SessionId == idSession).ToList();
+                return dal.SharedItems.Where(s => s.SessionId == idSession).ToList();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                return null;
             }
         }
 
@@ -112,11 +145,15 @@ namespace Spryd.Server.Models
         /// <param name="idSession"></param>
         public void GetUsersOutOfSession(int idSession)
         {
-            using (DbConnection c = new DbConnection())
+            try
             {
-                c.UserSession.Where(us => us.SessionId == idSession && us.EndDate == null).ToList().ForEach(u => u.EndDate = DateTime.Now);
-                c.SaveChanges();
-            }            
+                dal.UserSession.Where(us => us.SessionId == idSession && us.EndDate == null).ToList().ForEach(u => u.EndDate = DateTime.Now);
+                dal.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+            }
         }
 
         /// <summary>
@@ -126,9 +163,14 @@ namespace Spryd.Server.Models
         /// <returns></returns>
         public bool IsAlreadySessionRunningInSprydZone(int sprydZoneId)
         {
-            using (DbConnection c = new DbConnection())
+            try
             {
-                return c.Sessions.Any(s => s.SprydZoneId == sprydZoneId && s.EndDate == null);
+                return dal.Sessions.Any(s => s.SprydZoneId == sprydZoneId && s.EndDate == null);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                throw;
             }
         }
 
@@ -140,9 +182,14 @@ namespace Spryd.Server.Models
         /// <returns></returns>
         public bool IsCreatorOfSession(int idSession, int idUser)
         {
-            using (DbConnection c = new DbConnection())
+            try
             {
-                return c.UserSession.Any(us => us.SessionId == idSession && us.UserId == idUser && us.IsCreator == true);
+                return dal.UserSession.Any(us => us.SessionId == idSession && us.UserId == idUser && us.IsCreator == true);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                throw;
             }
         }
 
@@ -153,9 +200,14 @@ namespace Spryd.Server.Models
         /// <returns></returns>
         public bool IsSessionExist(int idSession)
         {
-            using (DbConnection c = new DbConnection())
+            try
             {
-                return c.Sessions.Any(s => s.Id == idSession);
+                return dal.Sessions.Any(s => s.Id == idSession);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                throw;
             }
         }
 
@@ -166,9 +218,14 @@ namespace Spryd.Server.Models
         /// <returns></returns>
         public bool IsSessionRunning(int idSession)
         {
-            using (DbConnection c = new DbConnection())
+            try
             {
-                return c.Sessions.Any(s => s.Id == idSession && s.EndDate == null);
+                return dal.Sessions.Any(s => s.Id == idSession && s.EndDate == null);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                throw;
             }
         }
 
@@ -179,13 +236,18 @@ namespace Spryd.Server.Models
         /// <returns></returns>
         public List<User> GetSessionUsers(int idSession)
         {
-            using (DbConnection c = new DbConnection())
+            try
             {
-                return (from user in c.Users
-                        join userSession in c.UserSession on user.Id equals userSession.UserId
+                return (from user in dal.Users
+                        join userSession in dal.UserSession on user.Id equals userSession.UserId
                         where userSession.SessionId == idSession
                         && userSession.EndDate == null
                         select user).ToList();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                throw;
             }
         }
 
@@ -197,10 +259,10 @@ namespace Spryd.Server.Models
         /// <param name="idSession"></param>
         public void GetInactiveUsersOutOfSession(int idSession)
         {
-            using (DbConnection c = new DbConnection())
+            try
             {
                 var limitDelayActivity = DateTime.Now.AddMinutes(-1);
-                var isCreatorInactive = c.UserSession.Any(us => us.SessionId == idSession && us.EndDate == null && us.LastActivity < limitDelayActivity && us.IsCreator == true);
+                var isCreatorInactive = dal.UserSession.Any(us => us.SessionId == idSession && us.EndDate == null && us.LastActivity < limitDelayActivity && us.IsCreator == true);
                 if (isCreatorInactive) // if creator inactive, end session 
                 {
                     GetUsersOutOfSession(idSession);
@@ -208,12 +270,74 @@ namespace Spryd.Server.Models
                 }
                 else // else, get inactive users out of session
                 {
-                    c.UserSession.Where(us => us.SessionId == idSession && us.EndDate == null && us.LastActivity < limitDelayActivity && us.IsCreator == false)
+                    dal.UserSession.Where(us => us.SessionId == idSession && us.EndDate == null && us.LastActivity < limitDelayActivity && us.IsCreator == false)
                         .ToList()
                         .ForEach(u => u.EndDate = DateTime.Now);
 
-                    c.SaveChanges();
+                    dal.SaveChanges();
                 }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Check if password mathes session password
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public bool IsGoodPassword(int idSession, string password)
+        {
+            try
+            {
+                return dal.Sessions.Any(s => s.Id == idSession && s.Password == password);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Check if this shared item exist in this session
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <param name="idSharedItem"></param>
+        /// <returns></returns>
+        public bool IsSharedItemExist(int idSession, int idSharedItem)
+        {
+            try
+            {
+                return dal.SharedItems.Any(s => s.SessionId == idSession && s.Id == idSharedItem);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Get shared item in a session
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <param name="idSharedItem"></param>
+        /// <returns></returns>
+        public SharedItem GetSharedItemById(int idSession, int idSharedItem)
+        {
+            try
+            {
+                return dal.SharedItems.Where(s => s.SessionId == idSession && s.Id == idSharedItem).FirstOrDefault() ;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                return null;
             }
         }
     }

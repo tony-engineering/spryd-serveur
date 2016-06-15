@@ -8,6 +8,7 @@ using System.Linq;
 using System.Web;
 using System.Data.Entity;
 using System.Web.Configuration;
+using log4net;
 
 namespace Spryd.Server.Models
 {
@@ -16,6 +17,8 @@ namespace Spryd.Server.Models
     /// </summary>
     public class UserDal : IUserDal
     {
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// Default constructor
         /// </summary>

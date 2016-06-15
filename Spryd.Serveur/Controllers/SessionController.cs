@@ -1,7 +1,9 @@
-﻿using Spryd.Server.Models;
+﻿using log4net;
+using Spryd.Server.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -12,6 +14,7 @@ namespace Spryd.Server.Controllers
 {
     public class SessionController : ApiController
     {
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private ISessionDal sessionDal;
         private IUserDal userDal;
         private ISprydZoneDal sprydZoneDal;
@@ -97,12 +100,13 @@ namespace Spryd.Server.Controllers
         /// </summary>
         /// <param name="idSession"></param>
         /// <param name="idUser"></param>
+        /// <param name="password"></param>
         /// <returns></returns>
         [Route("session/{idSession}/user/{idUser}/join")]
         [HttpPost]
-        public Session JoinSession(int idSession, int idUser)
+        public Session JoinSession(int idSession, int idUser, [FromUri] string password = null)
         {
-            CheckJoiningUserAndSession(idSession, idUser);
+            CheckJoiningUserAndSession(idSession, idUser, password);
 
             var userSession = new UserSession()
             {
@@ -186,7 +190,7 @@ namespace Spryd.Server.Controllers
                 sessionDal.AddSharedItem(new SharedItem()
                 {
                     CreateDate = DateTime.Now,
-                    Path = WebApiConfig.ApiUrl + ConfigurationManager.AppSettings["SharedItemsRepository"] + postedFile.FileName,
+                    Path = WebApiConfig.SharedItemsRepository + postedFile.FileName,
                     Text = postedFile.FileName,
                     SessionId = idSession
                 });
@@ -210,6 +214,30 @@ namespace Spryd.Server.Controllers
             if(listSharedItems.IsNullOrEmpty())
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Session " + idSession + " doesn't have shared items."));
             return listSharedItems;
+        }
+
+        /// <summary>
+        /// Download item shared in a session
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <param name="idSharedItem"></param>
+        /// <returns></returns>
+        [Route("session/{idSession}/sharedItems/{idSharedItem}")]
+        [HttpGet]
+        public HttpResponseMessage GetGetSharedItem(int idSession, int idSharedItem)
+        {
+            IsSessionExist(idSession);
+            IsSharedItemExist(idSession, idSharedItem);
+
+            SharedItem sharedItem = sessionDal.GetSharedItemById(idSession, idSharedItem);
+            
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+            response.Content = new StreamContent(new FileStream(sharedItem.Path, FileMode.Open, FileAccess.Read));
+            response.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
+            response.Content.Headers.ContentDisposition.FileName = sharedItem.Text;
+
+            return response;
         }
 
         /// <summary>
@@ -322,6 +350,40 @@ namespace Spryd.Server.Controllers
         }
 
         /// <summary>
+        /// Check session password
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <param name="password"></param>
+        private void IsGoodPassword(int idSession, string password)
+        {
+            if (!sessionDal.IsGoodPassword(idSession, password))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Wrong password !"));
+        }
+
+        /// <summary>
+        /// Validate session password
+        /// </summary>
+        /// <param name="password"></param>
+        private void IsSessionPasswordValid(string password)
+        {
+            if (password == null)
+                return;
+            if (password.Length == 0)
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Password not valid (lentgh = 0)."));
+        }
+
+        /// <summary>
+        /// Check if this shared item exist in this session
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <param name="idSharedItem"></param>
+        private void IsSharedItemExist(int idSession, int idSharedItem)
+        {
+            if (!sessionDal.IsSharedItemExist(idSession, idSharedItem))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "There is no item " + idSharedItem + " in session " + idSession + "."));
+        }
+
+        /// <summary>
         /// Validate user session informations before creating the session
         /// </summary>
         /// <param name="userSession"></param>
@@ -330,7 +392,8 @@ namespace Spryd.Server.Controllers
             IsUserExist(userSession.UserId);
             IsSprydZoneExist(userSession.Session.SprydZoneId);
             IsAlreadyASessionRunningInSprydZone(userSession.Session.SprydZoneId);
-            
+            IsSessionPasswordValid(userSession.Session.Password);
+
             userSession.Session.StartDate = DateTime.Now;
             userSession.LastActivity = DateTime.Now;
             userSession.StartDate = DateTime.Now;
@@ -342,13 +405,16 @@ namespace Spryd.Server.Controllers
         /// </summary>
         /// <param name="idSession"></param>
         /// <param name="idUser"></param>
-        private void CheckJoiningUserAndSession(int idSession, int idUser)
+        /// <param name="password"></param>
+        private void CheckJoiningUserAndSession(int idSession, int idUser, string password)
         {
             IsSessionRunning(idSession);
             IsUserExist(idUser);
+            if(sessionDal.GetSessionById(idSession).Password != null) // if there is a password, check it
+                IsGoodPassword(idSession, password);
             EndUserSessionIfAlreadyJoin(idSession, idUser);
         }
-
+        
         /// <summary>
         /// Check if the session is still available and user info
         /// </summary>

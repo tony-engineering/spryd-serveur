@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using Spryd.Server.Models;
 using System.Configuration;
 using System.Linq;
+using log4net;
 
-namespace Spryd.Server.Controllers
+namespace Spryd.Server.Models
 {
     public class BeaconDal : IBeaconDal
     {
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// Default constructor
         /// </summary>

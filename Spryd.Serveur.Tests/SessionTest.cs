@@ -147,7 +147,7 @@ namespace Spryd.Server.Tests
                 Session = new Session() { SprydZoneId = 1 }
             };
             sessionController.AddSession(sessionParameters);
-            sessionController.JoinSession(1, 2);
+            sessionController.JoinSession(1, 2,null);
 
             Assert.AreEqual(1, dal.GetCurrentSession(2).Id);
             Assert.AreEqual(dal.GetSprydZoneCurrentession(1), dal.GetCurrentSession(2));
@@ -170,7 +170,41 @@ namespace Spryd.Server.Tests
                 Session = new Session() { SprydZoneId = 3 }
             };
             sessionController.AddSession(sessionParameters);
-            sessionController.JoinSession(1, 1);
+            sessionController.JoinSession(1, 1, null);
+        }
+
+        [TestMethod]
+        public void JoinSession_GoodPassword_Success()
+        {
+            dal.AddUser(new User()); // id = 1
+            dal.AddUser(new User()); // id = 2
+            dal.AddSprydZone(new SprydZone() { Id = 3 });
+            UserSession sessionParameters = new UserSession()
+            {
+                UserId = 1,
+                SessionId = 1,
+                Session = new Session() { SprydZoneId = 1 , Password ="azerty"}
+            };
+            sessionController.AddSession(sessionParameters);
+            sessionController.JoinSession(1, 2, "azerty");
+
+            Assert.IsTrue(dal.IsUserInSession(1,2));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(HttpResponseException))]
+        public void JoinSession_WrongPassword_ThrowException()
+        {
+            dal.AddUser(new User());
+            dal.AddSprydZone(new SprydZone() { Id = 3 });
+            UserSession sessionParameters = new UserSession()
+            {
+                UserId = 1,
+                SessionId = 1,
+                Session = new Session() { SprydZoneId = 3 , Password = "azerty" }
+            };
+            sessionController.AddSession(sessionParameters);
+            sessionController.JoinSession(1, 1, "patati");
         }
 
         /// <summary>
@@ -181,7 +215,7 @@ namespace Spryd.Server.Tests
         public void JoinUnknownSession_ThrowException()
         {
             dal.AddUser(new User());
-            sessionController.JoinSession(1, 1);
+            sessionController.JoinSession(1, 1,null);
         }
 
         /// <summary>
@@ -199,7 +233,7 @@ namespace Spryd.Server.Tests
                 Session = new Session() { SprydZoneId = 1 }
             };
             sessionController.AddSession(sessionParameters);
-            sessionController.JoinSession(1, 2);
+            sessionController.JoinSession(1, 2,null);
             sessionController.LeaveSession(1, 1); // creator leave the session, so it get users out of the session and end the session
 
             Assert.IsFalse(dal.IsSessionRunning(1)); // session over
@@ -223,7 +257,7 @@ namespace Spryd.Server.Tests
                 Session = new Session() { SprydZoneId = 1 }
             };
             sessionController.AddSession(sessionParameters);
-            sessionController.JoinSession(1, 2); // user 2 join session 1
+            sessionController.JoinSession(1, 2,null); // user 2 join session 1
 
             Assert.IsTrue(dal.IsUserInSession(1, 2)); // is user 2 in session 1 ?
             sessionController.LeaveSession(1, 2); // user 2 leave the session 1
@@ -268,7 +302,7 @@ namespace Spryd.Server.Tests
                 Session = new Session() { SprydZoneId = 1 }
             };
             sessionController.AddSession(sessionParameters);
-            sessionController.JoinSession(1, 2); // user 2 join session 1
+            sessionController.JoinSession(1, 2,null); // user 2 join session 1
 
             Assert.IsTrue(dal.IsUserInSession(1, 2)); // is user 2 in session 1 ?
             sessionController.LeaveSession(1, 2); // user 2 leave the session 1
@@ -276,7 +310,7 @@ namespace Spryd.Server.Tests
             
             Assert.AreEqual(null, dal.GetCurrentSession(2)); // user 2 have no more current session
 
-            sessionController.JoinSession(1, 2); // user 2 join session 1
+            sessionController.JoinSession(1, 2,null); // user 2 join session 1
             Assert.IsTrue(dal.IsUserInSession(1, 2)); // is user 2 in session 1 ?
 
             sessionController.LeaveSession(1, 2); // user 2 leave the session 1 again

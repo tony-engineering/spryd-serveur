@@ -295,5 +295,20 @@ namespace Spryd.Server.Tests
                 .ToList()
                 .ForEach(u => u.EndDate = DateTime.Now);
         }
+
+        public bool IsGoodPassword(int idSession, string password)
+        {
+            return listSessions.Any(s => s.Id == idSession && s.Password == password);
+        }
+
+        public bool IsSharedItemExist(int idSession, int idSharedItem)
+        {
+            throw new NotImplementedException();
+        }
+
+        public SharedItem GetSharedItemById(int idSession, int idSharedItem)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

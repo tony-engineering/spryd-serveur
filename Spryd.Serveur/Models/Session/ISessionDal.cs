@@ -24,5 +24,8 @@ namespace Spryd.Server.Models
         List<SharedItem> GetSharedItems(int idSession);
         List<User> GetSessionUsers(int idSession);
         void GetInactiveUsersOutOfSession(int idSession);
+        bool IsGoodPassword(int idSession, string password);
+        bool IsSharedItemExist(int idSession, int idSharedItem);
+        SharedItem GetSharedItemById(int idSession, int idSharedItem);
     }
 }
