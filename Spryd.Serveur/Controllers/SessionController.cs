@@ -247,7 +247,7 @@ namespace Spryd.Server.Controllers
         /// <param name="idUser"></param>
         /// <returns></returns>
         [Route("session/{idSession}/user/{idUser}/i-am-here")]
-        [HttpPut]
+        [HttpPost]
         public Session IAmHere(int idSession, int idUser)
         {
             IsSessionRunning(idSession);
