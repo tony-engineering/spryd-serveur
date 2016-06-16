@@ -211,8 +211,8 @@ namespace Spryd.Server.Controllers
             IsSessionExist(idSession);
 
             var listSharedItems = sessionDal.GetSharedItems(idSession);
-            if(listSharedItems.IsNullOrEmpty())
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Session " + idSession + " doesn't have shared items."));
+            //if(listSharedItems.IsNullOrEmpty())
+              //  throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "Session " + idSession + " doesn't have shared items."));
             return listSharedItems;
         }
 
@@ -247,7 +247,7 @@ namespace Spryd.Server.Controllers
         /// <param name="idUser"></param>
         /// <returns></returns>
         [Route("session/{idSession}/user/{idUser}/i-am-here")]
-        [HttpPut]
+        [HttpPost]
         public Session IAmHere(int idSession, int idUser)
         {
             IsSessionRunning(idSession);
