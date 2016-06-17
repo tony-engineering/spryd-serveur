@@ -74,7 +74,7 @@ namespace Spryd.Server.Controllers
             sessionDal.GetInactiveUsersOutOfSession(idSession);
             IsSessionExist(idSession); // Check session exist again (if creator was inactive, the session is over)
             var listUsers = sessionDal.GetSessionUsers(idSession);
-            IsListUsersEmpty(listUsers);
+            //IsListUsersEmpty(listUsers);
             return listUsers;
         }
 
@@ -90,8 +90,8 @@ namespace Spryd.Server.Controllers
             IsSessionExist(idSession);
             var listUsers = sessionDal.GetSessionAllUsers(idSession);
 
-            if (listUsers.IsNullOrEmpty()) // s'il n'y a aucun
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "There is no users in session " + idSession));
+            //if (listUsers.IsNullOrEmpty()) // s'il n'y a aucun
+              //  throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent, "There is no users in session " + idSession));
             return listUsers;
         }
 
