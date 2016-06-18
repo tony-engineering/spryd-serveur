@@ -11,7 +11,7 @@ namespace Spryd.Server.Tests
     [TestClass]
     public class BeaconTest
     {
-        private IBeaconDal dal;
+        private FakeDal dal;
         private BeaconController beaconController;
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace Spryd.Server.Tests
         [TestInitialize]
         public void InitializeTestingEnvironnement()
         {
-            dal = new BeaconDal();
+            dal = new FakeDal();
 
             beaconController = new BeaconController(dal);
             beaconController.Request = new HttpRequestMessage();
