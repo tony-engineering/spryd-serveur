@@ -92,7 +92,7 @@ namespace Spryd.Server.Controllers
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "SprydZone " + zoneId + " is null."));
             var currentSession = dal.GetSprydZoneCurrentession(zoneId);
             if(currentSession == null)
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "SprydZone " + zoneId + " doesn't have a current session."));
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent , "SprydZone " + zoneId + " doesn't have a current session."));
             return dal.GetSprydZoneCurrentession(zoneId);
         }
     }
