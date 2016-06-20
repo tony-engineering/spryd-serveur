@@ -116,7 +116,29 @@ namespace Spryd.Server.Tests
 
         public bool IsUserInSession(int idSession, int idUser)
         {
-            return listUserSessions.Any(us => us.UserId == idUser && us.Session.Id == idSession && us.EndDate == null);
+            return listUserSessions.Any(us => us.UserId == idUser 
+                                        && us.Session.Id == idSession 
+                                        && us.EndDate == null);
+        }
+
+        public bool IsAllPreviousActivitiesEnded(int idSession, int idUser)
+        {
+            int nbEndedActivities = listUserSessions.Count(us => us.UserId == idUser 
+                                    && us.Session.Id == idSession
+                                    && us.EndDate == null);
+
+            int nbCurrentActivities = listUserSessions.Count(us => us.UserId == idUser
+                                    && us.Session.Id == idSession
+                                    && us.EndDate != null);
+
+            return nbEndedActivities >= 0 && nbCurrentActivities == 1;
+        }
+
+        public bool IsAllActivitiesEnded(int idSession, int idUser)
+        {
+            return listUserSessions.FindAll(us => us.UserId == idUser).All(us =>
+                                    us.Session.Id == idSession
+                                    && us.EndDate != null);
         }
 
         public User GetUserByIdPassword(string identifier, string password)
@@ -290,10 +312,28 @@ namespace Spryd.Server.Tests
 
         public void GetInactiveUsersOutOfSession(int idSession)
         {
-            var limitDelayActivity = DateTime.Now.AddMinutes(-1);
-            listUserSessions.Where(us => us.SessionId == idSession && us.EndDate == null && us.LastActivity > limitDelayActivity)
-                .ToList()
-                .ForEach(u => u.EndDate = DateTime.Now);
+            try
+            {
+                var limitDelayActivity = DateTime.Now.AddMinutes(-1);
+                listUserSessions.First();
+
+                var isCreatorInactive = listUserSessions.Any(us => us.SessionId == idSession && us.EndDate == null && us.LastActivity < limitDelayActivity && us.IsCreator == true);
+                if (isCreatorInactive) // if creator inactive, end session 
+                {
+                    GetUsersOutOfSession(idSession);
+                    EndSession(idSession);
+                }
+                else // else, get inactive users out of session
+                {
+                    listUserSessions.Where(us => us.SessionId == idSession && us.EndDate == null && us.LastActivity < limitDelayActivity && us.IsCreator == false)
+                        .ToList()
+                        .ForEach(u => u.EndDate = DateTime.Now);
+                }
+            }
+            catch (Exception e)
+            {
+                // TODO : comment on logue ça ?
+            }
         }
 
         public bool IsGoodPassword(int idSession, string password)

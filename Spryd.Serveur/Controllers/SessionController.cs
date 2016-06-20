@@ -395,9 +395,15 @@ namespace Spryd.Server.Controllers
             IsSessionPasswordValid(userSession.Session.Password);
 
             userSession.Session.StartDate = DateTime.Now;
-            userSession.LastActivity = DateTime.Now;
             userSession.StartDate = DateTime.Now;
             userSession.IsCreator = true;
+
+            // (to be able to set an other last_activity value for tests)
+            // set it to now, else keep the actual fake value
+            if (userSession.LastActivity == null)
+            {
+                userSession.LastActivity = DateTime.Now;
+            }
         }
 
         /// <summary>

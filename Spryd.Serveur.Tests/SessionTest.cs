@@ -4,6 +4,7 @@ using Spryd.Server.Models;
 using System.Net.Http;
 using System.Web.Http;
 using System.Linq;
+using System;
 
 namespace Spryd.Server.Tests
 {
@@ -317,6 +318,75 @@ namespace Spryd.Server.Tests
             Assert.IsFalse(dal.IsUserInSession(1, 2)); // is user 2 in session 1 ?
 
             Assert.AreEqual(null, dal.GetCurrentSession(2)); // user 2 have no more current session
+        }
+
+        /// <summary>
+        /// User creates session
+        /// Don't leave it properly (kills app, still in session)
+        /// Other user joins
+        /// List users from left session after 70 secs of inactivity
+        /// All users are kicked
+        /// Session is ended
+        /// </summary>
+        [TestMethod]
+        public void ScenarioInactiveCreatorSessionClosedWhenParticipantJoins_Success()
+        {
+            dal.AddUser(new User()); // id = 1
+            dal.AddUser(new User()); // id = 2
+            dal.AddSprydZone(new SprydZone()); // id = 1
+            UserSession sessionParameters = new UserSession()
+            {
+                UserId = 1,
+                Session = new Session() { SprydZoneId = 1 }, // id session = 1
+                IsCreator = true,
+                LastActivity = DateTime.Now.AddSeconds(-70) // force inactive
+            };
+
+            sessionController.AddSession(sessionParameters);
+            Assert.IsTrue(dal.IsUserInSession(1, 1));
+
+            sessionController.JoinSession(1, 2);
+            Assert.IsTrue(dal.IsUserInSession(1, 2));
+
+            sessionController.GetSessionUsers(1); // list users from session 1
+
+            dal.IsAllActivitiesEnded(1, 1);
+            Assert.IsTrue(dal.IsAllActivitiesEnded(1, 1));
+            Assert.IsTrue(dal.IsAllActivitiesEnded(1, 2));
+
+            Assert.IsFalse(dal.IsUserInSession(1, 1));
+            Assert.IsFalse(dal.IsUserInSession(1, 2));
+            Assert.IsFalse(dal.IsSessionRunning(1));
+        }
+
+        /// <summary>
+        /// User creates session
+        /// Don't leave it properly (kills app, still in session)
+        /// He joins session again
+        /// </summary>
+        [TestMethod]
+        public void ScenarioInactiveCreatorJoinsAgain_Success()
+        {
+            dal.AddUser(new User()); // id = 1
+            dal.AddSprydZone(new SprydZone()); // id = 1
+            UserSession sessionParameters = new UserSession()
+            {
+                UserId = 1,
+                Session = new Session() { SprydZoneId = 1 }, // id session = 1
+                IsCreator = true,
+                LastActivity = DateTime.Now.AddSeconds(-70) // force inactive
+            };
+
+            sessionController.AddSession(sessionParameters);
+            Assert.IsTrue(dal.IsUserInSession(1, 1));
+
+            sessionController.JoinSession(1, 1);
+            Assert.IsTrue(dal.IsUserInSession(1, 1));
+
+            sessionController.GetSessionUsers(1); // list users from session 1
+
+            Assert.IsTrue(dal.IsSessionRunning(1));
+            Assert.IsTrue(dal.IsUserInSession(1, 1));
         }
     }
 }
