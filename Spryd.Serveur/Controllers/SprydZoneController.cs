@@ -1,5 +1,5 @@
-﻿using Spryd.Server.Models;
-using Spryd.Serveur.Models;
+﻿using log4net;
+using Spryd.Server.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +11,7 @@ namespace Spryd.Server.Controllers
 {
     public class SprydZoneController : ApiController
     {
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private ISprydZoneDal dal;
 
         /// <summary>
@@ -21,6 +22,11 @@ namespace Spryd.Server.Controllers
             dal = new SprydZoneDal();
         }
 
+        public SprydZoneController(ISprydZoneDal sprydZoneDal)
+        {
+            dal = sprydZoneDal;
+        }
+
         /// <summary>
         /// Get nearby SprydZone searched by beacons technical ID
         /// Need technicalId in URL parameters
@@ -28,41 +34,53 @@ namespace Spryd.Server.Controllers
         /// <param name="values"></param>
         /// <returns></returns>
         [Route("zone/nearby")]
-        [HttpPost]
+        [HttpGet]
         public List<SprydZone> GetNearbySprydZones([FromUri] string[] values)
         {
             if (values.IsNullOrEmpty())
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Need a list of beacon technical Id"));
-            return dal.GetNearbySprydZone(values.ToList());
+
+            var listSprydZone = dal.GetNearbySprydZone(values.ToList());
+            foreach (var sprydZone in listSprydZone)
+                sprydZone.CurrentSession = dal.GetSprydZoneCurrentession(sprydZone.Id);
+
+            return listSprydZone;
         }
         
         /// <summary>
-        /// Get all Spryd Zones
+        /// Get all Spryd Zones with their current session
         /// </summary>
         /// <returns></returns>
         [Route("zone/all")]
         [HttpGet]
         public List<SprydZone> GetAllSprydZones()
         {
-            return dal.GetAllSprydZones();
+            var listSprydZone = dal.GetAllSprydZones();
+            foreach (var sprydZone in listSprydZone)
+                sprydZone.CurrentSession = dal.GetSprydZoneCurrentession(sprydZone.Id);
+            return listSprydZone;
         }
 
         /// <summary>
         /// Get Spryd Zone by Id
         /// </summary>
-        /// <param name="sprydZoneId"></param>
+        /// <param name="zoneId"></param>
         /// <returns></returns>
         [Route("zone/{zoneId}")]
         [HttpGet]
         public SprydZone GetSprydZoneById(int zoneId)
         {
             if (!dal.IsSprydZoneExist(zoneId))
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "SprydZone " + zoneId + " is null."));
-            return dal.GetSprydZoneById(zoneId);
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "SprydZone " + zoneId + " does not exist."));
+
+            var sprydZone = dal.GetSprydZoneById(zoneId);
+            sprydZone.CurrentSession = dal.GetSprydZoneCurrentession(zoneId);
+
+            return sprydZone;
         }
 
         /// <summary>
-        /// Get the current session of a spryd zone
+        /// Get the current session of a spryd zone 
         /// </summary>
         /// <param name="zoneId"></param>
         /// <returns></returns>
@@ -72,11 +90,14 @@ namespace Spryd.Server.Controllers
         {
             if (!dal.IsSprydZoneExist(zoneId))
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "SprydZone " + zoneId + " is null."));
+            var currentSession = dal.GetSprydZoneCurrentession(zoneId);
+            if(currentSession == null)
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NoContent , "SprydZone " + zoneId + " doesn't have a current session."));
             return dal.GetSprydZoneCurrentession(zoneId);
         }
     }
 
-    public static class MyExtensions
+    internal static class MyExtensions
     {
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable)
         {

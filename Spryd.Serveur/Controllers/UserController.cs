@@ -1,5 +1,6 @@
 ﻿
-using Spryd.Serveur.Models;
+using log4net;
+using Spryd.Server.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -10,13 +11,11 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
 
-namespace Spryd.Serveur.Controllers
+namespace Spryd.Server.Controllers
 {
-    /// <summary>
-    /// User controller
-    /// </summary>
     public class UserController : ApiController
     {
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private IUserDal dal;
 
         /// <summary>
@@ -30,7 +29,7 @@ namespace Spryd.Serveur.Controllers
         /// <summary>
         /// Constructor used for tests (possible to put a different DB )
         /// </summary>
-        /// <param name="connectionString"></param>
+        /// <param name="testDal"></param>
         public UserController(IUserDal testDal)
         {
             dal = testDal;
@@ -47,6 +46,7 @@ namespace Spryd.Serveur.Controllers
         {
             if (!dal.IsUserExist(userId))
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "User " + userId + " is null."));
+                
             return dal.GetUserById(userId);
         }
 
@@ -67,7 +67,6 @@ namespace Spryd.Serveur.Controllers
         /// <summary>
         /// List Users
         /// </summary>
-        /// <param name="user"></param>
         [Route("user/all")]
         [HttpGet]
         public List<User> ListUsers()
@@ -80,8 +79,6 @@ namespace Spryd.Serveur.Controllers
         /// <summary>
         /// Authenticates a User
         /// </summary>
-        /// <param name="identifier"></param>
-        /// <param name="password"></param>
         /// <returns>The result of authentification</returns>
         [Route("user/authenticate")]
         [HttpPost]
@@ -101,7 +98,10 @@ namespace Spryd.Serveur.Controllers
         {
             if(!dal.IsUserExist(userId))
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "User " + userId + " is null."));
-            return dal.GetCurrentSession(userId);
+            var currentSession = dal.GetCurrentSession(userId);
+            if (currentSession == null)
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, "User " + userId + " has not join a session."));
+            return currentSession;
         }
 
         /// <summary>
@@ -113,6 +113,8 @@ namespace Spryd.Serveur.Controllers
         {
             if(String.IsNullOrEmpty(user.Email) || String.IsNullOrEmpty(user.Password) || String.IsNullOrEmpty(user.Name) || String.IsNullOrEmpty(user.Surname))
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "One or more missing parameters."));
+            if(dal.IsUserExist(user.Email))
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, "User " + user.Email + " already exist."));
             user.CreateDate = DateTime.Now;
             user.UpdateDate = DateTime.Now;
         }

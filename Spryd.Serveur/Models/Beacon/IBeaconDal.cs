@@ -1,7 +1,7 @@
-﻿using Spryd.Serveur.Models;
+﻿using Spryd.Server.Models;
 using System.Collections.Generic;
 
-namespace Spryd.Serveur.Controllers
+namespace Spryd.Server.Models
 {
     public interface IBeaconDal
     {

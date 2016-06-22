@@ -6,15 +6,19 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Data.Entity;
 using System.Web.Configuration;
+using log4net;
 
-namespace Spryd.Serveur.Models
+namespace Spryd.Server.Models
 {
     /// <summary>
     /// Data access layer for User
     /// </summary>
     public class UserDal : IUserDal
     {
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -38,16 +42,16 @@ namespace Spryd.Serveur.Models
 
         public AuthenticationResult Authenticate(AuthentificationRequest authenticationRequest)
         {
+            var user = GetUserByIdPassword(authenticationRequest.Identifier, authenticationRequest.Password);
+            
             AuthenticationResult authResult = new AuthenticationResult();
 
-            try
-            {
-                authResult.User = GetUserByIdPassword(authenticationRequest.Identifier, authenticationRequest.Password);
-                authResult.IsSuccess = true;
-            }
-            catch(UserNotFoundException e)
-            {
+            if (user == null)
                 authResult.IsSuccess = false;
+            else
+            {
+                authResult.User = user;
+                authResult.IsSuccess = true;
             }
 
             return authResult;
@@ -59,14 +63,11 @@ namespace Spryd.Serveur.Models
         /// <param name="identifier"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        private User GetUserByIdPassword(string identifier, string password)
+        public User GetUserByIdPassword(string identifier, string password)
         {
             using (DbConnection c = new DbConnection())
             {
-                var user = c.Users.Where(u => u.Email == identifier && u.Password == password).FirstOrDefault();
-                if (user == null)
-                    throw new UserNotFoundException("User with identifier " + identifier + " and password password " + password + " not found.");
-                return user;
+                return c.Users.Where(u => u.Email == identifier && u.Password == password).FirstOrDefault();
             }
         }
 
@@ -79,17 +80,13 @@ namespace Spryd.Serveur.Models
         {
             using (DbConnection c = new DbConnection())
             {
-                var user = c.Users.Where(u => u.Id == id).FirstOrDefault();
-                if(user == null)
-                    throw new UserNotFoundException("User with id " + id + " not found.");
-                return user;
+                return c.Users.Where(u => u.Id == id).FirstOrDefault(); ;
             }
         }
 
         /// <summary>
         /// List users
         /// </summary>
-        /// <param name="id"></param>
         /// <returns></returns>
         public List<User> ListUsers()
         {
@@ -126,6 +123,85 @@ namespace Spryd.Serveur.Models
             using (DbConnection c = new DbConnection())
             {
                 return c.Users.Any(u => u.Id == id);
+            }
+        }
+
+        /// <summary>
+        /// Add a user in a session
+        /// </summary>
+        /// <param name="userSession"></param>
+        public void AddUserSession(UserSession userSession)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                c.UserSession.Add(userSession);
+                c.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// End the user session by setting the user session date at now
+        /// </summary>
+        /// <param name="idUser"></param>
+        /// <param name="idSession"></param>
+        public void EndUserSession(int idUser, int idSession)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                var userSessionToEnd = 
+                    c.UserSession
+                    .Where(us => us.UserId == idUser && us.SessionId == idSession && us.EndDate == null)
+                    .OrderByDescending(us => us .Id)
+                    .FirstOrDefault(); // get the last session joined
+                if (userSessionToEnd == null)
+                    return;
+                userSessionToEnd.EndDate = DateTime.Now;
+                c.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// Indicate if the user is already in the session
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <param name="idUser"></param>
+        /// <returns></returns>
+        public bool IsUserInSession(int idSession, int idUser)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                return c.UserSession.Any(us => us.UserId == idUser && us.SessionId == idSession && us.EndDate == null);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        public bool IsUserExist(string email)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                return c.Users.Any(u => u.Email == email);
+            }
+        }
+
+        /// <summary>
+        /// Update user last activity
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <param name="idUser"></param>
+        public void UpdateUserLastActivity(int idSession, int idUser)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                var userSession = c.UserSession
+                    .Where(u => u.UserId == idUser && u.SessionId == idSession)
+                    .OrderByDescending(u =>u.Id)
+                    .FirstOrDefault();
+                userSession.LastActivity = DateTime.Now;
+                c.SaveChanges();
             }
         }
     }

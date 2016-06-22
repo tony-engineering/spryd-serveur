@@ -2,18 +2,33 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Spryd.Serveur.Models;
+using Spryd.Server.Models;
+using log4net;
 
 namespace Spryd.Server.Models
 {
     public class SprydZoneDal : ISprydZoneDal
     {
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// Default constructor
         /// </summary>
         public SprydZoneDal()
         {
 
+        }
+
+        /// <summary>
+        /// Add a spryd zone
+        /// </summary>
+        /// <param name="sprydZone"></param>
+        public void AddSprydZone(SprydZone sprydZone)
+        {
+            using (DbConnection c = new DbConnection())
+            {
+                c.SprydZones.Add(sprydZone);
+            }
         }
 
         /// <summary>
@@ -31,7 +46,7 @@ namespace Spryd.Server.Models
         /// <summary>
         /// Get nearby SprydZone searched by beacons technical ID
         /// </summary>
-        /// <param name="listBeacons"></param>
+        /// <param name="listBeaconId"></param>
         /// <returns></returns>
         public List<SprydZone> GetNearbySprydZone(List<string> listBeaconId)
         {
