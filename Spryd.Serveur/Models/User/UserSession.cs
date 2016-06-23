@@ -42,7 +42,7 @@ namespace Spryd.Server.Models
         [Column("end_date")]
         public DateTime? EndDate { get; set; }
 
-        //[JsonIgnore]
+        [JsonIgnore]
         [JsonProperty("lastActivity")]
         [Column("last_activity")]
         public DateTime LastActivity { get; set; }

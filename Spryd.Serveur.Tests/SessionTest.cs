@@ -297,12 +297,12 @@ namespace Spryd.Server.Tests
             dal.AddUser(new User()); // id = 1
             dal.AddUser(new User()); // id = 2
             dal.AddSprydZone(new SprydZone()); // id = 1
-            UserSession sessionParameters = new UserSession()
+            UserSession userSession = new UserSession()
             {
                 UserId = 1,
                 Session = new Session() { SprydZoneId = 1 }
             };
-            sessionController.AddSession(sessionParameters);
+            sessionController.AddSession(userSession);
             sessionController.JoinSession(1, 2,null); // user 2 join session 1
 
             Assert.IsTrue(dal.IsUserInSession(1, 2)); // is user 2 in session 1 ?
@@ -334,7 +334,7 @@ namespace Spryd.Server.Tests
             dal.AddUser(new User()); // id = 1
             dal.AddUser(new User()); // id = 2
             dal.AddSprydZone(new SprydZone()); // id = 1
-            UserSession sessionParameters = new UserSession()
+            UserSession userSession = new UserSession()
             {
                 UserId = 1,
                 Session = new Session() { SprydZoneId = 1 }, // id session = 1
@@ -342,7 +342,7 @@ namespace Spryd.Server.Tests
                 LastActivity = DateTime.Now.AddSeconds(-70) // force inactive
             };
 
-            sessionController.AddSession(sessionParameters);
+            sessionController.AddSession(userSession);
             Assert.IsTrue(dal.IsUserInSession(1, 1));
 
             sessionController.JoinSession(1, 2);
@@ -369,7 +369,7 @@ namespace Spryd.Server.Tests
         {
             dal.AddUser(new User()); // id = 1
             dal.AddSprydZone(new SprydZone()); // id = 1
-            UserSession sessionParameters = new UserSession()
+            UserSession userSession = new UserSession()
             {
                 UserId = 1,
                 Session = new Session() { SprydZoneId = 1 }, // id session = 1
@@ -377,7 +377,7 @@ namespace Spryd.Server.Tests
                 LastActivity = DateTime.Now.AddSeconds(-70) // force inactive
             };
 
-            sessionController.AddSession(sessionParameters);
+            sessionController.AddSession(userSession);
             Assert.IsTrue(dal.IsUserInSession(1, 1));
 
             sessionController.JoinSession(1, 1);
@@ -387,6 +387,48 @@ namespace Spryd.Server.Tests
 
             Assert.IsTrue(dal.IsSessionRunning(1));
             Assert.IsTrue(dal.IsUserInSession(1, 1));
+        }
+
+        /// <summary>
+        /// User creates multiple sessions
+        /// </summary>
+        [TestMethod]
+        public void ScenarioUserCreatesMultipleSessions_Success()
+        {
+            dal.AddUser(new User()); // id = 1
+            dal.AddUser(new User()); // id = 2
+
+            dal.AddSprydZone(new SprydZone()); // id = 1
+            UserSession userSession = new UserSession()
+            {
+                UserId = 1,
+                Session = new Session() { SprydZoneId = 1 }, // id session = 1
+                IsCreator = true,
+            };
+            sessionController.AddSession(userSession);
+            sessionController.JoinSession(1, 2);
+
+            Assert.IsTrue(dal.IsUserInSession(1, 1));
+            Assert.IsTrue(dal.IsUserInSession(1, 2));
+
+            // Create second session
+            dal.AddSprydZone(new SprydZone()); // id = 2
+            UserSession userSession2 = new UserSession()
+            {
+                UserId = 1,
+                Session = new Session() { SprydZoneId = 2 }, // id session = 2
+                IsCreator = true,
+            };
+            sessionController.AddSession(userSession2);
+
+            Assert.IsTrue(dal.IsSessionRunning(1));
+            Assert.IsTrue(dal.IsSessionRunning(2));
+
+            sessionController.LeaveSession(1, 1);
+            Assert.IsFalse(dal.IsSessionRunning(1));
+
+            sessionController.LeaveSession(2, 1);
+            Assert.IsFalse(dal.IsSessionRunning(2));
         }
     }
 }
