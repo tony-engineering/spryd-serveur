@@ -121,7 +121,8 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FakeDal.cs" />
+    <Compile Include="FakeDbSet.cs" />
+    <Compile Include="FakeSprydContext.cs" />
     <Compile Include="SessionTest.cs" />
     <Compile Include="BeaconTest.cs" />
     <Compile Include="SprydZoneTest.cs" />

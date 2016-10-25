@@ -18,18 +18,9 @@ namespace Spryd.Server.Controllers
         /// <summary>
         /// Default constructor
         /// </summary>
-        public BeaconController()
+        public BeaconController(ISprydContext context)
         {
-            dal = new BeaconDal();
-        }
-
-        /// <summary>
-        /// Constructor used for tests (possible to put a different DB)
-        /// </summary>
-        /// <param name="testDal"></param>
-        public BeaconController(IBeaconDal testDal)
-        {
-            dal = testDal;
+            dal = new BeaconDal(context);
         }
 
         /// <summary>

@@ -18,12 +18,14 @@ namespace Spryd.Server.Models
     public class UserDal : IUserDal
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private ISprydContext _context;
 
         /// <summary>
         /// Default constructor
         /// </summary>
-        public UserDal()
+        public UserDal(ISprydContext context)
         {
+            _context = context;
         }
 
         /// <summary>
@@ -32,18 +34,16 @@ namespace Spryd.Server.Models
         /// <param name="user"></param>
         public long AddUser(User user)
         {
-            using (DbConnection c = new DbConnection())
-            {
-                c.Users.Add(user);
-                c.SaveChanges();
-                return user.Id;
-            }
+
+            _context.Users.Add(user);
+            _context.SaveChanges();
+            return user.Id;
         }
 
         public AuthenticationResult Authenticate(AuthentificationRequest authenticationRequest)
         {
             var user = GetUserByIdPassword(authenticationRequest.Identifier, authenticationRequest.Password);
-            
+
             AuthenticationResult authResult = new AuthenticationResult();
 
             if (user == null)
@@ -65,10 +65,7 @@ namespace Spryd.Server.Models
         /// <returns></returns>
         public User GetUserByIdPassword(string identifier, string password)
         {
-            using (DbConnection c = new DbConnection())
-            {
-                return c.Users.Where(u => u.Email == identifier && u.Password == password).FirstOrDefault();
-            }
+            return _context.Users.Where(u => u.Email == identifier && u.Password == password).FirstOrDefault();
         }
 
         /// <summary>
@@ -78,10 +75,7 @@ namespace Spryd.Server.Models
         /// <returns></returns>
         public User GetUserById(int id)
         {
-            using (DbConnection c = new DbConnection())
-            {
-                return c.Users.Where(u => u.Id == id).FirstOrDefault(); ;
-            }
+            return _context.Users.Where(u => u.Id == id).FirstOrDefault();
         }
 
         /// <summary>
@@ -90,10 +84,7 @@ namespace Spryd.Server.Models
         /// <returns></returns>
         public List<User> ListUsers()
         {
-            using (DbConnection c = new DbConnection())
-            {
-                return c.Users.ToList();
-            }
+            return _context.Users.ToList();
         }
 
         /// <summary>
@@ -104,13 +95,10 @@ namespace Spryd.Server.Models
         /// <returns></returns>
         public Session GetCurrentSession(int userId)
         {
-            using (DbConnection c = new DbConnection())
-            {
-                int? sessionId = c.UserSession.Where(u => u.UserId == userId && u.StartDate != null && u.EndDate == null).Select(u => u.SessionId).FirstOrDefault();
-                if(sessionId == null)
-                    return null;
-                return c.Sessions.Where(s => s.Id == sessionId).FirstOrDefault();
-            }
+            int? sessionId = _context.UserSession.Where(u => u.UserId == userId && u.StartDate != null && u.EndDate == null).Select(u => u.SessionId).FirstOrDefault();
+            if (sessionId == null)
+                return null;
+            return _context.Sessions.Where(s => s.Id == sessionId).FirstOrDefault();
         }
 
         /// <summary>
@@ -120,10 +108,7 @@ namespace Spryd.Server.Models
         /// <returns></returns>
         public bool IsUserExist(int id)
         {
-            using (DbConnection c = new DbConnection())
-            {
-                return c.Users.Any(u => u.Id == id);
-            }
+            return _context.Users.Any(u => u.Id == id);
         }
 
         /// <summary>
@@ -132,11 +117,8 @@ namespace Spryd.Server.Models
         /// <param name="userSession"></param>
         public void AddUserSession(UserSession userSession)
         {
-            using (DbConnection c = new DbConnection())
-            {
-                c.UserSession.Add(userSession);
-                c.SaveChanges();
-            }
+            _context.UserSession.Add(userSession);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -146,18 +128,15 @@ namespace Spryd.Server.Models
         /// <param name="idSession"></param>
         public void EndUserSession(int idUser, int idSession)
         {
-            using (DbConnection c = new DbConnection())
-            {
-                var userSessionToEnd = 
-                    c.UserSession
-                    .Where(us => us.UserId == idUser && us.SessionId == idSession && us.EndDate == null)
-                    .OrderByDescending(us => us .Id)
-                    .FirstOrDefault(); // get the last session joined
-                if (userSessionToEnd == null)
-                    return;
-                userSessionToEnd.EndDate = DateTime.Now;
-                c.SaveChanges();
-            }
+            var userSessionToEnd =
+                _context.UserSession
+                .Where(us => us.UserId == idUser && us.SessionId == idSession && us.EndDate == null)
+                .OrderByDescending(us => us.Id)
+                .FirstOrDefault(); // get the last session joined
+            if (userSessionToEnd == null)
+                return;
+            userSessionToEnd.EndDate = DateTime.Now;
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -168,10 +147,7 @@ namespace Spryd.Server.Models
         /// <returns></returns>
         public bool IsUserInSession(int idSession, int idUser)
         {
-            using (DbConnection c = new DbConnection())
-            {
-                return c.UserSession.Any(us => us.UserId == idUser && us.SessionId == idSession && us.EndDate == null);
-            }
+            return _context.UserSession.Any(us => us.UserId == idUser && us.SessionId == idSession && us.EndDate == null);
         }
 
         /// <summary>
@@ -181,10 +157,7 @@ namespace Spryd.Server.Models
         /// <returns></returns>
         public bool IsUserExist(string email)
         {
-            using (DbConnection c = new DbConnection())
-            {
-                return c.Users.Any(u => u.Email == email);
-            }
+            return _context.Users.Any(u => u.Email == email);
         }
 
         /// <summary>
@@ -194,15 +167,25 @@ namespace Spryd.Server.Models
         /// <param name="idUser"></param>
         public void UpdateUserLastActivity(int idSession, int idUser)
         {
-            using (DbConnection c = new DbConnection())
-            {
-                var userSession = c.UserSession
-                    .Where(u => u.UserId == idUser && u.SessionId == idSession)
-                    .OrderByDescending(u =>u.Id)
-                    .FirstOrDefault();
-                userSession.LastActivity = DateTime.Now;
-                c.SaveChanges();
-            }
+            var userSession = _context.UserSession
+                .Where(u => u.UserId == idUser && u.SessionId == idSession)
+                .OrderByDescending(u => u.Id)
+                .FirstOrDefault();
+            userSession.LastActivity = DateTime.Now;
+            _context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Indique si l'utilisateur est toujours dans une session
+        /// </summary>
+        /// <param name="idSession"></param>
+        /// <param name="idUser"></param>
+        /// <returns></returns>
+        public bool IsAllActivitiesEnded(int idSession, int idUser)
+        {
+            return _context.UserSession.ToList().FindAll(us => us.UserId == idUser).All(us =>
+                                    us.Session.Id == idSession
+                                    && us.EndDate != null);
         }
     }
 }

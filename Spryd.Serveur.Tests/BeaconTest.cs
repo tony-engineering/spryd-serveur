@@ -11,7 +11,7 @@ namespace Spryd.Server.Tests
     [TestClass]
     public class BeaconTest
     {
-        private FakeDal dal;
+        private FakeSprydContext _context;
         private BeaconController beaconController;
 
         /// <summary>
@@ -20,9 +20,9 @@ namespace Spryd.Server.Tests
         [TestInitialize]
         public void InitializeTestingEnvironnement()
         {
-            dal = new FakeDal();
+            _context = new FakeSprydContext();
 
-            beaconController = new BeaconController(dal);
+            beaconController = new BeaconController(_context);
             beaconController.Request = new HttpRequestMessage();
             beaconController.Configuration = new HttpConfiguration();
         }
@@ -33,7 +33,7 @@ namespace Spryd.Server.Tests
         [TestMethod]
         public void ValidateBeacon_Success()
         {
-            var listBeacon = dal.GetBeacons() ;
+            var listBeacon = _context.Beacons;
             Assert.IsFalse(listBeacon.Any(b => b.IsValid() == false));
         }
 

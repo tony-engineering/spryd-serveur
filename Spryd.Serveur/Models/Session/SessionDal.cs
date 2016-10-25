@@ -16,13 +16,14 @@ namespace Spryd.Server.Models
     public class SessionDal : ISessionDal
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private DbConnection dal = new DbConnection();
+        private ISprydContext _context;
 
         /// <summary>
         /// Default constructor
         /// </summary>
-        public SessionDal()
+        public SessionDal(ISprydContext context)
         {
+            _context = context;
         }
 
         /// <summary>
@@ -33,8 +34,8 @@ namespace Spryd.Server.Models
         {
             try
             {
-                dal.Sessions.Add(session);
-                dal.SaveChanges();
+                _context.Sessions.Add(session);
+                _context.SaveChanges();
                 return session.Id;
             }
             catch (Exception e)
@@ -53,8 +54,8 @@ namespace Spryd.Server.Models
         {
             try
             {
-                dal.SharedItems.Add(sharedItem);
-                dal.SaveChanges();
+                _context.SharedItems.Add(sharedItem);
+                _context.SaveChanges();
             }
             catch (Exception e)
             {
@@ -70,11 +71,11 @@ namespace Spryd.Server.Models
         {
             try
             {
-                var session = dal.Sessions.Where(s => s.Id == idSession).FirstOrDefault();
+                var session = _context.Sessions.Where(s => s.Id == idSession).FirstOrDefault();
                 if (session == null)
                     return;
                 session.EndDate = DateTime.Now;
-                dal.SaveChanges();
+                _context.SaveChanges();
             }
             catch (Exception e)
             {
@@ -91,7 +92,7 @@ namespace Spryd.Server.Models
         {
             try
             {
-                return dal.Sessions.Where(s => s.Id == sessionId).FirstOrDefault();
+                return _context.Sessions.Where(s => s.Id == sessionId).FirstOrDefault();
             }
             catch (Exception e)
             {
@@ -108,8 +109,8 @@ namespace Spryd.Server.Models
         {
             try
             {
-                return (from user in dal.Users
-                        join userSession in dal.UserSession on user.Id equals userSession.UserId
+                return (from user in _context.Users
+                        join userSession in _context.UserSession on user.Id equals userSession.UserId
                         where userSession.SessionId == sessionId
                         && userSession.EndDate == null
                         select user).ToList();
@@ -130,7 +131,7 @@ namespace Spryd.Server.Models
         {
             try
             {
-                return dal.SharedItems.Where(s => s.SessionId == idSession).ToList();
+                return _context.SharedItems.Where(s => s.SessionId == idSession).ToList();
             }
             catch (Exception e)
             {
@@ -147,8 +148,8 @@ namespace Spryd.Server.Models
         {
             try
             {
-                dal.UserSession.Where(us => us.SessionId == idSession && us.EndDate == null).ToList().ForEach(u => u.EndDate = DateTime.Now);
-                dal.SaveChanges();
+                _context.UserSession.Where(us => us.SessionId == idSession && us.EndDate == null).ToList().ForEach(u => u.EndDate = DateTime.Now);
+                _context.SaveChanges();
             }
             catch (Exception e)
             {
@@ -165,7 +166,7 @@ namespace Spryd.Server.Models
         {
             try
             {
-                return dal.Sessions.Any(s => s.SprydZoneId == sprydZoneId && s.EndDate == null);
+                return _context.Sessions.Any(s => s.SprydZoneId == sprydZoneId && s.EndDate == null);
             }
             catch (Exception e)
             {
@@ -184,7 +185,7 @@ namespace Spryd.Server.Models
         {
             try
             {
-                return dal.UserSession.Any(us => us.SessionId == idSession && us.UserId == idUser && us.IsCreator == true);
+                return _context.UserSession.Any(us => us.SessionId == idSession && us.UserId == idUser && us.IsCreator == true);
             }
             catch (Exception e)
             {
@@ -202,7 +203,7 @@ namespace Spryd.Server.Models
         {
             try
             {
-                return dal.Sessions.Any(s => s.Id == idSession);
+                return _context.Sessions.Any(s => s.Id == idSession);
             }
             catch (Exception e)
             {
@@ -220,7 +221,7 @@ namespace Spryd.Server.Models
         {
             try
             {
-                return dal.Sessions.Any(s => s.Id == idSession && s.EndDate == null);
+                return _context.Sessions.Any(s => s.Id == idSession && s.EndDate == null);
             }
             catch (Exception e)
             {
@@ -238,8 +239,8 @@ namespace Spryd.Server.Models
         {
             try
             {
-                return (from user in dal.Users
-                        join userSession in dal.UserSession on user.Id equals userSession.UserId
+                return (from user in _context.Users
+                        join userSession in _context.UserSession on user.Id equals userSession.UserId
                         where userSession.SessionId == idSession
                         && userSession.EndDate == null
                         select user).ToList();
@@ -262,7 +263,7 @@ namespace Spryd.Server.Models
             try
             {
                 var limitDelayActivity = DateTime.Now.AddMinutes(-1);
-                var isCreatorInactive = dal.UserSession.Any(us => us.SessionId == idSession && us.EndDate == null && us.LastActivity < limitDelayActivity && us.IsCreator == true);
+                var isCreatorInactive = _context.UserSession.Any(us => us.SessionId == idSession && us.EndDate == null && us.LastActivity < limitDelayActivity && us.IsCreator == true);
                 if (isCreatorInactive) // if creator inactive, end session 
                 {
                     GetUsersOutOfSession(idSession);
@@ -270,11 +271,11 @@ namespace Spryd.Server.Models
                 }
                 else // else, get inactive users out of session
                 {
-                    dal.UserSession.Where(us => us.SessionId == idSession && us.EndDate == null && us.LastActivity < limitDelayActivity && us.IsCreator == false)
+                    _context.UserSession.Where(us => us.SessionId == idSession && us.EndDate == null && us.LastActivity < limitDelayActivity && us.IsCreator == false)
                         .ToList()
                         .ForEach(u => u.EndDate = DateTime.Now);
 
-                    dal.SaveChanges();
+                    _context.SaveChanges();
                 }
             }
             catch (Exception e)
@@ -294,7 +295,7 @@ namespace Spryd.Server.Models
         {
             try
             {
-                return dal.Sessions.Any(s => s.Id == idSession && s.Password == password);
+                return _context.Sessions.Any(s => s.Id == idSession && s.Password == password);
             }
             catch (Exception e)
             {
@@ -313,7 +314,7 @@ namespace Spryd.Server.Models
         {
             try
             {
-                return dal.SharedItems.Any(s => s.SessionId == idSession && s.Id == idSharedItem);
+                return _context.SharedItems.Any(s => s.SessionId == idSession && s.Id == idSharedItem);
             }
             catch (Exception e)
             {
@@ -332,7 +333,7 @@ namespace Spryd.Server.Models
         {
             try
             {
-                return dal.SharedItems.Where(s => s.SessionId == idSession && s.Id == idSharedItem).FirstOrDefault() ;
+                return _context.SharedItems.Where(s => s.SessionId == idSession && s.Id == idSharedItem).FirstOrDefault() ;
             }
             catch (Exception e)
             {

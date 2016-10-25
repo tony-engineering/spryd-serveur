@@ -25,5 +25,6 @@ namespace Spryd.Server.Models
         void EndUserSession(int idUser, int idSession);
         bool IsUserExist(string email);
         void UpdateUserLastActivity(int idSession, int idUser);
+        bool IsAllActivitiesEnded(int idSession, int idUser);
     }
 }

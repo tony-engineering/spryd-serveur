@@ -4,19 +4,21 @@ using System.Linq;
 using System.Web;
 using Spryd.Server.Models;
 using log4net;
+using System.Data.Entity;
 
 namespace Spryd.Server.Models
 {
     public class SprydZoneDal : ISprydZoneDal
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private ISprydContext _context;
 
         /// <summary>
         /// Default constructor
         /// </summary>
-        public SprydZoneDal()
+        public SprydZoneDal(ISprydContext context)
         {
-
+            _context = context;
         }
 
         /// <summary>
@@ -25,10 +27,7 @@ namespace Spryd.Server.Models
         /// <param name="sprydZone"></param>
         public void AddSprydZone(SprydZone sprydZone)
         {
-            using (DbConnection c = new DbConnection())
-            {
-                c.SprydZones.Add(sprydZone);
-            }
+            _context.SprydZones.Add(sprydZone);
         }
 
         /// <summary>
@@ -37,10 +36,7 @@ namespace Spryd.Server.Models
         /// <returns></returns>
         public List<SprydZone> GetAllSprydZones()
         {
-            using (DbConnection c = new DbConnection())
-            {
-                return c.SprydZones.Include("Beacon").ToList();
-            }
+            return _context.SprydZones.Include("Beacon").ToList();
         }
 
         /// <summary>
@@ -52,13 +48,10 @@ namespace Spryd.Server.Models
         {
             if (listBeaconId == null)
                 return new List<SprydZone>();
-            using (DbConnection c = new DbConnection())
-            {
-                return (from sprydZone in c.SprydZones.Include("Beacon").ToList()
-                        join beaconId in listBeaconId on sprydZone.Beacon.TechnicalId equals beaconId
-                        select sprydZone).ToList();
-            }
-            
+
+            return (from sprydZone in _context.SprydZones.Include("Beacon").ToList()
+                    join beaconId in listBeaconId on sprydZone.Beacon.TechnicalId equals beaconId
+                    select sprydZone).ToList();
         }
 
         /// <summary>
@@ -68,10 +61,7 @@ namespace Spryd.Server.Models
         /// <returns></returns>
         public SprydZone GetSprydZoneById(int id)
         {
-            using (DbConnection c = new DbConnection())
-            {
-                return c.SprydZones.Include("Beacon").ToList().Where(z => z.Id == id).FirstOrDefault();
-            }
+            return _context.SprydZones.Include("Beacon").ToList().Where(z => z.Id == id).FirstOrDefault();
         }
 
         /// <summary>
@@ -81,10 +71,7 @@ namespace Spryd.Server.Models
         /// <returns></returns>
         public Session GetSprydZoneCurrentession(int zoneId)
         {
-            using (DbConnection c = new DbConnection())
-            {
-                return c.Sessions.Where(s => s.SprydZoneId == zoneId && s.StartDate != null && s.EndDate == null).FirstOrDefault();
-            }
+            return _context.Sessions.Where(s => s.SprydZoneId == zoneId && s.StartDate != null && s.EndDate == null).FirstOrDefault();
         }
 
         /// <summary>
@@ -94,10 +81,7 @@ namespace Spryd.Server.Models
         /// <returns></returns>
         public bool IsSprydZoneExist(int zoneId)
         {
-            using (DbConnection c = new DbConnection())
-            {
-                return c.SprydZones.Any(s => s.Id == zoneId);
-            }
+            return _context.SprydZones.Any(s => s.Id == zoneId);
         }
     }
 }

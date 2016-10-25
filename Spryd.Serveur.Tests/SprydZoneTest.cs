@@ -10,7 +10,8 @@ namespace Spryd.Server.Tests
     [TestClass]
     public class SprydZoneTest
     {
-        private FakeDal dal;
+        private FakeSprydContext context;
+        private SprydZoneDal dal;
         private SprydZoneController sprydZoneController;
 
         /// <summary>
@@ -19,9 +20,9 @@ namespace Spryd.Server.Tests
         [TestInitialize]
         public void InitializeTestingEnvironnement()
         {
-            dal = new FakeDal();
-
-            sprydZoneController = new SprydZoneController(dal);
+            context = new FakeSprydContext();
+            dal = new SprydZoneDal(context);
+            sprydZoneController = new SprydZoneController(context);
             sprydZoneController.Request = new HttpRequestMessage();
             sprydZoneController.Configuration = new HttpConfiguration();
         }
@@ -49,7 +50,7 @@ namespace Spryd.Server.Tests
         {
             var sprydZone = new SprydZone();
             dal.AddSprydZone(sprydZone);
-            Assert.AreEqual(sprydZone, sprydZoneController.GetSprydZoneById(1));
+            Assert.AreEqual(sprydZone, sprydZoneController.GetSprydZoneById(0));
         }
 
         /// <summary>

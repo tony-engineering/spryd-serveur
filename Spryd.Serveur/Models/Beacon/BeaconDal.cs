@@ -10,12 +10,14 @@ namespace Spryd.Server.Models
     public class BeaconDal : IBeaconDal
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private ISprydContext _context;
 
         /// <summary>
         /// Default constructor
         /// </summary>
-        public BeaconDal()
+        public BeaconDal(ISprydContext context)
         {
+            _context = context;
         }
 
         /// <summary>
@@ -25,10 +27,7 @@ namespace Spryd.Server.Models
         /// <returns></returns>
         public Beacon GetBeaconById(int id)
         {
-            using (DbConnection c = new DbConnection())
-            {
-                return c.Beacons.Where(b => b.Id == id).FirstOrDefault();
-            }
+            return _context.Beacons.Where(b => b.Id == id).FirstOrDefault();
         }
 
         /// <summary>
@@ -38,10 +37,7 @@ namespace Spryd.Server.Models
         /// <returns></returns>
         public Beacon GetBeaconByTechnicalId(string technicalId)
         {
-            using (DbConnection c = new DbConnection())
-            {
-                return c.Beacons.Where(b => b.TechnicalId == technicalId).FirstOrDefault();
-            }
+            return _context.Beacons.Where(b => b.TechnicalId == technicalId).FirstOrDefault();
         }
 
         /// <summary>
@@ -50,10 +46,7 @@ namespace Spryd.Server.Models
         /// <returns></returns>
         public List<Beacon> GetBeacons()
         {
-            using (DbConnection c = new DbConnection())
-            {
-                return c.Beacons.ToList();
-            }
+            return _context.Beacons.ToList();
         }
     }
 }

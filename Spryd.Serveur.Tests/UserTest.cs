@@ -14,7 +14,8 @@ namespace Spryd.Server.Tests
     [TestClass]
     public class UserTest
     {
-        private FakeDal dal;
+        private UserDal dal;
+        private FakeSprydContext context;
         private UserController userController;
 
         /// <summary>
@@ -23,9 +24,10 @@ namespace Spryd.Server.Tests
         [TestInitialize]
         public void InitializeTestingEnvironnement()
         {
-            dal = new FakeDal();
+            context = new FakeSprydContext();
+            dal = new UserDal(context);
 
-            userController = new UserController(dal);
+            userController = new UserController(context);
             userController.Request = new HttpRequestMessage();
             userController.Configuration = new HttpConfiguration();
         }
@@ -72,7 +74,7 @@ namespace Spryd.Server.Tests
             User newUser = new User("Spriiid", "Youre", "data@spryd.io", "superpwd");
             User addedUser = userController.AddUser(newUser);
 
-            Assert.AreEqual(newUser.Id, 1);
+            Assert.AreEqual(0, newUser.Id);
         }
 
         /// <summary>

@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Microsoft.Practices.Unity;
+using Spryd.Server.App_Start;
+using Spryd.Server.Controllers;
+using Spryd.Server.Models;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -14,8 +18,7 @@ namespace Spryd.Server
     public static class WebApiConfig
     {
         public static ConnectionStringSettings connectionString;
-        public static String SharedItemsRepository;
-        public static String ApiUrl;
+        public static string SharedItemsRepository;
 
         public static void Register(HttpConfiguration config)
         {
@@ -31,6 +34,12 @@ namespace Spryd.Server
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            //Injection des dépendances
+            var container = new UnityContainer();
+            container.RegisterType<ISprydContext, SprydContext>();
+            config.DependencyResolver = new UnityResolver(container);
+
             // Output in JSON
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
 
@@ -41,13 +50,10 @@ namespace Spryd.Server
             // Set logging configuration
             log4net.Config.XmlConfigurator.Configure();
 
-            ApiUrl = ConfigurationManager.AppSettings["SprydURL"];
-
-            string subPath = ConfigurationManager.AppSettings["SharedItemsRepository"]; // your code goes here
-
-            if (!Directory.Exists(HttpContext.Current.Server.MapPath(subPath)))
-                Directory.CreateDirectory(HttpContext.Current.Server.MapPath(subPath));
-
+            // Définition de l'URL de dépôt des sharedItems
+            string subPath = ConfigurationManager.AppSettings["SharedItemsRepository"]; // Dépôt des sharedItems
+            if (!Directory.Exists(HttpContext.Current.Server.MapPath(subPath)))//Check si le répertoire existe
+                Directory.CreateDirectory(HttpContext.Current.Server.MapPath(subPath));// sinon il le créé
             SharedItemsRepository = HttpRuntime.AppDomainAppPath + ConfigurationManager.AppSettings["SharedItemsRepository"];
         }
     }

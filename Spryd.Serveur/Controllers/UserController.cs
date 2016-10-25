@@ -21,18 +21,9 @@ namespace Spryd.Server.Controllers
         /// <summary>
         /// Default constructor
         /// </summary>
-        public UserController()
+        public UserController(ISprydContext context)
         {
-            dal = new UserDal();
-        }
-
-        /// <summary>
-        /// Constructor used for tests (possible to put a different DB )
-        /// </summary>
-        /// <param name="testDal"></param>
-        public UserController(IUserDal testDal)
-        {
-            dal = testDal;
+            dal = new UserDal(context);
         }
 
         /// <summary>

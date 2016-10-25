@@ -1,4 +1,6 @@
-﻿using Spryd.Server.Models;
+﻿using Microsoft.Practices.Unity;
+using Spryd.Server.Controllers;
+using Spryd.Server.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +19,15 @@ namespace Spryd.Server
         /// </summary>
         protected void Application_Start()
         {
+            //Initialisation générale
             GlobalConfiguration.Configure(WebApiConfig.Register);
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            
+            
         }
     }
 }

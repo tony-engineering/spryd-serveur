@@ -17,14 +17,9 @@ namespace Spryd.Server.Controllers
         /// <summary>
         /// Default constructor
         /// </summary>
-        public SprydZoneController()
+        public SprydZoneController(ISprydContext context)
         {
-            dal = new SprydZoneDal();
-        }
-
-        public SprydZoneController(ISprydZoneDal sprydZoneDal)
-        {
-            dal = sprydZoneDal;
+            dal = new SprydZoneDal(context);
         }
 
         /// <summary>

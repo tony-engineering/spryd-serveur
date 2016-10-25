@@ -22,24 +22,11 @@ namespace Spryd.Server.Controllers
         /// <summary>
         /// Default constructor
         /// </summary>
-        public SessionController()
+        public SessionController(ISprydContext context)
         {
-            sessionDal = new SessionDal();
-            userDal = new UserDal();
-            sprydZoneDal = new SprydZoneDal();
-        }
-
-        /// <summary>
-        /// Constructor used for tests (possible to put a different DB)
-        /// </summary>
-        /// <param name="sessionFakeDal"></param>
-        /// <param name="userFakeDal"></param>
-        /// <param name="sprydZoneFakeDal"></param>
-        public SessionController(ISessionDal sessionFakeDal, IUserDal userFakeDal, ISprydZoneDal sprydZoneFakeDal)
-        {
-            sessionDal = sessionFakeDal;
-            userDal = userFakeDal;
-            sprydZoneDal = sprydZoneFakeDal;
+            sessionDal = new SessionDal(context);
+            userDal = new UserDal(context);
+            sprydZoneDal = new SprydZoneDal(context);
         }
 
         /// <summary>
