@@ -387,10 +387,9 @@ namespace Spryd.Server.Controllers
 
             // (to be able to set an other last_activity value for tests)
             // set it to now, else keep the actual fake value
-            if (userSession.LastActivity == null)
-            {
-                userSession.LastActivity = DateTime.Now;
-            }
+
+            userSession.LastActivity = DateTime.Now;
+            
         }
 
         /// <summary>
